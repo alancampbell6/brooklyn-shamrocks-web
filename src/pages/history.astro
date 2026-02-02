@@ -4,8 +4,9 @@ import Hero from '../components/Hero.astro';
 
 const timeline = [
   {
-    era: 'The Early Years',
-    description: 'The club was established by a group of passionate Gaels who gathered weekly to play football in Brooklyn\'s parks. These informal games attracted more and more players, creating a need for formal organization.',
+    year: '1955',
+    era: 'Founded',
+    description: 'Brooklyn Shamrocks GAA was established in 1955 by a group of passionate Irish immigrants who gathered weekly to play football in Brooklyn\'s parks. These informal games attracted more and more players, creating a need for formal organization.',
   },
   {
     era: 'Growth Period',
@@ -57,7 +58,7 @@ const honours = [
       <!-- Introduction -->
       <div class="mb-16">
         <p class="text-xl text-gray-600 leading-relaxed">
-          Brooklyn Shamrocks GAA has a proud history of promoting Gaelic games in Brooklyn, New York.
+          Founded in 1955, Brooklyn Shamrocks GAA has nearly 70 years of proud history promoting Gaelic games in Brooklyn, New York.
           From humble beginnings to becoming a cornerstone of the New York GAA community, our story
           is one of dedication, community, and sporting excellence.
         </p>
@@ -67,7 +68,7 @@ const honours = [
       <div class="mb-16">
         <h2 class="text-2xl font-bold text-gray-900 mb-6">Our Story</h2>
         <p class="text-gray-600 leading-relaxed">
-          The Brooklyn Shamrocks were founded by Irish immigrants who wanted to maintain their connection
+          The Brooklyn Shamrocks were founded in 1955 by Irish immigrants who wanted to maintain their connection
           to home through the sports they loved. What started as informal kickabouts in local parks grew
           into an organized club competing at the highest levels in North American GAA.
         </p>
@@ -111,6 +112,7 @@ const honours = [
 
                 <!-- Content -->
                 <div class={`ml-12 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'}`}>
+                  {item.year && <span class="text-shamrock-600 font-semibold text-sm">{item.year}</span>}
                   <h3 class="text-lg font-bold text-gray-900 mb-2">{item.era}</h3>
                   <p class="text-gray-600">{item.description}</p>
                 </div>
