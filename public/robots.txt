@@ -1,0 +1,5 @@
+# Brooklyn Shamrocks GAA Website
+User-agent: *
+Allow: /
+
+Sitemap: https://brooklynshamrocks.com/sitemap.xml

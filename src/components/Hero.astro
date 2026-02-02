@@ -1,0 +1,61 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  showCta?: boolean;
+  size?: 'small' | 'medium' | 'large';
+}
+
+const { title, subtitle, showCta = false, size = 'large' } = Astro.props;
+
+const sizeClasses = {
+  small: 'py-12 md:py-16',
+  medium: 'py-16 md:py-24',
+  large: 'py-20 md:py-32',
+};
+---
+
+<section class={`relative bg-gradient-to-br from-shamrock-800 via-shamrock-700 to-shamrock-900 ${sizeClasses[size]}`}>
+  <!-- Pattern Overlay -->
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute inset-0" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <!-- Club Crest -->
+    <div class="mb-8">
+      <div class="inline-flex items-center justify-center w-24 h-24 md:w-32 md:h-32 bg-white/10 rounded-full backdrop-blur-sm border-2 border-gold-400 p-2">
+        <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks Crest" class="w-full h-full object-contain" />
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+      {title}
+    </h1>
+
+    {subtitle && (
+      <p class="text-lg md:text-xl text-shamrock-100 max-w-2xl mx-auto mb-8">
+        {subtitle}
+      </p>
+    )}
+
+    {showCta && (
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/fixtures" class="btn btn-secondary">
+          View Fixtures
+        </a>
+        <a href="/about" class="btn btn-outline border-white text-white hover:bg-white hover:text-shamrock-800">
+          Learn More
+        </a>
+      </div>
+    )}
+  </div>
+
+  <!-- Bottom Wave -->
+  <div class="absolute bottom-0 left-0 right-0">
+    <svg class="w-full h-8 md:h-12 text-white" viewBox="0 0 1440 48" fill="currentColor" preserveAspectRatio="none">
+      <path d="M0,48 L1440,48 L1440,0 C1200,32 960,48 720,48 C480,48 240,32 0,0 L0,48 Z"></path>
+    </svg>
+  </div>
+</section>

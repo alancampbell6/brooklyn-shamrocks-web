@@ -1,0 +1,351 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import productsData from '../data/products.json';
+
+const storeUrl = 'https://www.oneills.com/us_en/shop-by-team/gaa/usa/brooklyn-shamrocks.html';
+
+// Get featured products
+const featuredProducts = productsData.products.filter(p => p.featured);
+
+// Group products by category
+const jerseys = productsData.products.filter(p => p.category === 'jerseys');
+const training = productsData.products.filter(p => p.category === 'training');
+const leisurewear = productsData.products.filter(p => p.category === 'leisurewear');
+---
+
+<BaseLayout title="Shop" description="Official Brooklyn Shamrocks GAA merchandise - jerseys, training wear, and accessories">
+  <Hero
+    title="Official Merchandise"
+    subtitle="Gear up in green and gold with official Brooklyn Shamrocks kit"
+    size="small"
+  />
+
+  <!-- Main CTA Section -->
+  <section class="py-12 md:py-16 bg-gradient-to-b from-shamrock-900 to-shamrock-800">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-2 bg-white/10 text-shamrock-100 px-4 py-2 rounded-full text-sm mb-6">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        Official O'Neills Partner
+      </div>
+
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+        Shop the Official Store
+      </h2>
+      <p class="text-shamrock-100 text-lg max-w-2xl mx-auto mb-8">
+        All Brooklyn Shamrocks merchandise is available through our official partner O'Neills,
+        the leading manufacturer of GAA sportswear. Quality gear shipped directly to your door.
+      </p>
+
+      <a
+        href={storeUrl}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-gray-900 font-bold px-8 py-4 rounded-xl text-lg transition-all hover:scale-105 shadow-lg"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        Visit Official Store
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      </a>
+
+      <p class="text-shamrock-200 text-sm mt-4">
+        Ships to USA & Ireland
+      </p>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Our most popular items - click any product to purchase from the official O'Neills store.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        {featuredProducts.map((product) => (
+          <a
+            href={product.url}
+            target="_blank"
+            rel="noopener"
+            class="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:border-shamrock-200 hover:shadow-lg transition-all"
+          >
+            <div class="aspect-square bg-gray-50 p-4 flex items-center justify-center overflow-hidden">
+              <img
+                src={product.image}
+                alt={product.name}
+                class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+            <div class="p-4">
+              <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-2 group-hover:text-shamrock-700 transition-colors">
+                {product.name}
+              </h3>
+              <p class="text-shamrock-700 font-bold">{product.price}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Playing Kit Section -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Playing Kit</h2>
+          <p class="text-gray-600 text-sm">Jerseys, shorts, and match day essentials</p>
+        </div>
+        <a
+          href={storeUrl}
+          target="_blank"
+          rel="noopener"
+          class="text-shamrock-700 hover:text-shamrock-800 font-medium text-sm inline-flex items-center gap-1"
+        >
+          View All
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {jerseys.slice(0, 5).map((product) => (
+          <a
+            href={product.url}
+            target="_blank"
+            rel="noopener"
+            class="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:border-shamrock-200 hover:shadow-lg transition-all"
+          >
+            <div class="aspect-square bg-white p-3 flex items-center justify-center overflow-hidden">
+              <img
+                src={product.image}
+                alt={product.name}
+                class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+            <div class="p-3">
+              <h3 class="font-medium text-gray-900 text-xs md:text-sm mb-1 line-clamp-2 group-hover:text-shamrock-700 transition-colors">
+                {product.name}
+              </h3>
+              <p class="text-shamrock-700 font-bold text-sm">{product.price}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Training Wear Section -->
+  <section class="py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Training Wear</h2>
+          <p class="text-gray-600 text-sm">Training tops, vests, and workout gear</p>
+        </div>
+        <a
+          href={storeUrl}
+          target="_blank"
+          rel="noopener"
+          class="text-shamrock-700 hover:text-shamrock-800 font-medium text-sm inline-flex items-center gap-1"
+        >
+          View All
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {training.slice(0, 5).map((product) => (
+          <a
+            href={product.url}
+            target="_blank"
+            rel="noopener"
+            class="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:border-shamrock-200 hover:shadow-lg transition-all"
+          >
+            <div class="aspect-square bg-gray-50 p-3 flex items-center justify-center overflow-hidden">
+              <img
+                src={product.image}
+                alt={product.name}
+                class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+            <div class="p-3">
+              <h3 class="font-medium text-gray-900 text-xs md:text-sm mb-1 line-clamp-2 group-hover:text-shamrock-700 transition-colors">
+                {product.name}
+              </h3>
+              <p class="text-shamrock-700 font-bold text-sm">{product.price}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Leisurewear Section -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Leisurewear</h2>
+          <p class="text-gray-600 text-sm">T-shirts, polos, and casual wear</p>
+        </div>
+        <a
+          href={storeUrl}
+          target="_blank"
+          rel="noopener"
+          class="text-shamrock-700 hover:text-shamrock-800 font-medium text-sm inline-flex items-center gap-1"
+        >
+          View All
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {leisurewear.slice(0, 5).map((product) => (
+          <a
+            href={product.url}
+            target="_blank"
+            rel="noopener"
+            class="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:border-shamrock-200 hover:shadow-lg transition-all"
+          >
+            <div class="aspect-square bg-white p-3 flex items-center justify-center overflow-hidden">
+              <img
+                src={product.image}
+                alt={product.name}
+                class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+            <div class="p-3">
+              <h3 class="font-medium text-gray-900 text-xs md:text-sm mb-1 line-clamp-2 group-hover:text-shamrock-700 transition-colors">
+                {product.name}
+              </h3>
+              <p class="text-shamrock-700 font-bold text-sm">{product.price}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Size Guide & Info -->
+  <section class="py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Sizing -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">Size Guide</h3>
+          <p class="text-gray-600 text-sm mb-4">
+            O'Neills provides detailed size charts for all products. Check measurements before ordering.
+          </p>
+          <a
+            href="https://www.oneills.com/us_en/size-guide"
+            target="_blank"
+            rel="noopener"
+            class="text-shamrock-700 hover:text-shamrock-800 text-sm font-medium inline-flex items-center gap-1"
+          >
+            View Size Guide
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Shipping -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">Shipping</h3>
+          <p class="text-gray-600 text-sm mb-4">
+            Free delivery on orders to US over $100. Standard shipping typically takes 7-14 business days.
+          </p>
+          <a
+            href="https://www.oneills.com/us_en/customer-service"
+            target="_blank"
+            rel="noopener"
+            class="text-shamrock-700 hover:text-shamrock-800 text-sm font-medium inline-flex items-center gap-1"
+          >
+            Shipping Info
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Club Orders -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div class="w-12 h-12 bg-gold-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-gold-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">Team Orders</h3>
+          <p class="text-gray-600 text-sm mb-4">
+            Ordering for a team? Contact us for bulk order information and potential discounts.
+          </p>
+          <a
+            href="/contact"
+            class="text-shamrock-700 hover:text-shamrock-800 text-sm font-medium inline-flex items-center gap-1"
+          >
+            Contact Us
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom CTA -->
+  <section class="py-12 md:py-16 bg-shamrock-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+        Wear the Green & Gold with Pride
+      </h2>
+      <p class="text-shamrock-100 mb-8">
+        Support the Shamrocks and look great doing it. Every purchase helps support the club.
+      </p>
+      <a
+        href={storeUrl}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-shamrock-900 font-bold px-8 py-4 rounded-xl text-lg transition-all hover:scale-105"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        Shop Now at O'Neills
+      </a>
+
+      <p class="text-shamrock-200 text-xs mt-6">
+        Product images and prices from O'Neills. Last updated: {new Date(productsData.lastUpdated).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,162 @@
+{
+  "lastUpdated": "2026-02-02T15:52:39.455Z",
+  "source": "https://www.finalwhistle.ie/gaelic/team/brooklyn-shamrocks/",
+  "results": [
+    {
+      "id": "res-2025-09-07-0",
+      "date": "2025-09-07",
+      "homeTeam": "Kerry",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "4-19",
+      "awayScore": "0-11",
+      "competition": "NY Senior Football Championship",
+      "round": "Semi Final",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2025-08-24-1",
+      "date": "2025-08-24",
+      "homeTeam": "Donegal",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "0-15",
+      "awayScore": "2-15",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 4",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2025-08-16-2",
+      "date": "2025-08-16",
+      "homeTeam": "Cavan",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "2-14",
+      "awayScore": "1-15",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 7",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2025-08-10-3",
+      "date": "2025-08-10",
+      "homeTeam": "Cork",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "1-11",
+      "awayScore": "1-14",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 6",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2025-07-27-4",
+      "date": "2025-07-27",
+      "homeTeam": "St. Barnabas",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "3-18",
+      "awayScore": "3-12",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 5",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2025-06-29-5",
+      "date": "2025-06-29",
+      "homeTeam": "Kerry",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "2-17",
+      "awayScore": "1-13",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 3",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2025-06-22-6",
+      "date": "2025-06-22",
+      "homeTeam": "Westmeath",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "1-17",
+      "awayScore": "3-13",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 2",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2025-05-18-7",
+      "date": "2025-05-18",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Sligo",
+      "homeScore": "2-10",
+      "awayScore": "1-8",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 1",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2024-08-11-9",
+      "date": "2024-08-11",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Kerry",
+      "homeScore": "2-15",
+      "awayScore": "4-20",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 6",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2024-07-21-10",
+      "date": "2024-07-21",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "St. Barnabas",
+      "homeScore": "1-11",
+      "awayScore": "0-17",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 5",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2024-06-30-11",
+      "date": "2024-06-30",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Sligo",
+      "homeScore": "0-8",
+      "awayScore": "2-18",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 4",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2024-06-16-13",
+      "date": "2024-06-16",
+      "homeTeam": "Westmeath",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "1-19",
+      "awayScore": "2-8",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 2",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "res-2024-05-19-14",
+      "date": "2024-05-19",
+      "homeTeam": "Rangers",
+      "awayTeam": "Brooklyn Shamrocks",
+      "homeScore": "0-8",
+      "awayScore": "2-18",
+      "competition": "NY Senior Football Championship",
+      "round": "Round 1",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "sponsors": [
+    {
+      "name": "IRL Systems",
+      "url": "https://www.irlsystems.com",
+      "logo": "/images/sponsors/irl-systems.png",
+      "tier": "primary",
+      "description": "Principal Sponsor"
+    },
+    {
+      "name": "JT Magen",
+      "url": "https://jtmagen.com",
+      "logo": "/images/sponsors/jt-magen.png",
+      "tier": "secondary",
+      "description": "Club Sponsor"
+    }
+  ]
+}

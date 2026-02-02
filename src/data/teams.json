@@ -1,0 +1,35 @@
+{
+  "teams": [
+    {
+      "slug": "senior-football",
+      "name": "Senior Football",
+      "shortName": "Senior Football",
+      "sport": "Gaelic Football",
+      "description": "Our flagship team competing at the highest level in New York GAA. The senior footballers represent Brooklyn Shamrocks in the NY Senior Football Championship and various league competitions throughout the season.",
+      "trainingDays": "Tuesday & Thursday",
+      "trainingTime": "7:00 PM",
+      "trainingLocation": "Randalls Island Field 73",
+      "contact": "seniorfootball@brooklynshamrocks.com",
+      "competitions": [
+        "NY Senior Football Championship",
+        "NY Senior Football League",
+        "NAGAA Finals"
+      ]
+    },
+    {
+      "slug": "junior-football",
+      "name": "Junior Football",
+      "shortName": "Junior Football",
+      "sport": "Gaelic Football",
+      "description": "Our junior football team provides a pathway for developing players and those returning to the game. Competing in the NY Junior Football Championship, this team focuses on skill development while maintaining a competitive edge.",
+      "trainingDays": "Tuesday & Thursday",
+      "trainingTime": "7:00 PM",
+      "trainingLocation": "Randalls Island Field 73",
+      "contact": "juniorfootball@brooklynshamrocks.com",
+      "competitions": [
+        "NY Junior Football Championship",
+        "NY Junior Football League"
+      ]
+    }
+  ]
+}
