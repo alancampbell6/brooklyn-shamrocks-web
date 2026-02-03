@@ -1,0 +1,249 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+
+const championships = [
+  {
+    year: '2022',
+    title: 'New York Senior Football League Champions',
+    details: 'Brooklyn 2-13, Westmeath 1-13',
+    captain: 'Conor Connolly',
+    manager: 'Tommy McConvey',
+    highlight: true,
+  },
+  {
+    year: '2020',
+    title: 'New York Intermediate Football Champions',
+    details: 'Promotion to Senior division',
+    highlight: true,
+  },
+  {
+    year: '2019',
+    title: 'New York League Winners',
+    details: 'Strong season building momentum',
+  },
+  {
+    year: '2015',
+    title: 'New York Junior A Football Champions',
+    details: 'Foundation for future success',
+    highlight: true,
+  },
+];
+
+const playerOfTheYear = [
+  { year: '2025', name: 'Rob Wharton' },
+  { year: '2024', name: 'Rob Car' },
+  { year: '2023', name: 'Alan Campbell' },
+  { year: '2022', name: 'Niall Madine' },
+  { year: '2021', name: 'Kevin Hannigan' },
+  { year: '2019', name: 'Shane Boyle' },
+  { year: '2017', name: 'Barry Kane' },
+];
+
+const clubPerson = [
+  { year: '2024', name: 'Jason Peloquin', note: 'James Keenaghan Club Person of the Year' },
+  { year: '2023', name: 'Mark Barrett' },
+  { year: '2022', name: 'Michael Dorgan' },
+  { year: '2021', name: 'Suzanne Hogan' },
+  { year: '2019', name: 'Michael Cunningham' },
+  { year: '2017', name: 'Adam Keaney' },
+];
+
+const jimmyLally = [
+  { year: '2025', name: 'Chris Fitzgerald' },
+  { year: '2024', name: 'Dave Bourke' },
+  { year: '2022', name: 'Mike Conlon' },
+  { year: '2021', name: 'Pat Lawlor' },
+  { year: '2019', name: 'Donie O\'Sullivan' },
+  { year: '2017', name: 'Tony Spollen' },
+];
+
+const guestOfHonor = [
+  { year: '2025', name: 'Eamonn Gunn', event: '47th Annual (70th Anniversary)' },
+  { year: '2024', name: 'Michael Cunningham', event: '46th Annual' },
+  { year: '2023', name: 'Adam Keaney', event: '45th Annual' },
+  { year: '2022', name: 'Mike Lawlor', event: '44th Annual' },
+  { year: '2021', name: 'Tommy McConvey', event: '43rd Annual' },
+  { year: '2019', name: 'John Bennett' },
+  { year: '2017', name: 'Matt Hogan', event: '40th Annual' },
+];
+---
+
+<BaseLayout title="Honours" description="Brooklyn Shamrocks GAA championships, trophies, and individual award winners">
+  <Hero
+    title="Honours & Awards"
+    subtitle="Celebrating our achievements on and off the field"
+    size="small"
+  />
+
+  <!-- Championships Section -->
+  <section class="py-12 md:py-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Club Championships</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          From Junior A to Senior League champions, our journey through New York GAA.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        {championships.map((champ) => (
+          <div class={`rounded-2xl p-6 md:p-8 ${champ.highlight ? 'bg-gradient-to-r from-shamrock-700 to-shamrock-800 text-white' : 'bg-white border border-gray-200'}`}>
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+              <div class={`text-4xl md:text-5xl font-bold ${champ.highlight ? 'text-gold-400' : 'text-shamrock-700'}`}>
+                {champ.year}
+              </div>
+              <div class="flex-1">
+                <h3 class={`text-xl md:text-2xl font-bold ${champ.highlight ? 'text-white' : 'text-gray-900'}`}>
+                  {champ.title}
+                </h3>
+                <p class={`mt-1 ${champ.highlight ? 'text-shamrock-100' : 'text-gray-600'}`}>
+                  {champ.details}
+                </p>
+                {(champ.captain || champ.manager) && (
+                  <div class={`mt-3 flex flex-wrap gap-4 text-sm ${champ.highlight ? 'text-shamrock-200' : 'text-gray-500'}`}>
+                    {champ.captain && <span>Captain: <strong>{champ.captain}</strong></span>}
+                    {champ.manager && <span>Manager: <strong>{champ.manager}</strong></span>}
+                  </div>
+                )}
+              </div>
+              {champ.highlight && (
+                <div class="flex-shrink-0">
+                  <svg class="w-16 h-16 text-gold-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Individual Awards Section -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Individual Awards</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Recognizing outstanding contributions to Brooklyn Shamrocks, presented annually at our Dinner Dance.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Player of the Year -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-shamrock-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-shamrock-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Player of the Year</h3>
+          </div>
+          <div class="space-y-3">
+            {playerOfTheYear.map((award, index) => (
+              <div class={`flex items-center justify-between py-2 ${index !== playerOfTheYear.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                <span class="font-semibold text-shamrock-700">{award.year}</span>
+                <span class="text-gray-900">{award.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Club Person of the Year -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-shamrock-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-shamrock-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-gray-900">Club Person of the Year</h3>
+              <p class="text-sm text-gray-500">James Keenaghan Award (from 2024)</p>
+            </div>
+          </div>
+          <div class="space-y-3">
+            {clubPerson.map((award, index) => (
+              <div class={`flex items-center justify-between py-2 ${index !== clubPerson.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                <span class="font-semibold text-shamrock-700">{award.year}</span>
+                <span class="text-gray-900">{award.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Jimmy Lally Lifetime Achievement -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-gold-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-gold-700" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Jimmy Lally Lifetime Achievement</h3>
+          </div>
+          <div class="space-y-3">
+            {jimmyLally.map((award, index) => (
+              <div class={`flex items-center justify-between py-2 ${index !== jimmyLally.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                <span class="font-semibold text-shamrock-700">{award.year}</span>
+                <span class="text-gray-900">{award.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Guest of Honor -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-shamrock-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-shamrock-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Guest of Honor</h3>
+          </div>
+          <div class="space-y-3">
+            {guestOfHonor.map((award, index) => (
+              <div class={`flex items-center justify-between py-2 ${index !== guestOfHonor.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                <span class="font-semibold text-shamrock-700">{award.year}</span>
+                <div class="text-right">
+                  <span class="text-gray-900">{award.name}</span>
+                  {award.event && <span class="block text-xs text-gray-500">{award.event}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Memorial Note -->
+      <div class="mt-8 bg-white rounded-xl p-6 border-l-4 border-gray-400">
+        <h4 class="font-semibold text-gray-900 mb-2">In Memory of James Keenaghan</h4>
+        <p class="text-gray-600 text-sm">
+          The 2023 Dinner Dance was dedicated to honor the memory of James Keenaghan.
+          In 2024, the Club Person of the Year award was renamed the "James Keenaghan Club Person of the Year" in his honor.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Annual Dinner Dance -->
+  <section class="py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-br from-shamrock-800 to-shamrock-900 rounded-2xl p-8 md:p-12 text-white text-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">Annual Dinner Dance</h2>
+        <p class="text-shamrock-100 mb-6">
+          Since 1978, we've celebrated our club family each year at our Annual Dinner Dance.
+          The 47th Annual in 2025 marks our 70th Anniversary!
+        </p>
+        <div class="bg-white/10 rounded-xl p-6 inline-block">
+          <p class="text-gold-400 font-semibold">Bay Ridge Manor</p>
+          <p class="text-shamrock-100 text-sm">476 76th Street, Brooklyn, NY</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

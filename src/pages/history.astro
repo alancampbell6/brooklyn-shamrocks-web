@@ -5,94 +5,120 @@ import Hero from '../components/Hero.astro';
 const timeline = [
   {
     year: '1955',
-    era: 'Founded',
-    description: 'Brooklyn Shamrocks GAA was established in 1955 by a group of passionate Irish immigrants who gathered weekly to play football in Brooklyn\'s parks. These informal games attracted more and more players, creating a need for formal organization.',
+    title: 'Club Founded',
+    description: 'Brooklyn Shamrocks established by Irish immigrants in Brooklyn, initially with strong Kerry influence. The founding members wanted to maintain their connection to home through the sports they loved.',
+    highlight: true,
   },
   {
-    era: 'Growth Period',
-    description: 'As the club grew, we established formal training programs, joined official competitions, and began building the structures needed for sustained success. Gaelic Park in the Bronx became our spiritual home for competitive matches.',
+    year: '1978',
+    title: 'First Annual Dinner Dance',
+    description: 'Inaugural Annual Dinner Dance celebration at Bay Ridge Manor, beginning a tradition that continues to this day.',
   },
   {
-    era: 'Modern Era',
-    description: 'Today, Brooklyn Shamrocks fields teams at senior and junior levels in Gaelic football. Our teams compete for championships each season, carrying on the proud tradition of Gaelic games in Brooklyn.',
+    year: '1990s',
+    title: 'Classic Era',
+    description: 'The club competed proudly wearing the iconic green jerseys with bold "BROOKLYN" lettering across the chest. A golden era that produced many memorable moments.',
+  },
+  {
+    year: '2011',
+    title: 'Brooklyn Shamrocks / Long Island Gaels Partnership',
+    description: 'Combined team formed with Long Island Gaels, strengthening both clubs and expanding the reach of Gaelic games in the New York area.',
+  },
+  {
+    year: '2015',
+    title: 'Junior A Champions',
+    description: 'Won the New York Junior A Football Championship - the first major title of the modern era and foundation for future success.',
+    highlight: true,
+  },
+  {
+    year: '2019',
+    title: 'League Winners',
+    description: 'Strong campaign that built momentum toward promotion to the top tier of New York GAA.',
+  },
+  {
+    year: '2020',
+    title: 'Intermediate Champions',
+    description: 'Won the New York Intermediate Football Championship, earning promotion to the Senior division.',
+    highlight: true,
+  },
+  {
+    year: '2022',
+    title: 'Senior League Champions',
+    description: 'Historic first-ever Senior Football League championship. Brooklyn 2-13 defeated Westmeath 1-13 at Gaelic Park under manager Tommy McConvey. Captain Conor Connolly lifted the trophy.',
+    highlight: true,
+  },
+  {
+    year: '2025',
+    title: '70th Anniversary',
+    description: 'The 47th Annual Dinner Dance celebrates 70 years of Brooklyn Shamrocks - seven decades of Gaelic football excellence in Brooklyn.',
+    highlight: true,
   },
 ];
 
-const honours = [
-  {
-    category: 'Senior Football',
-    achievements: [
-      'New York Senior Football Championship winners',
-      'Multiple league titles',
-      'Consistent competitors in national competitions',
-    ],
-  },
-  {
-    category: 'Junior Football',
-    achievements: [
-      'New York Junior Football Championship competitors',
-      'Development pathway for emerging players',
-      'Strong squad depth and competition',
-    ],
-  },
-  {
-    category: 'Club Culture',
-    achievements: [
-      'Active social calendar and community events',
-      'Strong Irish cultural connections',
-      'Welcoming environment for all skill levels',
-    ],
-  },
+const jerseyEras = [
+  { era: '1990s', sponsor: '"BROOKLYN"', description: 'Text across chest', colors: ['#1a5632', '#ffd700'] },
+  { era: '2000s-2010s', sponsor: 'IRE', description: 'IRE Sponsor', colors: ['#1a5632', '#ffd700'] },
+  { era: '2015-Present', sponsor: 'IRL', description: 'IRL Systems', colors: ['#1a5632', '#ffd700', '#ffffff'] },
 ];
 ---
 
-<BaseLayout title="Club History" description="The history of Brooklyn Shamrocks GAA - our story, achievements, and honours">
+<BaseLayout title="Club History" description="The history of Brooklyn Shamrocks GAA since 1955 - our story, achievements, and 70 years of Gaelic football in Brooklyn">
   <Hero
     title="Club History"
-    subtitle="A proud tradition of Gaelic games in Brooklyn"
+    subtitle="70 years of Gaelic football excellence in Brooklyn"
     size="small"
   />
 
   <section class="py-12 md:py-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Stats Banner -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+        <div class="bg-shamrock-50 rounded-xl p-6 text-center">
+          <div class="text-3xl md:text-4xl font-bold text-shamrock-700">70</div>
+          <div class="text-sm text-gray-600">Years of History</div>
+        </div>
+        <div class="bg-shamrock-50 rounded-xl p-6 text-center">
+          <div class="text-3xl md:text-4xl font-bold text-shamrock-700">4</div>
+          <div class="text-sm text-gray-600">Championships</div>
+        </div>
+        <div class="bg-shamrock-50 rounded-xl p-6 text-center">
+          <div class="text-3xl md:text-4xl font-bold text-shamrock-700">47</div>
+          <div class="text-sm text-gray-600">Dinner Dances</div>
+        </div>
+        <div class="bg-shamrock-50 rounded-xl p-6 text-center">
+          <div class="text-3xl md:text-4xl font-bold text-shamrock-700">2022</div>
+          <div class="text-sm text-gray-600">Senior Champs</div>
+        </div>
+      </div>
+
       <!-- Introduction -->
       <div class="mb-16">
         <p class="text-xl text-gray-600 leading-relaxed">
-          Founded in 1955, Brooklyn Shamrocks GAA has nearly 70 years of proud history promoting Gaelic games in Brooklyn, New York.
-          From humble beginnings to becoming a cornerstone of the New York GAA community, our story
-          is one of dedication, community, and sporting excellence.
+          Founded in 1955, Brooklyn Shamrocks GAA is one of New York's oldest and most storied Gaelic football clubs.
+          For seven decades, we have been promoting Irish culture and Gaelic games in Brooklyn,
+          building a community that feels like family while competing at the highest levels.
         </p>
       </div>
 
       <!-- Our Story -->
       <div class="mb-16">
         <h2 class="text-2xl font-bold text-gray-900 mb-6">Our Story</h2>
-        <p class="text-gray-600 leading-relaxed">
-          The Brooklyn Shamrocks were founded in 1955 by Irish immigrants who wanted to maintain their connection
-          to home through the sports they loved. What started as informal kickabouts in local parks grew
-          into an organized club competing at the highest levels in North American GAA.
-        </p>
-      </div>
-
-      <!-- Honours -->
-      <div class="mb-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-8">Honours & Achievements</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-          {honours.map((section) => (
-            <div class="bg-gradient-to-br from-shamrock-50 to-shamrock-100 p-6 rounded-xl">
-              <h3 class="font-bold text-shamrock-800 mb-4">{section.category}</h3>
-              <ul class="space-y-2">
-                {section.achievements.map((achievement) => (
-                  <li class="flex items-start gap-2 text-sm text-gray-700">
-                    <svg class="w-4 h-4 text-gold-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    {achievement}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <div class="prose prose-lg max-w-none text-gray-600">
+          <p>
+            The Brooklyn Shamrocks were founded in 1955 by Irish immigrants who wanted to maintain their connection
+            to home through the sports they loved. What started as informal kickabouts in local parks grew
+            into an organized club competing at the highest levels in North American GAA.
+          </p>
+          <p class="mt-4">
+            Gaelic Park in the Bronx became our spiritual home for competitive matches - the historic venue
+            that has hosted New York GAA since 1928. The sight of the elevated train passing by during matches
+            has become an iconic part of our club's story.
+          </p>
+          <p class="mt-4">
+            Through the decades, Brooklyn Shamrocks has evolved while staying true to our founding mission:
+            bringing the joy of Gaelic games to Brooklyn and welcoming anyone who shares our passion for
+            sport and community.
+          </p>
         </div>
       </div>
 
@@ -101,63 +127,93 @@ const honours = [
         <h2 class="text-2xl font-bold text-gray-900 mb-8">Timeline</h2>
         <div class="relative">
           <!-- Timeline Line -->
-          <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-shamrock-200 transform md:-translate-x-1/2"></div>
+          <div class="absolute left-4 md:left-8 top-0 bottom-0 w-0.5 bg-shamrock-200"></div>
 
           <!-- Timeline Items -->
-          <div class="space-y-12">
-            {timeline.map((item, index) => (
-              <div class={`relative flex items-start gap-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+          <div class="space-y-8">
+            {timeline.map((item) => (
+              <div class="relative pl-12 md:pl-20">
                 <!-- Dot -->
-                <div class="absolute left-4 md:left-1/2 w-4 h-4 bg-shamrock-600 rounded-full transform -translate-x-1/2 md:-translate-x-1/2 z-10 ring-4 ring-white"></div>
+                <div class={`absolute left-2 md:left-6 w-5 h-5 rounded-full border-4 border-white ${item.highlight ? 'bg-gold-500 ring-4 ring-gold-100' : 'bg-shamrock-600'}`}></div>
 
                 <!-- Content -->
-                <div class={`ml-12 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'}`}>
-                  {item.year && <span class="text-shamrock-600 font-semibold text-sm">{item.year}</span>}
-                  <h3 class="text-lg font-bold text-gray-900 mb-2">{item.era}</h3>
-                  <p class="text-gray-600">{item.description}</p>
+                <div class={`${item.highlight ? 'bg-gradient-to-r from-shamrock-50 to-gold-50 border-l-4 border-shamrock-600' : 'bg-white border border-gray-100'} rounded-xl p-6`}>
+                  <span class="text-shamrock-700 font-bold text-lg">{item.year}</span>
+                  <h3 class="text-xl font-bold text-gray-900 mt-1">{item.title}</h3>
+                  <p class="text-gray-600 mt-2">{item.description}</p>
                 </div>
-
-                <!-- Spacer for alternating layout -->
-                <div class="hidden md:block md:w-1/2"></div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <!-- Notable Figures -->
+      <!-- Jersey Evolution -->
       <div class="mb-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Notable Figures</h2>
-        <p class="text-gray-600 mb-4">
-          Over the years, many dedicated individuals have contributed to our success:
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Jersey Evolution</h2>
+        <p class="text-gray-600 mb-8">
+          Our jersey has evolved over the decades while maintaining the signature green and gold colors
+          that represent Brooklyn Shamrocks.
         </p>
-        <ul class="grid sm:grid-cols-2 gap-4">
-          <li class="flex items-center gap-3 text-gray-700">
-            <div class="w-2 h-2 bg-shamrock-500 rounded-full"></div>
-            Players who represented New York in national competitions
-          </li>
-          <li class="flex items-center gap-3 text-gray-700">
-            <div class="w-2 h-2 bg-shamrock-500 rounded-full"></div>
-            Volunteers who built our club infrastructure
-          </li>
-          <li class="flex items-center gap-3 text-gray-700">
-            <div class="w-2 h-2 bg-shamrock-500 rounded-full"></div>
-            Coaches who developed multiple generations of players
-          </li>
-          <li class="flex items-center gap-3 text-gray-700">
-            <div class="w-2 h-2 bg-shamrock-500 rounded-full"></div>
-            Supporters who stood by us through all seasons
-          </li>
-        </ul>
+        <div class="grid md:grid-cols-3 gap-6">
+          {jerseyEras.map((jersey) => (
+            <div class="bg-white border border-gray-200 rounded-xl p-6 text-center">
+              <div class="flex justify-center gap-2 mb-4">
+                {jersey.colors.map((color) => (
+                  <div class="w-8 h-8 rounded-full border-2 border-gray-200" style={`background-color: ${color}`}></div>
+                ))}
+              </div>
+              <div class="font-bold text-shamrock-700 mb-1">{jersey.era}</div>
+              <div class="text-xl font-bold text-gray-900">{jersey.sponsor}</div>
+              <div class="text-sm text-gray-500">{jersey.description}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Home Venues -->
+      <div class="mb-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Our Homes</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-shamrock-50 rounded-xl p-6">
+            <h3 class="font-bold text-shamrock-800 mb-2">Gaelic Park, The Bronx</h3>
+            <p class="text-gray-600 text-sm">
+              Our spiritual home for competitive matches. Historic venue that has hosted New York GAA since 1928.
+              The iconic elevated train passing during matches is quintessentially New York GAA.
+            </p>
+          </div>
+          <div class="bg-shamrock-50 rounded-xl p-6">
+            <h3 class="font-bold text-shamrock-800 mb-2">Randall's Island</h3>
+            <p class="text-gray-600 text-sm">
+              Our training base where we develop players of all skill levels. Regular sessions throughout the season
+              from March to September.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Link to Honours -->
+      <div class="mb-16">
+        <a href="/honours" class="block bg-gradient-to-r from-shamrock-700 to-shamrock-800 rounded-2xl p-8 text-white hover:from-shamrock-800 hover:to-shamrock-900 transition-all">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-2xl font-bold mb-2">Honours & Awards</h3>
+              <p class="text-shamrock-100">View our championship wins and individual award recipients</p>
+            </div>
+            <svg class="w-8 h-8 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
       </div>
 
       <!-- The Future -->
       <div class="bg-shamrock-900 text-white p-8 rounded-2xl">
         <h2 class="text-2xl font-bold mb-4">The Future</h2>
         <p class="text-shamrock-100 mb-6">
-          Brooklyn Shamrocks continues to grow, welcoming new members and developing the next generation
-          of Gaelic athletes. We remain committed to our founding mission: bringing the joy of Gaelic
-          games to Brooklyn.
+          As we celebrate 70 years in 2025, Brooklyn Shamrocks continues to grow, welcoming new members
+          and developing the next generation of Gaelic athletes. We remain committed to our founding mission:
+          bringing the joy of Gaelic games to Brooklyn.
         </p>
         <p class="text-shamrock-100">
           Whether you're a seasoned player or completely new to GAA, you're welcome at Brooklyn Shamrocks.
