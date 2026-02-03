@@ -140,12 +140,6 @@ const timeline = [
   },
 ];
 
-const jerseyEras = [
-  { era: '1990s', sponsor: '"BROOKLYN"', description: 'Text across chest', colors: ['#1a5632', '#ffd700'] },
-  { era: '2000s-2010s', sponsor: 'IRE', description: 'IRE Sponsor', colors: ['#1a5632', '#ffd700'] },
-  { era: '2015-Present', sponsor: 'IRL', description: 'IRL Systems', colors: ['#1a5632', '#ffd700', '#ffffff'] },
-];
-
 ---
 
 <BaseLayout title="Club History" description="The history of Brooklyn Shamrocks GAA since 1955 - our story, achievements, and 70 years of Gaelic football in Brooklyn">
@@ -318,29 +312,6 @@ const jerseyEras = [
             />
             <p id="lightbox-caption" class="text-white/80 text-center mt-4 text-sm"></p>
           </div>
-        </div>
-      </div>
-
-      <!-- Jersey Evolution -->
-      <div class="mb-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Jersey Evolution</h2>
-        <p class="text-gray-600 mb-8">
-          Our jersey has evolved over the decades while maintaining the signature green and gold colors
-          that represent Brooklyn Shamrocks.
-        </p>
-        <div class="grid md:grid-cols-3 gap-6">
-          {jerseyEras.map((jersey) => (
-            <div class="bg-white border border-gray-200 rounded-xl p-6 text-center">
-              <div class="flex justify-center gap-2 mb-4">
-                {jersey.colors.map((color) => (
-                  <div class="w-8 h-8 rounded-full border-2 border-gray-200" style={`background-color: ${color}`}></div>
-                ))}
-              </div>
-              <div class="font-bold text-shamrock-700 mb-1">{jersey.era}</div>
-              <div class="text-xl font-bold text-gray-900">{jersey.sponsor}</div>
-              <div class="text-sm text-gray-500">{jersey.description}</div>
-            </div>
-          ))}
         </div>
       </div>
 
