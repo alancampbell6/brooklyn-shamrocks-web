@@ -10,12 +10,16 @@ const championships = [
     captain: 'Conor Connolly',
     manager: 'Tommy McConvey',
     highlight: true,
+    image: '/images/history/leagueChamps2023.jpg',
+    imageCaption: 'Senior League Champions celebration at Gaelic Park',
   },
   {
     year: '2020',
     title: 'New York Intermediate Football Champions',
     details: 'Promotion to Senior division',
     highlight: true,
+    image: '/images/history/intermediate_champs_2021.jpg',
+    imageCaption: 'Intermediate Championship winners',
   },
   {
     year: '2019',
@@ -27,6 +31,8 @@ const championships = [
     title: 'New York Junior A Football Champions',
     details: 'Foundation for future success',
     highlight: true,
+    image: '/images/history/2015_juniorA_champs.jpg',
+    imageCaption: 'Junior A Championship celebration',
   },
 ];
 
@@ -88,32 +94,47 @@ const guestOfHonor = [
 
       <div class="space-y-6">
         {championships.map((champ) => (
-          <div class={`rounded-2xl p-6 md:p-8 ${champ.highlight ? 'bg-gradient-to-r from-shamrock-700 to-shamrock-800 text-white' : 'bg-white border border-gray-200'}`}>
-            <div class="flex flex-col md:flex-row md:items-center gap-4">
-              <div class={`text-4xl md:text-5xl font-bold ${champ.highlight ? 'text-gold-400' : 'text-shamrock-700'}`}>
-                {champ.year}
+          <div class={`rounded-2xl overflow-hidden ${champ.highlight ? 'bg-gradient-to-r from-shamrock-700 to-shamrock-800 text-white' : 'bg-white border border-gray-200'}`}>
+            {champ.image && (
+              <div class="aspect-[21/9] overflow-hidden bg-gray-100">
+                <img
+                  src={champ.image}
+                  alt={champ.imageCaption || champ.title}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </div>
-              <div class="flex-1">
-                <h3 class={`text-xl md:text-2xl font-bold ${champ.highlight ? 'text-white' : 'text-gray-900'}`}>
-                  {champ.title}
-                </h3>
-                <p class={`mt-1 ${champ.highlight ? 'text-shamrock-100' : 'text-gray-600'}`}>
-                  {champ.details}
-                </p>
-                {(champ.captain || champ.manager) && (
-                  <div class={`mt-3 flex flex-wrap gap-4 text-sm ${champ.highlight ? 'text-shamrock-200' : 'text-gray-500'}`}>
-                    {champ.captain && <span>Captain: <strong>{champ.captain}</strong></span>}
-                    {champ.manager && <span>Manager: <strong>{champ.manager}</strong></span>}
+            )}
+            <div class="p-6 md:p-8">
+              <div class="flex flex-col md:flex-row md:items-center gap-4">
+                <div class={`text-4xl md:text-5xl font-bold ${champ.highlight ? 'text-gold-400' : 'text-shamrock-700'}`}>
+                  {champ.year}
+                </div>
+                <div class="flex-1">
+                  <h3 class={`text-xl md:text-2xl font-bold ${champ.highlight ? 'text-white' : 'text-gray-900'}`}>
+                    {champ.title}
+                  </h3>
+                  <p class={`mt-1 ${champ.highlight ? 'text-shamrock-100' : 'text-gray-600'}`}>
+                    {champ.details}
+                  </p>
+                  {(champ.captain || champ.manager) && (
+                    <div class={`mt-3 flex flex-wrap gap-4 text-sm ${champ.highlight ? 'text-shamrock-200' : 'text-gray-500'}`}>
+                      {champ.captain && <span>Captain: <strong>{champ.captain}</strong></span>}
+                      {champ.manager && <span>Manager: <strong>{champ.manager}</strong></span>}
+                    </div>
+                  )}
+                  {champ.imageCaption && (
+                    <p class={`text-xs mt-3 italic ${champ.highlight ? 'text-shamrock-200' : 'text-gray-400'}`}>{champ.imageCaption}</p>
+                  )}
+                </div>
+                {champ.highlight && (
+                  <div class="flex-shrink-0 hidden md:block">
+                    <svg class="w-16 h-16 text-gold-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
                   </div>
                 )}
               </div>
-              {champ.highlight && (
-                <div class="flex-shrink-0">
-                  <svg class="w-16 h-16 text-gold-400" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                  </svg>
-                </div>
-              )}
             </div>
           </div>
         ))}
