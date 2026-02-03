@@ -21,45 +21,6 @@ const leisurewear = productsData.products.filter(p => p.category === 'leisurewea
     size="small"
   />
 
-  <!-- Main CTA Section -->
-  <section class="py-12 md:py-16 bg-gradient-to-b from-shamrock-900 to-shamrock-800">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="inline-flex items-center gap-2 bg-white/10 text-shamrock-100 px-4 py-2 rounded-full text-sm mb-6">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-        Official O'Neills Partner
-      </div>
-
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-        Shop the Official Store
-      </h2>
-      <p class="text-shamrock-100 text-lg max-w-2xl mx-auto mb-8">
-        All Brooklyn Shamrocks merchandise is available through our official partner O'Neills,
-        the leading manufacturer of GAA sportswear. Quality gear shipped directly to your door.
-      </p>
-
-      <a
-        href={storeUrl}
-        target="_blank"
-        rel="noopener"
-        class="inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-gray-900 font-bold px-8 py-4 rounded-xl text-lg transition-all hover:scale-105 shadow-lg"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-        </svg>
-        Visit Official Store
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-        </svg>
-      </a>
-
-      <p class="text-shamrock-200 text-sm mt-4">
-        Ships to USA & Ireland
-      </p>
-    </div>
-  </section>
-
   <!-- Featured Products -->
   <section class="py-12 md:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -250,6 +211,45 @@ const leisurewear = productsData.products.filter(p => p.category === 'leisurewea
           </a>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- Main CTA Section -->
+  <section class="py-12 md:py-16 bg-gradient-to-b from-shamrock-900 to-shamrock-800">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-2 bg-white/10 text-shamrock-100 px-4 py-2 rounded-full text-sm mb-6">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        Official O'Neills Partner
+      </div>
+
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+        Shop the Official Store
+      </h2>
+      <p class="text-shamrock-100 text-lg max-w-2xl mx-auto mb-8">
+        All Brooklyn Shamrocks merchandise is available through our official partner O'Neills,
+        the leading manufacturer of GAA sportswear. Quality gear shipped directly to your door.
+      </p>
+
+      <a
+        href={storeUrl}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-3 bg-gold-500 hover:bg-gold-400 text-gray-900 font-bold px-8 py-4 rounded-xl text-lg transition-all hover:scale-105 shadow-lg"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        Visit Official Store
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      </a>
+
+      <p class="text-shamrock-200 text-sm mt-4">
+        Ships to USA & Ireland
+      </p>
     </div>
   </section>
 
