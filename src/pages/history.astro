@@ -15,6 +15,7 @@ const timeline = [
     description: 'Irish Haven in Sunset Park with Brooklyn Shamrocks fixtures displayed in the top left corner. Pictured is Irish Haven founder Frank Lawler behind the taps - a glimpse into the Brooklyn Irish community that supported the club.',
     image: '/images/history/1967_irish_haven.jpg',
     imageCaption: 'Frank Lawler at Irish Haven, Sunset Park, 1967',
+    imagePosition: 'top',
   },
   {
     year: '1972',
@@ -233,7 +234,7 @@ const jerseyEras = [
                       <img
                         src={item.image}
                         alt={item.imageCaption || item.title}
-                        class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        class={`w-full h-full object-cover hover:scale-105 transition-transform duration-300 ${item.imagePosition === 'top' ? 'object-top' : ''}`}
                         loading="lazy"
                       />
                     </button>
