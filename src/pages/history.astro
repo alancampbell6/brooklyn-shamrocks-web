@@ -15,20 +15,26 @@ const timeline = [
     description: 'Inaugural Annual Dinner Dance celebration at Bay Ridge Manor, beginning a tradition that continues to this day.',
   },
   {
-    year: '1990s',
+    year: '1997',
     title: 'Classic Era',
     description: 'The club competed proudly wearing the iconic green jerseys with bold "BROOKLYN" lettering across the chest. A golden era that produced many memorable moments.',
+    image: '/images/history/1997_team_photo.jpg',
+    imageCaption: 'Brooklyn Shamrocks team photo, 1997',
   },
   {
     year: '2011',
     title: 'Brooklyn Shamrocks / Long Island Gaels Partnership',
     description: 'Combined team formed with Long Island Gaels, strengthening both clubs and expanding the reach of Gaelic games in the New York area.',
+    image: '/images/history/2011_team_photo.jpg',
+    imageCaption: 'Brooklyn Shamrocks / Long Island Gaels combined team',
   },
   {
     year: '2015',
     title: 'Junior A Champions',
     description: 'Won the New York Junior A Football Championship - the first major title of the modern era and foundation for future success.',
     highlight: true,
+    image: '/images/history/2015_juniorA_champs.jpg',
+    imageCaption: 'Junior A Championship celebration',
   },
   {
     year: '2019',
@@ -40,12 +46,16 @@ const timeline = [
     title: 'Intermediate Champions',
     description: 'Won the New York Intermediate Football Championship, earning promotion to the Senior division.',
     highlight: true,
+    image: '/images/history/intermediate_champs_2021.jpg',
+    imageCaption: 'Intermediate Championship winners',
   },
   {
     year: '2022',
     title: 'Senior League Champions',
     description: 'Historic first-ever Senior Football League championship. Brooklyn 2-13 defeated Westmeath 1-13 at Gaelic Park under manager Tommy McConvey. Captain Conor Connolly lifted the trophy.',
     highlight: true,
+    image: '/images/history/leagueChamps2023.jpg',
+    imageCaption: 'Senior League Champions at Gaelic Park',
   },
   {
     year: '2025',
@@ -61,50 +71,6 @@ const jerseyEras = [
   { era: '2015-Present', sponsor: 'IRL', description: 'IRL Systems', colors: ['#1a5632', '#ffd700', '#ffffff'] },
 ];
 
-const historicPhotos = [
-  {
-    src: '/images/history/1997_team_photo.jpg',
-    title: 'Brooklyn Shamrocks 1997',
-    year: '1997',
-    description: 'Classic team photo featuring the iconic green jerseys with "BROOKLYN" lettering.',
-  },
-  {
-    src: '/images/history/2011_team_photo.jpg',
-    title: 'Brooklyn Shamrocks / Long Island Gaels',
-    year: '2011',
-    description: 'Combined team photo showing the partnership between Brooklyn Shamrocks and Long Island Gaels.',
-  },
-  {
-    src: '/images/history/2015_juniorA_champs.jpg',
-    title: 'Junior A Champions',
-    year: '2015',
-    description: 'Celebrating our New York Junior A Football Championship victory.',
-  },
-  {
-    src: '/images/history/intermediate_champs_2021.jpg',
-    title: 'Intermediate Champions',
-    year: '2020',
-    description: 'Night-time celebration after winning the Intermediate Championship and earning promotion to Senior.',
-  },
-  {
-    src: '/images/history/juniorB_champs.jpg',
-    title: 'Junior B Champions',
-    year: '',
-    description: 'Championship celebration at Gaelic Park.',
-  },
-  {
-    src: '/images/history/Brooklyn_players_for_newYork_vs_leitrim_win.jpg',
-    title: 'Brooklyn Players with New York',
-    year: '',
-    description: 'Brooklyn Shamrocks players representing New York county in inter-county competition.',
-  },
-  {
-    src: '/images/history/leagueChamps2023.jpg',
-    title: 'Senior League Champions',
-    year: '2022',
-    description: 'Historic Senior Football League Championship victory at Gaelic Park. Brooklyn 2-13, Westmeath 1-13.',
-  },
-];
 ---
 
 <BaseLayout title="Club History" description="The history of Brooklyn Shamrocks GAA since 1955 - our story, achievements, and 70 years of Gaelic football in Brooklyn">
@@ -167,34 +133,6 @@ const historicPhotos = [
         </div>
       </div>
 
-      <!-- Photo Gallery -->
-      <div class="mb-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-8">Through the Years</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {historicPhotos.map((photo) => (
-            <div class="group bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
-              <div class="aspect-[4/3] overflow-hidden bg-gray-100">
-                <img
-                  src={photo.src}
-                  alt={photo.title}
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-              </div>
-              <div class="p-4">
-                {photo.year && (
-                  <span class="inline-block px-2 py-1 bg-shamrock-100 text-shamrock-700 text-xs font-semibold rounded mb-2">
-                    {photo.year}
-                  </span>
-                )}
-                <h3 class="font-bold text-gray-900">{photo.title}</h3>
-                <p class="text-sm text-gray-600 mt-1">{photo.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <!-- Timeline -->
       <div class="mb-16">
         <h2 class="text-2xl font-bold text-gray-900 mb-8">Timeline</h2>
@@ -210,10 +148,25 @@ const historicPhotos = [
                 <div class={`absolute left-2 md:left-6 w-5 h-5 rounded-full border-4 border-white ${item.highlight ? 'bg-gold-500 ring-4 ring-gold-100' : 'bg-shamrock-600'}`}></div>
 
                 <!-- Content -->
-                <div class={`${item.highlight ? 'bg-gradient-to-r from-shamrock-50 to-gold-50 border-l-4 border-shamrock-600' : 'bg-white border border-gray-100'} rounded-xl p-6`}>
-                  <span class="text-shamrock-700 font-bold text-lg">{item.year}</span>
-                  <h3 class="text-xl font-bold text-gray-900 mt-1">{item.title}</h3>
-                  <p class="text-gray-600 mt-2">{item.description}</p>
+                <div class={`${item.highlight ? 'bg-gradient-to-r from-shamrock-50 to-gold-50 border-l-4 border-shamrock-600' : 'bg-white border border-gray-100'} rounded-xl overflow-hidden`}>
+                  {item.image && (
+                    <div class="aspect-[16/9] overflow-hidden bg-gray-100">
+                      <img
+                        src={item.image}
+                        alt={item.imageCaption || item.title}
+                        class="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div class="p-6">
+                    <span class="text-shamrock-700 font-bold text-lg">{item.year}</span>
+                    <h3 class="text-xl font-bold text-gray-900 mt-1">{item.title}</h3>
+                    <p class="text-gray-600 mt-2">{item.description}</p>
+                    {item.imageCaption && (
+                      <p class="text-xs text-gray-400 mt-3 italic">{item.imageCaption}</p>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
