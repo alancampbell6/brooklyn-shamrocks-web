@@ -215,35 +215,45 @@ const jerseyEras = [
           <div class="absolute left-4 md:left-8 top-0 bottom-0 w-0.5 bg-shamrock-200"></div>
 
           <!-- Timeline Items -->
-          <div class="space-y-8">
-            {timeline.map((item) => (
-              <div class="relative pl-12 md:pl-20">
+          <div id="timeline-container" class="space-y-8">
+            {timeline.map((item, index) => (
+              <div class={`timeline-item relative pl-12 md:pl-20 ${index >= 8 ? 'hidden' : ''}`} data-index={index}>
                 <!-- Dot -->
                 <div class={`absolute left-2 md:left-6 w-5 h-5 rounded-full border-4 border-white ${item.highlight ? 'bg-gold-500 ring-4 ring-gold-100' : 'bg-shamrock-600'}`}></div>
 
                 <!-- Content -->
                 <div class={`${item.highlight ? 'bg-gradient-to-r from-shamrock-50 to-gold-50 border-l-4 border-shamrock-600' : 'bg-white border border-gray-100'} rounded-xl overflow-hidden`}>
                   {item.image && (
-                    <div class="aspect-[16/9] overflow-hidden bg-gray-100">
+                    <button
+                      type="button"
+                      class="w-full aspect-[16/9] overflow-hidden bg-gray-100 cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-shamrock-500"
+                      data-lightbox={item.image}
+                      data-caption={item.imageCaption || item.title}
+                    >
                       <img
                         src={item.image}
                         alt={item.imageCaption || item.title}
-                        class="w-full h-full object-cover"
+                        class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                       />
-                    </div>
+                    </button>
                   )}
                   {item.images && (
                     <div class="grid grid-cols-2 gap-1 bg-gray-100">
                       {item.images.map((img, idx) => (
-                        <div class="aspect-[4/3] overflow-hidden">
+                        <button
+                          type="button"
+                          class="aspect-[4/3] overflow-hidden cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-shamrock-500"
+                          data-lightbox={img}
+                          data-caption={`${item.imageCaption || item.title} - Photo ${idx + 1}`}
+                        >
                           <img
                             src={img}
                             alt={`${item.title} - Photo ${idx + 1}`}
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                             loading="lazy"
                           />
-                        </div>
+                        </button>
                       ))}
                     </div>
                   )}
@@ -266,6 +276,46 @@ const jerseyEras = [
                 </div>
               </div>
             ))}
+          </div>
+
+          <!-- Load More Button -->
+          <div id="load-more-container" class="mt-8 text-center">
+            <button
+              id="load-more-btn"
+              type="button"
+              class="inline-flex items-center gap-2 px-6 py-3 bg-shamrock-700 text-white font-semibold rounded-xl hover:bg-shamrock-800 transition-colors"
+            >
+              <span>Load More History</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <p id="load-more-count" class="text-sm text-gray-500 mt-2"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lightbox Modal -->
+      <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm">
+        <button
+          id="lightbox-close"
+          type="button"
+          class="absolute top-4 right-4 z-10 p-2 text-white/80 hover:text-white transition-colors"
+          aria-label="Close"
+        >
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div class="flex items-center justify-center w-full h-full p-4">
+          <div class="max-w-5xl max-h-full">
+            <img
+              id="lightbox-img"
+              src=""
+              alt=""
+              class="max-w-full max-h-[85vh] object-contain mx-auto"
+            />
+            <p id="lightbox-caption" class="text-white/80 text-center mt-4 text-sm"></p>
           </div>
         </div>
       </div>
@@ -347,3 +397,83 @@ const jerseyEras = [
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  // Load More functionality
+  const ITEMS_PER_PAGE = 8;
+  let visibleCount = ITEMS_PER_PAGE;
+  const timelineItems = document.querySelectorAll('.timeline-item');
+  const loadMoreBtn = document.getElementById('load-more-btn');
+  const loadMoreContainer = document.getElementById('load-more-container');
+  const loadMoreCount = document.getElementById('load-more-count');
+  const totalItems = timelineItems.length;
+
+  function updateLoadMoreButton() {
+    const remaining = totalItems - visibleCount;
+    if (remaining <= 0) {
+      loadMoreContainer?.classList.add('hidden');
+    } else {
+      loadMoreCount!.textContent = `Showing ${visibleCount} of ${totalItems} moments`;
+    }
+  }
+
+  function showMoreItems() {
+    const nextCount = Math.min(visibleCount + ITEMS_PER_PAGE, totalItems);
+    timelineItems.forEach((item, index) => {
+      if (index < nextCount) {
+        item.classList.remove('hidden');
+      }
+    });
+    visibleCount = nextCount;
+    updateLoadMoreButton();
+  }
+
+  loadMoreBtn?.addEventListener('click', showMoreItems);
+  updateLoadMoreButton();
+
+  // Lightbox functionality
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxClose = document.getElementById('lightbox-close');
+  const lightboxTriggers = document.querySelectorAll('[data-lightbox]');
+
+  function openLightbox(src: string, caption: string) {
+    if (lightbox && lightboxImg && lightboxCaption) {
+      lightboxImg.src = src;
+      lightboxImg.alt = caption;
+      lightboxCaption.textContent = caption;
+      lightbox.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeLightbox() {
+    if (lightbox) {
+      lightbox.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  }
+
+  lightboxTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const src = trigger.getAttribute('data-lightbox') || '';
+      const caption = trigger.getAttribute('data-caption') || '';
+      openLightbox(src, caption);
+    });
+  });
+
+  lightboxClose?.addEventListener('click', closeLightbox);
+
+  lightbox?.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeLightbox();
+    }
+  });
+</script>
