@@ -22,6 +22,18 @@ const timeline = [
     imageCaption: 'Brooklyn Shamrocks team photo, 1997',
   },
   {
+    year: '2002',
+    title: 'Shore Road Days',
+    description: 'Brooklyn played home games by the Verrazano Bridge on Shore Road in Bay Ridge - a quintessentially Brooklyn setting for Gaelic football. Featured: Declan McAleer (on the ball), Enda Lally (#14), Bobby Murphy & John Egan.',
+    images: [
+      '/images/history/2002_1.jpg',
+      '/images/history/2002_2.jpg',
+      '/images/history/2002_3.jpg',
+      '/images/history/2002_4.jpg',
+    ],
+    imageCaption: 'Brooklyn vs Long Island at Shore Road, Bay Ridge',
+  },
+  {
     year: '2011',
     title: 'Brooklyn Shamrocks / Long Island Gaels Partnership',
     description: 'Combined team formed with Long Island Gaels, strengthening both clubs and expanding the reach of Gaelic games in the New York area.',
@@ -157,6 +169,20 @@ const jerseyEras = [
                         class="w-full h-full object-cover"
                         loading="lazy"
                       />
+                    </div>
+                  )}
+                  {item.images && (
+                    <div class="grid grid-cols-2 gap-1 bg-gray-100">
+                      {item.images.map((img, idx) => (
+                        <div class="aspect-[4/3] overflow-hidden">
+                          <img
+                            src={img}
+                            alt={`${item.title} - Photo ${idx + 1}`}
+                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                        </div>
+                      ))}
                     </div>
                   )}
                   <div class="p-6">
