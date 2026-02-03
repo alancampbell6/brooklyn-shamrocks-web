@@ -60,6 +60,45 @@ const jerseyEras = [
   { era: '2000s-2010s', sponsor: 'IRE', description: 'IRE Sponsor', colors: ['#1a5632', '#ffd700'] },
   { era: '2015-Present', sponsor: 'IRL', description: 'IRL Systems', colors: ['#1a5632', '#ffd700', '#ffffff'] },
 ];
+
+const historicPhotos = [
+  {
+    src: '/images/history/1997_team_photo.jpg',
+    title: 'Brooklyn Shamrocks 1997',
+    year: '1997',
+    description: 'Classic team photo featuring the iconic green jerseys with "BROOKLYN" lettering.',
+  },
+  {
+    src: '/images/history/2011_team_photo.jpg',
+    title: 'Brooklyn Shamrocks / Long Island Gaels',
+    year: '2011',
+    description: 'Combined team photo showing the partnership between Brooklyn Shamrocks and Long Island Gaels.',
+  },
+  {
+    src: '/images/history/2015_juniorA_champs.jpg',
+    title: 'Junior A Champions',
+    year: '2015',
+    description: 'Celebrating our New York Junior A Football Championship victory.',
+  },
+  {
+    src: '/images/history/intermediate_champs_2021.jpg',
+    title: 'Intermediate Champions',
+    year: '2020',
+    description: 'Night-time celebration after winning the Intermediate Championship and earning promotion to Senior.',
+  },
+  {
+    src: '/images/history/juniorB_champs.jpg',
+    title: 'Junior B Champions',
+    year: '',
+    description: 'Championship celebration at Gaelic Park.',
+  },
+  {
+    src: '/images/history/Brooklyn_players_for_newYork_vs_leitrim_win.jpg',
+    title: 'Brooklyn Players with New York',
+    year: '',
+    description: 'Brooklyn Shamrocks players representing New York county in inter-county competition.',
+  },
+];
 ---
 
 <BaseLayout title="Club History" description="The history of Brooklyn Shamrocks GAA since 1955 - our story, achievements, and 70 years of Gaelic football in Brooklyn">
@@ -119,6 +158,34 @@ const jerseyEras = [
             bringing the joy of Gaelic games to Brooklyn and welcoming anyone who shares our passion for
             sport and community.
           </p>
+        </div>
+      </div>
+
+      <!-- Photo Gallery -->
+      <div class="mb-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">Through the Years</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {historicPhotos.map((photo) => (
+            <div class="group bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+              <div class="aspect-[4/3] overflow-hidden bg-gray-100">
+                <img
+                  src={photo.src}
+                  alt={photo.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              </div>
+              <div class="p-4">
+                {photo.year && (
+                  <span class="inline-block px-2 py-1 bg-shamrock-100 text-shamrock-700 text-xs font-semibold rounded mb-2">
+                    {photo.year}
+                  </span>
+                )}
+                <h3 class="font-bold text-gray-900">{photo.title}</h3>
+                <p class="text-sm text-gray-600 mt-1">{photo.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
