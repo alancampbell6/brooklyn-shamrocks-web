@@ -123,6 +123,15 @@ const timeline = [
     imageCaption: 'Senior League Champions at Gaelic Park',
   },
   {
+    year: '2023',
+    title: 'New York Make History',
+    description: 'Seven Brooklyn Shamrocks players and manager featured as New York achieved their first-ever Connacht SFC victory, defeating Leitrim in a dramatic penalty shootout at Gaelic Park. The match finished 0-15 to 0-15 after extra time. Club stalwart Niall Madine scored a crucial penalty, while Michael Cunningham made key saves in goal. Bill Maher and Shane Boyle also featured for New York in this historic win after 23 previous attempts.',
+    highlight: true,
+    image: '/images/history/Brooklyn_players_for_newYork_vs_leitrim_win.jpg',
+    imageCaption: 'Brooklyn Shamrocks players and manager after the historic win (R-L): Alan Campbell, Niall Madine, Tommy McConvey (Manager), Bill Maher, Shane Boyle, Paddy Boyle, Michael Cunningham',
+    link: 'https://www.rte.ie/sport/football/2023/0408/1375905-new-york-make-history-with-shootout-win-over-leitrim/',
+  },
+  {
     year: '2025',
     title: '70th Anniversary',
     description: 'The 47th Annual Dinner Dance celebrates 70 years of Brooklyn Shamrocks - seven decades of Gaelic football excellence in Brooklyn.',
@@ -244,6 +253,14 @@ const jerseyEras = [
                     <p class="text-gray-600 mt-2">{item.description}</p>
                     {item.imageCaption && (
                       <p class="text-xs text-gray-400 mt-3 italic">{item.imageCaption}</p>
+                    )}
+                    {item.link && (
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-sm text-shamrock-700 hover:text-shamrock-800 mt-3 font-medium">
+                        Read full article
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
                     )}
                   </div>
                 </div>
