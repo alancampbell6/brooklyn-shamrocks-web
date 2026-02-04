@@ -32,7 +32,7 @@ const monthDay = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'num
       <div class="flex-1 text-center">
         <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
           {homeTeam === 'Brooklyn Shamrocks' ? (
-            <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks" class="w-10 h-10 object-contain" />
+            <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks" width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
             <span class="text-gray-400 font-bold text-sm">{homeTeam.substring(0, 2).toUpperCase()}</span>
           )}
@@ -52,7 +52,7 @@ const monthDay = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'num
       <div class="flex-1 text-center">
         <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
           {awayTeam === 'Brooklyn Shamrocks' ? (
-            <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks" class="w-10 h-10 object-contain" />
+            <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks" width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
             <span class="text-gray-400 font-bold text-sm">{awayTeam.substring(0, 2).toUpperCase()}</span>
           )}

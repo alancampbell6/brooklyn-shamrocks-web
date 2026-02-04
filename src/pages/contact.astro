@@ -2,26 +2,51 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 
-const socialLinks = [
-  {
-    name: 'Facebook',
-    href: '#',
-    icon: 'facebook',
+// LocalBusiness schema for training location
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "SportsActivityLocation",
+  "name": "Brooklyn Shamrocks GAA Training Ground",
+  "description": "Training location for Brooklyn Shamrocks GAA, New York's oldest Gaelic Athletic Association club.",
+  "url": "https://brooklynshamrocks.com/contact",
+  "telephone": "",
+  "email": "info@brooklynshamrocks.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Randalls Island Field 73",
+    "addressLocality": "New York",
+    "addressRegion": "NY",
+    "postalCode": "10035",
+    "addressCountry": "US"
   },
-  {
-    name: 'Instagram',
-    href: '#',
-    icon: 'instagram',
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "40.7931",
+    "longitude": "-73.9214"
   },
-  {
-    name: 'Twitter',
-    href: '#',
-    icon: 'twitter',
-  },
-];
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Tuesday",
+      "opens": "19:00",
+      "closes": "21:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Thursday",
+      "opens": "19:00",
+      "closes": "21:00"
+    }
+  ],
+  "sameAs": [
+    "https://www.facebook.com/BrooklynShamrocksGAA",
+    "https://www.instagram.com/brooklynshamrocksgaa",
+    "https://twitter.com/BklynShamrocks"
+  ]
+};
 ---
 
-<BaseLayout title="Contact" description="Get in touch with Brooklyn Shamrocks GAA - location, contact info, and directions">
+<BaseLayout title="Contact" description="Get in touch with Brooklyn Shamrocks GAA - location, contact info, and directions" schema={localBusinessSchema}>
   <Hero
     title="Contact Us"
     subtitle="Get in touch with Brooklyn Shamrocks GAA"

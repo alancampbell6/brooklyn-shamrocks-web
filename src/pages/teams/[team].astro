@@ -27,9 +27,35 @@ const teamResults = resultsData.results
   .filter(r => r.team === team.shortName)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   .slice(0, 3);
+
+// BreadcrumbList schema for this team page
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://brooklynshamrocks.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Teams",
+      "item": "https://brooklynshamrocks.com/teams"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": team.name,
+      "item": `https://brooklynshamrocks.com/teams/${team.slug}`
+    }
+  ]
+};
 ---
 
-<BaseLayout title={team.name} description={team.description}>
+<BaseLayout title={team.name} description={team.description} schema={breadcrumbSchema}>
   <Hero
     title={team.name}
     subtitle={team.sport}
