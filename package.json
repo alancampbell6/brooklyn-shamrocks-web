@@ -12,12 +12,13 @@
     "scrape": "node scripts/scrape-fixtures.js"
   },
   "dependencies": {
-    "astro": "^4.16.0",
     "@astrojs/tailwind": "^5.1.0",
-    "tailwindcss": "^3.4.0",
-    "cheerio": "^1.0.0"
+    "astro": "^4.16.0",
+    "cheerio": "^1.0.0",
+    "tailwindcss": "^3.4.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "sharp": "^0.34.5"
   }
 }

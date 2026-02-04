@@ -6,9 +6,54 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  schema?: object;
 }
 
-const { title, description = 'Brooklyn Shamrocks GAA Club - Gaelic Athletic Association in Brooklyn, New York' } = Astro.props;
+const {
+  title,
+  description = 'Brooklyn Shamrocks GAA Club - Gaelic Athletic Association in Brooklyn, New York',
+  ogImage = '/images/crest_white_bg.png',
+  schema
+} = Astro.props;
+
+const siteUrl = 'https://brooklynshamrocks.com';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImageUrl = new URL(ogImage, siteUrl).toString();
+const fullTitle = `${title} | Brooklyn Shamrocks GAA`;
+
+// Default Organization schema
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "SportsOrganization",
+  "name": "Brooklyn Shamrocks GAA",
+  "alternateName": "Brooklyn Shamrocks",
+  "url": siteUrl,
+  "logo": `${siteUrl}/images/crest_white_bg.png`,
+  "foundingDate": "1955",
+  "description": "Brooklyn Shamrocks GAA is New York's oldest Gaelic Athletic Association club, founded in 1955. We promote Irish culture and Gaelic games in the New York area.",
+  "sport": "Gaelic Football",
+  "location": {
+    "@type": "Place",
+    "name": "Randalls Island Field 73",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "addressCountry": "US"
+    }
+  },
+  "sameAs": [
+    "https://www.facebook.com/BrooklynShamrocksGAA",
+    "https://www.instagram.com/brooklynshamrocksgaa",
+    "https://twitter.com/BklynShamrocks"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "brooklynshamrocksgaa@gmail.com",
+    "contactType": "general"
+  }
+};
 ---
 
 <!doctype html>
@@ -18,12 +63,30 @@ const { title, description = 'Brooklyn Shamrocks GAA Club - Gaelic Athletic Asso
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="author" content="Brooklyn Shamrocks GAA" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Brooklyn Shamrocks GAA" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Brooklyn Shamrocks GAA - New York's Oldest GAA Club" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@BklynShamrocks" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content="Brooklyn Shamrocks GAA - New York's Oldest GAA Club" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -33,7 +96,13 @@ const { title, description = 'Brooklyn Shamrocks GAA Club - Gaelic Athletic Asso
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <title>{title} | Brooklyn Shamrocks GAA</title>
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+    {schema && (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    )}
+
+    <title>{fullTitle}</title>
   </head>
   <body class="min-h-screen flex flex-col">
     <Header />
