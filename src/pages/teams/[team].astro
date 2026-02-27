@@ -17,9 +17,11 @@ export function getStaticPaths() {
 
 const { team } = Astro.props;
 
-// Get fixtures and results for this team
+// Compare date strings directly (YYYY-MM-DD sorts lexicographically) to avoid
+// timezone off-by-one issues when comparing UTC-parsed dates to local time.
+const todayStr = new Date().toLocaleDateString('en-CA'); // en-CA gives YYYY-MM-DD in local time
 const teamFixtures = fixturesData.fixtures
-  .filter(f => f.team === team.shortName && new Date(f.date) >= new Date())
+  .filter(f => f.team === team.shortName && f.date >= todayStr)
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   .slice(0, 3);
 

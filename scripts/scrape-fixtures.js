@@ -92,13 +92,34 @@ function parseTime(datetime) {
 }
 
 /**
- * Determine team category from competition name
+ * Parse a GAA score string (e.g. "2-14") to its total points equivalent.
+ * Formula: goals × 3 + points
+ */
+function parseGAAScore(score) {
+  const parts = score.split('-');
+  if (parts.length === 2) {
+    const goals = parseInt(parts[0], 10);
+    const points = parseInt(parts[1], 10);
+    if (!isNaN(goals) && !isNaN(points)) {
+      return goals * 3 + points;
+    }
+  }
+  return parseInt(score, 10) || 0;
+}
+
+/**
+ * Determine team category from competition name.
+ * Returns 'Junior Football', 'Senior Football', or logs a warning for unknown formats.
  */
 function getTeamCategory(competition) {
   const comp = competition.toLowerCase();
-  if (comp.includes('junior') || comp.includes('jfc')) {
+  if (comp.includes('junior') || comp.includes('jfc') || comp.includes('jnr')) {
     return 'Junior Football';
   }
+  if (comp.includes('senior') || comp.includes('sfc') || comp.includes('intermediate')) {
+    return 'Senior Football';
+  }
+  console.warn(`  ⚠️  Unknown competition format, defaulting to Senior Football: "${competition}"`);
   return 'Senior Football';
 }
 
@@ -293,10 +314,13 @@ async function main() {
   if (results.length > 0) {
     console.log('\nRecent Results:');
     results.slice(0, 5).forEach(r => {
-      const outcome = r.homeTeam === CONFIG.teamName
-        ? (parseInt(r.homeScore) > parseInt(r.awayScore) ? 'W' : 'L')
-        : (parseInt(r.awayScore) > parseInt(r.homeScore) ? 'W' : 'L');
-      console.log(`  ${r.date}: ${r.homeTeam} ${r.homeScore} - ${r.awayScore} ${r.awayTeam} (${r.round || r.competition})`);
+      const shamrocksIsHome = r.homeTeam === CONFIG.teamName;
+      const shamrocksScore = shamrocksIsHome ? r.homeScore : r.awayScore;
+      const opponentScore = shamrocksIsHome ? r.awayScore : r.homeScore;
+      const outcome = parseGAAScore(shamrocksScore) > parseGAAScore(opponentScore) ? 'W'
+        : parseGAAScore(shamrocksScore) < parseGAAScore(opponentScore) ? 'L'
+        : 'D';
+      console.log(`  ${r.date} [${outcome}]: ${r.homeTeam} ${r.homeScore} - ${r.awayScore} ${r.awayTeam} (${r.round || r.competition})`);
     });
   }
 

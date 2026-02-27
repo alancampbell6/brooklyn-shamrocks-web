@@ -1,0 +1,25 @@
+/**
+ * Parse a GAA score string (e.g. "2-14") to its total points equivalent.
+ * Formula: goals × 3 + points
+ */
+export function parseGAAScore(score: string): number {
+  const parts = score.split('-');
+  if (parts.length === 2) {
+    const goals = parseInt(parts[0], 10);
+    const points = parseInt(parts[1], 10);
+    if (!isNaN(goals) && !isNaN(points)) {
+      return goals * 3 + points;
+    }
+  }
+  return parseInt(score, 10) || 0;
+}
+
+export type MatchOutcome = 'win' | 'loss' | 'draw';
+
+export function getOutcome(shamrocksScore: string, opponentScore: string): MatchOutcome {
+  const shamrocksTotal = parseGAAScore(shamrocksScore);
+  const opponentTotal = parseGAAScore(opponentScore);
+  if (shamrocksTotal > opponentTotal) return 'win';
+  if (shamrocksTotal < opponentTotal) return 'loss';
+  return 'draw';
+}

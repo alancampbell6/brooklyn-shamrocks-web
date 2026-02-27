@@ -9,10 +9,11 @@ import fixturesData from '../data/fixtures.json';
 import resultsData from '../data/results.json';
 import videosData from '../data/videos.json';
 import sponsorsData from '../data/sponsors.json';
+import { CLUB_NAME } from '../lib/constants';
 
 // Helper function to find video URL for a result
 function findVideoUrl(result: typeof resultsData.results[0]): string | undefined {
-  const opponent = result.homeTeam === 'Brooklyn Shamrocks' ? result.awayTeam : result.homeTeam;
+  const opponent = result.homeTeam === CLUB_NAME ? result.awayTeam : result.homeTeam;
   const video = videosData.videos.find(v => {
     const opponentMatch = v.opponent.toLowerCase() === opponent.toLowerCase() ||
                           opponent.toLowerCase().includes(v.opponent.toLowerCase()) ||
@@ -23,9 +24,11 @@ function findVideoUrl(result: typeof resultsData.results[0]): string | undefined
   return video?.url;
 }
 
-// Get the next upcoming fixture
+// Compare date strings directly (YYYY-MM-DD sorts lexicographically) to avoid
+// timezone off-by-one issues when comparing UTC-parsed dates to local time.
+const todayStr = new Date().toLocaleDateString('en-CA'); // en-CA gives YYYY-MM-DD in local time
 const upcomingFixtures = fixturesData.fixtures
-  .filter(f => new Date(f.date) >= new Date())
+  .filter(f => f.date >= todayStr)
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
 const nextFixture = upcomingFixtures[0];
@@ -226,7 +229,7 @@ const quickLinks = [
           <a
             href={sponsor.url}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             class:list={[
               "group flex flex-col items-center p-6 rounded-xl transition-all hover:shadow-lg bg-white",
               sponsor.tier === 'primary' ? 'shadow-md' : ''

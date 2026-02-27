@@ -5,10 +5,12 @@ import ResultCard from '../components/ResultCard.astro';
 
 import resultsData from '../data/results.json';
 import videosData from '../data/videos.json';
+import { CLUB_NAME } from '../lib/constants';
+import { parseGAAScore } from '../lib/gaa';
 
 // Helper function to find video URL for a result
 function findVideoUrl(result: typeof resultsData.results[0]): string | undefined {
-  const opponent = result.homeTeam === 'Brooklyn Shamrocks' ? result.awayTeam : result.homeTeam;
+  const opponent = result.homeTeam === CLUB_NAME ? result.awayTeam : result.homeTeam;
   const video = videosData.videos.find(v => {
     const opponentMatch = v.opponent.toLowerCase() === opponent.toLowerCase() ||
                           opponent.toLowerCase().includes(v.opponent.toLowerCase()) ||
@@ -30,18 +32,9 @@ const years = [...new Set(resultsData.results.map(r => new Date(r.date).getFullY
 // Get unique team filters
 const teams = [...new Set(resultsData.results.map(r => r.team))].sort();
 
-// Helper to parse GAA score
-function parseGAAScore(score: string): number {
-  const parts = score.split('-');
-  if (parts.length === 2) {
-    return parseInt(parts[0]) * 3 + parseInt(parts[1]);
-  }
-  return parseInt(score) || 0;
-}
-
 // Calculate stats with outcome for each result
 const resultsWithOutcome = sortedResults.map(result => {
-  const shamrocksIsHome = result.homeTeam === 'Brooklyn Shamrocks';
+  const shamrocksIsHome = result.homeTeam === CLUB_NAME;
   const shamrocksScore = shamrocksIsHome ? result.homeScore : result.awayScore;
   const opponentScore = shamrocksIsHome ? result.awayScore : result.homeScore;
 
@@ -160,6 +153,11 @@ const totalDraws = resultsWithOutcome.filter(r => r.outcome === 'draw').length;
         <h3 class="text-lg font-semibold text-gray-900 mb-2">No Matches Found</h3>
         <p class="text-gray-500">No results match your selected filters.</p>
       </div>
+
+      <!-- Show all results when JS is disabled (filter buttons won't work) -->
+      <noscript>
+        <style>.result-item { display: block !important; } #no-results-message { display: none !important; }</style>
+      </noscript>
 
       <!-- Last Updated -->
       <div class="mt-8 text-center text-sm text-gray-500">

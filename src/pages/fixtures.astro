@@ -6,9 +6,11 @@ import SectionHeading from '../components/SectionHeading.astro';
 
 import fixturesData from '../data/fixtures.json';
 
-// Get all upcoming fixtures
+// Compare date strings directly (YYYY-MM-DD sorts lexicographically) to avoid
+// timezone off-by-one issues when comparing UTC-parsed dates to local time.
+const todayStr = new Date().toLocaleDateString('en-CA'); // en-CA gives YYYY-MM-DD in local time
 const upcomingFixtures = fixturesData.fixtures
-  .filter(f => new Date(f.date) >= new Date())
+  .filter(f => f.date >= todayStr)
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
 // Get unique team filters
@@ -80,6 +82,11 @@ const fixturesByMonth = upcomingFixtures.reduce((acc, fixture) => {
           <p class="text-gray-500">Check back soon for our upcoming schedule.</p>
         </div>
       )}
+
+      <!-- Show all fixtures when JS is disabled (filter buttons won't work) -->
+      <noscript>
+        <style>.fixture-item { display: block !important; }</style>
+      </noscript>
 
       <!-- Last Updated -->
       <div class="mt-8 text-center text-sm text-gray-500">

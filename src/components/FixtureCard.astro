@@ -1,4 +1,6 @@
 ---
+import { CLUB_NAME } from '../lib/constants';
+
 interface Props {
   date: string;
   time: string;
@@ -6,13 +8,12 @@ interface Props {
   awayTeam: string;
   venue: string;
   competition: string;
-  isHome?: boolean;
 }
 
-const { date, time, homeTeam, awayTeam, venue, competition, isHome = true } = Astro.props;
+const { date, time, homeTeam, awayTeam, venue, competition } = Astro.props;
 
 // Parse the date for display
-const dateObj = new Date(date);
+const dateObj = new Date(date + 'T00:00:00');
 const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
 const monthDay = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 ---
@@ -31,14 +32,14 @@ const monthDay = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'num
       <!-- Home Team -->
       <div class="flex-1 text-center">
         <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
-          {homeTeam === 'Brooklyn Shamrocks' ? (
-            <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks" width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
+          {homeTeam === CLUB_NAME ? (
+            <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
             <span class="text-gray-400 font-bold text-sm">{homeTeam.substring(0, 2).toUpperCase()}</span>
           )}
         </div>
         <p class="font-semibold text-gray-900 text-sm md:text-base">{homeTeam}</p>
-        {homeTeam === 'Brooklyn Shamrocks' && (
+        {homeTeam === CLUB_NAME && (
           <span class="text-xs text-shamrock-600">(Home)</span>
         )}
       </div>
@@ -51,14 +52,14 @@ const monthDay = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'num
       <!-- Away Team -->
       <div class="flex-1 text-center">
         <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
-          {awayTeam === 'Brooklyn Shamrocks' ? (
-            <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks" width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
+          {awayTeam === CLUB_NAME ? (
+            <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
             <span class="text-gray-400 font-bold text-sm">{awayTeam.substring(0, 2).toUpperCase()}</span>
           )}
         </div>
         <p class="font-semibold text-gray-900 text-sm md:text-base">{awayTeam}</p>
-        {awayTeam === 'Brooklyn Shamrocks' && (
+        {awayTeam === CLUB_NAME && (
           <span class="text-xs text-shamrock-600">(Away)</span>
         )}
       </div>

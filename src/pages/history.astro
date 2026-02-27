@@ -254,6 +254,11 @@ const timeline = [
             ))}
           </div>
 
+          <!-- Show all history items when JS is disabled -->
+          <noscript>
+            <style>.timeline-item { display: block !important; } #load-more-container { display: none !important; }</style>
+          </noscript>
+
           <!-- Load More Button -->
           <div id="load-more-container" class="mt-8 text-center">
             <button
