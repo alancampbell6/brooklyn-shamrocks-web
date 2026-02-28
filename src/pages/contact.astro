@@ -8,7 +8,7 @@ const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "SportsActivityLocation",
   "name": "Brooklyn Shamrocks GAA Training Ground",
-  "description": "Training location for Brooklyn Shamrocks GAA, New York's oldest Gaelic Athletic Association club.",
+  "description": "Training location for Brooklyn Shamrocks GAA, a sanctioned New York GAA club playing junior and senior Gaelic football in NYC.",
   "url": `${CLUB_SITE}/contact`,
   "telephone": "",
   "email": CLUB_EMAIL,
@@ -47,10 +47,10 @@ const localBusinessSchema = {
 };
 ---
 
-<BaseLayout title="Contact Us & Training Info" description="Get in touch with Brooklyn Shamrocks GAA. Training times, location at Randalls Island Field 73, match venue at Gaelic Park, and directions." schema={localBusinessSchema} preloadHero={true} breadcrumbs={[{ name: 'Contact', href: '/contact' }]}>
+<BaseLayout title="Contact Us - Play Gaelic Football in NYC" description="Join Brooklyn Shamrocks, a sanctioned New York GAA club. GAA transfers welcome. Training at Randalls Island, matches at Gaelic Park. Play junior or senior football in New York." schema={localBusinessSchema} preloadHero={true} breadcrumbs={[{ name: 'Contact', href: '/contact' }]}>
   <Hero
     title="Contact Us"
-    subtitle="Get in touch with Brooklyn Shamrocks GAA"
+    subtitle="Get in touch - new players and GAA transfers welcome"
     size="small"
   />
 
@@ -178,10 +178,10 @@ const localBusinessSchema = {
 
       <!-- Contact CTA -->
       <div class="mt-16 bg-shamrock-900 text-white p-8 md:p-12 rounded-2xl text-center">
-        <h2 class="text-2xl md:text-3xl font-bold mb-4">Ready to Join?</h2>
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">Ready to Play Football in NYC?</h2>
         <p class="text-shamrock-100 max-w-2xl mx-auto mb-8">
-          Whether you're an experienced player or completely new to Gaelic games,
-          we'd love to hear from you. Drop by training or send us a message!
+          Whether you're an experienced player looking to transfer or completely new to Gaelic games,
+          we'd love to hear from you. As a GAA-sanctioned club, we can process transfers from any GAA club worldwide. Drop by training or send us a message to get started!
         </p>
         <a href={`mailto:${CLUB_EMAIL}`} class="btn btn-secondary">
           Send Us an Email
