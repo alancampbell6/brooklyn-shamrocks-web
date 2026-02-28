@@ -28,11 +28,7 @@ const currentPath = Astro.url.pathname;
 
       <!-- Mobile Quick Nav — skewed links flush against logo accent (CPFC style) -->
       <nav id="mobile-quick-nav" class="flex md:hidden items-center h-full flex-1">
-        {[
-          { href: '/updates', label: 'Updates' },
-          { href: '/matches', label: 'Matches' },
-          { href: '/shop', label: 'Shop' },
-        ].map((item, i) => {
+        {NAV_ITEMS.filter(i => ['/updates', '/matches'].includes(i.href)).concat({ href: '/shop', label: 'Shop' }).map((item, i) => {
           const isActive = currentPath === item.href || currentPath.startsWith(item.href);
           return (
             <a
@@ -126,5 +122,29 @@ const currentPath = Astro.url.pathname;
     iconOpen?.classList.toggle('hidden', isOpen);
     iconClose?.classList.toggle('hidden', !isOpen);
     quickNav?.classList.toggle('hidden', isOpen);
+
+    // Focus trap: when menu is open, trap Tab within the menu
+    if (isOpen) {
+      const focusableEls = mobileMenu?.querySelectorAll('a, button') as NodeListOf<HTMLElement>;
+      const firstEl = focusableEls?.[0];
+      const lastEl = focusableEls?.[focusableEls.length - 1];
+      firstEl?.focus();
+
+      const trapFocus = (e: KeyboardEvent) => {
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey) {
+          if (document.activeElement === firstEl) { e.preventDefault(); lastEl?.focus(); }
+        } else {
+          if (document.activeElement === lastEl) { e.preventDefault(); firstEl?.focus(); }
+        }
+        if (e.key === 'Escape') { menuBtn.click(); }
+      };
+      mobileMenu?.addEventListener('keydown', trapFocus as EventListener);
+      (mobileMenu as any)._trapFocus = trapFocus;
+    } else {
+      const trapFn = (mobileMenu as any)?._trapFocus;
+      if (trapFn) mobileMenu?.removeEventListener('keydown', trapFn);
+      menuBtn.focus();
+    }
   });
 </script>

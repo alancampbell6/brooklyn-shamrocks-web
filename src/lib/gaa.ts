@@ -38,6 +38,12 @@ export const OUTCOME_LABELS: Record<MatchOutcome, string> = {
   draw: 'D',
 };
 
+export const OUTCOME_ARIA_LABELS: Record<MatchOutcome, string> = {
+  win: 'Win',
+  loss: 'Loss',
+  draw: 'Draw',
+};
+
 interface MatchResult {
   homeTeam: string;
   awayTeam: string;

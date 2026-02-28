@@ -143,7 +143,7 @@ const timeline = [
 
 ---
 
-<BaseLayout title="Club History - Since 1955" description="The history of Brooklyn Shamrocks GAA since 1955 - our story, achievements, and 70 years of Gaelic football in Brooklyn." preloadHero={true}>
+<BaseLayout title="Club History - Since 1955" description="The history of Brooklyn Shamrocks GAA since 1955 - our story, achievements, and 70 years of Gaelic football in Brooklyn." preloadHero={true} breadcrumbs={[{ name: 'History', href: '/history' }]}>
   <Hero
     title="Club History"
     subtitle="70 years of Gaelic football excellence in Brooklyn"
@@ -245,7 +245,7 @@ const timeline = [
                       <p class="text-xs text-gray-400 mt-3 italic">{item.imageCaption}</p>
                     )}
                     {item.link && (
-                      <a href={item.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-sm text-shamrock-700 hover:text-shamrock-800 mt-3 font-medium">
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-sm text-shamrock-700 hover:text-shamrock-800 mt-3 font-semibold">
                         Read full article
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -281,7 +281,7 @@ const timeline = [
       </div>
 
       <!-- Lightbox Modal -->
-      <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm">
+      <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Image viewer">
         <button
           id="lightbox-close"
           type="button"
@@ -400,13 +400,31 @@ const timeline = [
   const lightboxClose = document.getElementById('lightbox-close');
   const lightboxTriggers = document.querySelectorAll('[data-lightbox]');
 
-  function openLightbox(src: string, caption: string) {
+  let currentLightboxIndex = -1;
+  const allTriggers = Array.from(lightboxTriggers);
+
+  function openLightbox(src: string, caption: string, index?: number) {
     if (lightbox && lightboxImg && lightboxCaption) {
       lightboxImg.src = src;
       lightboxImg.alt = caption;
       lightboxCaption.textContent = caption;
       lightbox.classList.remove('hidden');
       document.body.style.overflow = 'hidden';
+      if (index !== undefined) currentLightboxIndex = index;
+      lightboxClose?.focus();
+    }
+  }
+
+  function navigateLightbox(direction: number) {
+    if (currentLightboxIndex < 0 || allTriggers.length === 0) return;
+    currentLightboxIndex = (currentLightboxIndex + direction + allTriggers.length) % allTriggers.length;
+    const trigger = allTriggers[currentLightboxIndex];
+    const src = trigger.getAttribute('data-lightbox') || '';
+    const caption = trigger.getAttribute('data-caption') || '';
+    if (lightboxImg && lightboxCaption) {
+      lightboxImg.src = src;
+      lightboxImg.alt = caption;
+      lightboxCaption.textContent = caption;
     }
   }
 
@@ -417,11 +435,11 @@ const timeline = [
     }
   }
 
-  lightboxTriggers.forEach((trigger) => {
+  lightboxTriggers.forEach((trigger, index) => {
     trigger.addEventListener('click', () => {
       const src = trigger.getAttribute('data-lightbox') || '';
       const caption = trigger.getAttribute('data-caption') || '';
-      openLightbox(src, caption);
+      openLightbox(src, caption, index);
     });
   });
 
@@ -434,8 +452,9 @@ const timeline = [
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeLightbox();
-    }
+    if (lightbox?.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') navigateLightbox(-1);
+    if (e.key === 'ArrowRight') navigateLightbox(1);
   });
 </script>

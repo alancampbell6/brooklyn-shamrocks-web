@@ -237,7 +237,7 @@ const updateCards = [
                   />
                 </div>
                 <div class="p-4">
-                  <h3 class="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-shamrock-700 transition-colors">
+                  <h3 class="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-shamrock-700 transition-colors">
                     {product.name}
                   </h3>
                   <p class="text-sm font-bold text-shamrock-700 mt-1">{product.price}</p>
@@ -293,12 +293,12 @@ const updateCards = [
                     <path d="M8 5v14l11-7z"/>
                   </svg>
                 </div>
-                <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-0.5 font-medium">
+                <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-0.5 font-semibold">
                   {video.round}
                 </span>
               </div>
               <div class="p-4">
-                <p class="text-sm font-medium text-white line-clamp-2 group-hover:text-shamrock-100">
+                <p class="text-sm font-semibold text-white line-clamp-2 group-hover:text-shamrock-100">
                   {video.title}
                 </p>
                 <p class="text-xs text-shamrock-400 mt-2 uppercase tracking-wide">vs {video.opponent}</p>
@@ -396,7 +396,7 @@ const updateCards = [
               </picture>
             </div>
             <span class:list={[
-              "text-sm font-medium",
+              "text-sm font-semibold",
               sponsor.tier === 'primary' ? 'text-gold-600' : 'text-gray-500'
             ]}>
               {sponsor.description}

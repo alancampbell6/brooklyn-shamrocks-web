@@ -5,7 +5,7 @@ import fixturesData from '../data/fixtures.json';
 import resultsData from '../data/results.json';
 import videosData from '../data/videos.json';
 import { CLUB_NAME } from '../lib/constants';
-import { getOutcome, findVideoUrl, OUTCOME_COLORS, OUTCOME_LABELS } from '../lib/gaa';
+import { getOutcome, findVideoUrl, OUTCOME_COLORS, OUTCOME_LABELS, OUTCOME_ARIA_LABELS } from '../lib/gaa';
 
 // --- Fixtures ---
 
@@ -91,7 +91,7 @@ const outcomeColors = OUTCOME_COLORS;
 const outcomeLabels = OUTCOME_LABELS;
 ---
 
-<BaseLayout title="Matches - Fixtures & Results" description="Brooklyn Shamrocks GAA match schedule and results. View upcoming Gaelic football fixtures, past scores, and competition details for all teams." schema={fixturesSchema}>
+<BaseLayout title="Matches - Fixtures & Results" description="Brooklyn Shamrocks GAA match schedule and results. View upcoming Gaelic football fixtures, past scores, and competition details for all teams." schema={fixturesSchema} breadcrumbs={[{ name: 'Matches', href: '/matches' }]}>
 
   <!-- Tab Bar (CPFC-style bordered tabs) -->
   <div class="bg-white border-b border-gray-200">
@@ -339,7 +339,7 @@ const outcomeLabels = OUTCOME_LABELS;
               <div class="result-item bg-white rounded-lg shadow-sm border border-gray-100 p-6 md:p-8 mb-6" data-team={featuredResult.team} data-year={featuredResult.year} data-outcome={featuredResult.outcome}>
                 <div class="text-center">
                   <div class="flex items-center justify-center gap-3 mb-4">
-                    <span class={`inline-block w-7 h-7 rounded-full text-white text-xs font-bold flex items-center justify-center ${outcomeColors[featuredResult.outcome]}`}>
+                    <span class={`inline-block w-7 h-7 rounded-full text-white text-xs font-bold flex items-center justify-center ${outcomeColors[featuredResult.outcome]}`} aria-label={OUTCOME_ARIA_LABELS[featuredResult.outcome]}>
                       {outcomeLabels[featuredResult.outcome]}
                     </span>
                     <span class="text-sm text-gray-500">
@@ -460,7 +460,7 @@ const outcomeLabels = OUTCOME_LABELS;
 
                       {/* Outcome Badge & Video */}
                       <div class="md:w-24 flex-shrink-0 flex items-center justify-end gap-2">
-                        <span class={`w-6 h-6 rounded-full text-white text-[10px] font-bold inline-flex items-center justify-center ${outcomeColors[result.outcome]}`}>
+                        <span class={`w-6 h-6 rounded-full text-white text-[10px] font-bold inline-flex items-center justify-center ${outcomeColors[result.outcome]}`} aria-label={OUTCOME_ARIA_LABELS[result.outcome]}>
                           {outcomeLabels[result.outcome]}
                         </span>
                         {result.videoUrl && (

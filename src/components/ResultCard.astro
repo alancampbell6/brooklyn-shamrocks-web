@@ -1,6 +1,6 @@
 ---
 import { CLUB_NAME } from '../lib/constants';
-import { getOutcome, type MatchOutcome } from '../lib/gaa';
+import { getOutcome, OUTCOME_ARIA_LABELS, type MatchOutcome } from '../lib/gaa';
 
 interface Props {
   date: string;
@@ -49,7 +49,7 @@ const resultLabels: Record<MatchOutcome, string> = {
       <span class="inline-block px-3 py-1 bg-shamrock-100 text-shamrock-700 text-xs font-semibold rounded-full">
         {competition}
       </span>
-      <span class={`inline-block px-2 py-1 text-xs font-bold rounded border ${resultColors[result]}`}>
+      <span class={`inline-block px-2 py-1 text-xs font-bold rounded border ${resultColors[result]}`} aria-label={OUTCOME_ARIA_LABELS[result]}>
         {resultLabels[result]}
       </span>
     </div>

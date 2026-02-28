@@ -88,7 +88,7 @@ const guestOfHonor = [
 ];
 ---
 
-<BaseLayout title="Honours & Championship Wins" description="Brooklyn Shamrocks GAA championship honours, trophy wins, and individual award recipients. From Junior B to Senior League champions in New York GAA." preloadHero={true}>
+<BaseLayout title="Honours & Championship Wins" description="Brooklyn Shamrocks GAA championship honours, trophy wins, and individual award recipients. From Junior B to Senior League champions in New York GAA." preloadHero={true} breadcrumbs={[{ name: 'Honours', href: '/honours' }]}>
   <Hero
     title="Honours & Awards"
     subtitle="Celebrating our achievements on and off the field"
@@ -280,6 +280,19 @@ const guestOfHonor = [
           <p class="text-shamrock-100 text-sm">476 76th Street, Brooklyn, NY</p>
         </div>
       </div>
+
+      <!-- Cross-link to History -->
+      <a href="/history" class="mt-8 block bg-white rounded-2xl p-6 border border-gray-200 hover:border-shamrock-300 hover:shadow-md transition-all group">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 group-hover:text-shamrock-700 transition-colors">Club History</h3>
+            <p class="text-gray-600 text-sm">Explore our story from 1955 to today</p>
+          </div>
+          <svg class="w-6 h-6 text-gray-400 group-hover:text-shamrock-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
     </div>
   </section>
 </BaseLayout>
