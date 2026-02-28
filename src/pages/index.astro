@@ -8,6 +8,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import fixturesData from '../data/fixtures.json';
 import resultsData from '../data/results.json';
 import videosData from '../data/videos.json';
+import productsData from '../data/products.json';
 import sponsorsData from '../data/sponsors.json';
 import { CLUB_NAME } from '../lib/constants';
 
@@ -42,18 +43,31 @@ const latestResult = latestResultRaw ? {
   videoUrl: findVideoUrl(latestResultRaw)
 } : null;
 
-const quickLinks = [
+// Featured products for shop carousel
+const featuredProducts = productsData.products.filter(p => p.featured);
+
+// Social/updates cards
+const updateCards = [
   {
-    title: 'Matches',
-    description: 'Fixtures & results',
-    href: '/matches',
-    icon: 'calendar',
+    title: 'Latest from Facebook',
+    description: 'Match day updates, club news, and community events.',
+    href: '/updates',
+    icon: 'facebook',
+    external: false,
   },
   {
-    title: 'Club History',
-    description: 'Our story and achievements',
-    href: '/history',
-    icon: 'book',
+    title: 'Follow on Instagram',
+    description: 'Behind the scenes, training photos, and match day galleries.',
+    href: 'https://www.instagram.com/brooklynshamrocksgfc',
+    icon: 'instagram',
+    external: true,
+  },
+  {
+    title: 'Follow on X',
+    description: 'Live match updates, scores, and breaking club news.',
+    href: 'https://x.com/bklynshamrocks',
+    icon: 'x',
+    external: true,
   },
 ];
 ---
@@ -64,101 +78,268 @@ const quickLinks = [
     title="Brooklyn Shamrocks"
     subtitle="Promoting Gaelic games and Irish culture in Brooklyn, New York. Join us on the field or in the stands."
     showCta={true}
-    size="medium"
+    size="large"
+    bottomColor="#14532d"
   />
 
-  <!-- Next Fixture & Latest Result -->
-  <section class="py-12 md:py-16 bg-gray-50">
+  <!-- Match Centre: Next Fixture & Latest Result (CPFC-style sharp cards on dark bg) -->
+  <section class="py-10 md:py-14 bg-shamrock-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-2 gap-8">
-        <!-- Next Fixture -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Last Match -->
         <div>
-          <div class="flex items-center gap-2 mb-4">
-            <span class="w-2 h-2 bg-shamrock-500 rounded-full animate-pulse"></span>
-            <h2 class="text-lg font-semibold text-gray-900">Next Fixture</h2>
-          </div>
-          {nextFixture ? (
-            <FixtureCard {...nextFixture} />
-          ) : (
-            <div class="card p-6 text-center text-gray-500">
-              No upcoming fixtures scheduled
-            </div>
-          )}
-          <a href="/matches" class="inline-flex items-center gap-1 mt-4 text-shamrock-700 hover:text-shamrock-800 font-medium text-sm">
-            View all fixtures
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-
-        <!-- Latest Result -->
-        <div>
-          <div class="flex items-center gap-2 mb-4">
-            <span class="w-2 h-2 bg-gold-500 rounded-full"></span>
-            <h2 class="text-lg font-semibold text-gray-900">Latest Result</h2>
-          </div>
+          <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4 border-b border-shamrock-700 pb-2">Last Match</h2>
           {latestResult ? (
-            <ResultCard {...latestResult} />
+            <div class="[&_.card]:rounded-none [&_.card]:shadow-none">
+              <ResultCard {...latestResult} />
+            </div>
           ) : (
-            <div class="card p-6 text-center text-gray-500">
+            <div class="bg-white p-6 text-center text-gray-500">
               No results available
             </div>
           )}
-          <a href="/matches" class="inline-flex items-center gap-1 mt-4 text-shamrock-700 hover:text-shamrock-800 font-medium text-sm">
+          <a href="/matches" class="inline-flex items-center gap-2 mt-4 text-sm font-bold text-shamrock-300 hover:text-white uppercase tracking-wide transition-colors">
             View all results
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>
         </div>
+
+        <!-- Next Match -->
+        <div>
+          <div class="flex items-center gap-2 mb-4 border-b border-shamrock-700 pb-2">
+            <h2 class="text-sm font-bold text-white uppercase tracking-widest">Next Match</h2>
+            <span class="w-2 h-2 bg-shamrock-400 rounded-full animate-pulse"></span>
+          </div>
+          {nextFixture ? (
+            <div class="[&_.card]:rounded-none [&_.card]:shadow-none">
+              <FixtureCard {...nextFixture} />
+            </div>
+          ) : (
+            <div class="bg-white p-6 text-center text-gray-500">
+              No upcoming fixtures scheduled
+            </div>
+          )}
+          <a href="/matches" class="inline-flex items-center gap-2 mt-4 text-sm font-bold text-shamrock-300 hover:text-white uppercase tracking-wide transition-colors">
+            View all fixtures
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Quick Links -->
-  <section class="py-12 md:py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <SectionHeading
-        title="Explore the Club"
-        subtitle="Everything you need to know about Brooklyn Shamrocks"
-      />
+  <!-- Diagonal separator: dark to light -->
+  <div class="relative h-10 md:h-16 bg-white">
+    <div class="absolute inset-0 bg-shamrock-900" style="clip-path: polygon(0 0, 100% 0, 0 100%);"></div>
+  </div>
 
-      <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-        {quickLinks.map((link) => (
-          <a href={link.href} class="card p-6 group hover:border-shamrock-200 border border-transparent">
-            <div class="w-12 h-12 bg-shamrock-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-shamrock-200 transition-colors">
-              {link.icon === 'calendar' && (
-                <svg class="w-6 h-6 text-shamrock-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  <!-- Latest Updates -->
+  <section class="py-10 md:py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight">Latest Updates</h2>
+        <a href="/updates" class="inline-flex items-center gap-1 px-5 py-2 bg-shamrock-900 text-white text-sm font-bold uppercase tracking-wide hover:bg-shamrock-800 transition-colors">
+          View all
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-6">
+        {updateCards.map((card) => (
+          <a
+            href={card.href}
+            target={card.external ? '_blank' : undefined}
+            rel={card.external ? 'noopener noreferrer' : undefined}
+            class="bg-white border border-gray-200 p-6 group hover:shadow-lg transition-shadow"
+          >
+            <div class="w-12 h-12 bg-shamrock-100 flex items-center justify-center mb-4 group-hover:bg-shamrock-200 transition-colors">
+              {card.icon === 'facebook' && (
+                <svg class="w-6 h-6 text-shamrock-700" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
               )}
-              {link.icon === 'book' && (
-                <svg class="w-6 h-6 text-shamrock-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              {card.icon === 'instagram' && (
+                <svg class="w-6 h-6 text-shamrock-700" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                </svg>
+              )}
+              {card.icon === 'x' && (
+                <svg class="w-6 h-6 text-shamrock-700" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
               )}
             </div>
-            <h3 class="font-semibold text-gray-900 mb-1 group-hover:text-shamrock-700 transition-colors">
-              {link.title}
+            <h3 class="font-bold text-gray-900 mb-1 group-hover:text-shamrock-700 transition-colors">
+              {card.title}
             </h3>
-            <p class="text-sm text-gray-500">{link.description}</p>
+            <p class="text-sm text-gray-500">{card.description}</p>
+            {card.external && (
+              <span class="inline-flex items-center gap-1 mt-3 text-xs text-gray-400 uppercase tracking-wide">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                External
+              </span>
+            )}
           </a>
         ))}
       </div>
     </div>
   </section>
 
+  <!-- Shop Carousel (CPFC style: sharp edges, bold heading, dark button) -->
+  <section class="py-10 md:py-14 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight">Shop Shamrocks Gear</h2>
+        <a href="/shop" class="inline-flex items-center gap-1 px-5 py-2 bg-shamrock-900 text-white text-sm font-bold uppercase tracking-wide hover:bg-shamrock-800 transition-colors">
+          View Shop
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="relative">
+        <!-- Scroll buttons (sharp rectangle like CPFC) -->
+        <button
+          id="shop-scroll-left"
+          class="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-shamrock-700 items-center justify-center text-white hover:bg-shamrock-600 transition-colors"
+          aria-label="Scroll left"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <div id="shop-carousel" class="carousel pb-4">
+          {featuredProducts.map((product) => (
+            <a
+              href={product.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="carousel-item w-56 md:w-64 group"
+            >
+              <div class="bg-white overflow-hidden hover:shadow-lg transition-shadow">
+                <div class="aspect-square bg-gray-100 overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    loading="lazy"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div class="p-4">
+                  <h3 class="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-shamrock-700 transition-colors">
+                    {product.name}
+                  </h3>
+                  <p class="text-sm font-bold text-shamrock-700 mt-1">{product.price}</p>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <button
+          id="shop-scroll-right"
+          class="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-shamrock-700 items-center justify-center text-white hover:bg-shamrock-600 transition-colors"
+          aria-label="Scroll right"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Match Highlights (CPFC-style dark section with sharp cards) -->
+  <section class="py-10 md:py-14 bg-shamrock-900 relative overflow-hidden">
+    <!-- Watermark text (like CPFC's "PALACE TV") -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
+      <span class="text-shamrock-800/30 text-[8rem] md:text-[12rem] font-black uppercase tracking-tighter leading-none">Shamrocks</span>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-tight">Match Highlights</h2>
+        <a href="https://plus.newlogicalsports.com/categories/category-effcuqyezzo" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-5 py-2 bg-shamrock-700 text-white text-sm font-bold uppercase tracking-wide hover:bg-shamrock-600 transition-colors">
+          View All
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div id="video-carousel" class="carousel pb-4">
+        {videosData.videos.map((video) => (
+          <a
+            href={video.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="carousel-item w-72 md:w-80 group"
+          >
+            <div class="bg-shamrock-800 overflow-hidden hover:bg-shamrock-700/80 transition-colors">
+              <div class="aspect-video bg-shamrock-800 flex items-center justify-center relative">
+                <div class="w-14 h-14 rounded-full bg-gold-500/90 flex items-center justify-center group-hover:bg-gold-500 group-hover:scale-110 transition-all">
+                  <svg class="w-6 h-6 text-gray-900 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+                <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-0.5 font-medium">
+                  {video.round}
+                </span>
+              </div>
+              <div class="p-4">
+                <p class="text-sm font-medium text-white line-clamp-2 group-hover:text-shamrock-100">
+                  {video.title}
+                </p>
+                <p class="text-xs text-shamrock-400 mt-2 uppercase tracking-wide">vs {video.opponent}</p>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Join CTA Section -->
+  <section class="py-12 md:py-16 bg-shamrock-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 uppercase tracking-tight">
+        Join the Shamrocks Family
+      </h2>
+      <p class="text-shamrock-100 max-w-2xl mx-auto mb-8">
+        Whether you're an experienced player or new to Gaelic games, we welcome all levels.
+        Training sessions, social events, and a community that feels like family.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contact" class="btn btn-secondary btn-sharp uppercase tracking-wide">
+          Become a Member
+        </a>
+        <a href="/contact" class="btn btn-sharp border-2 border-white text-white hover:bg-white hover:text-shamrock-900 uppercase tracking-wide">
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Our Teams -->
-  <section class="py-12 md:py-16 bg-gray-50">
+  <section class="py-10 md:py-14 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading
         title="Our Teams"
         subtitle="Two squads competing across New York GAA competitions"
       />
       <div class="grid md:grid-cols-2 gap-6">
-        <div class="card p-6 border border-gray-100">
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Senior Football</h3>
+        <div class="bg-white border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+          <h3 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-wide">Senior Football</h3>
           <p class="text-sm text-gray-600 mb-4">
             Our flagship team competing at the highest level in the NY Senior Football Championship and league competitions throughout the season.
           </p>
@@ -167,8 +348,8 @@ const quickLinks = [
             <p>Randalls Island Field 73</p>
           </div>
         </div>
-        <div class="card p-6 border border-gray-100">
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Junior Football</h3>
+        <div class="bg-white border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+          <h3 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-wide">Junior Football</h3>
           <p class="text-sm text-gray-600 mb-4">
             A pathway for developing players and those returning to the game, competing in the NY Junior Football Championship with a focus on skill development.
           </p>
@@ -181,56 +362,11 @@ const quickLinks = [
     </div>
   </section>
 
-  <!-- Club News / Announcements -->
-  <section class="py-12 md:py-16 bg-shamrock-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-        Join the Shamrocks Family
-      </h2>
-      <p class="text-shamrock-100 max-w-2xl mx-auto mb-8">
-        Whether you're an experienced player or new to Gaelic games, we welcome all levels.
-        Training sessions, social events, and a community that feels like family.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/contact" class="btn btn-secondary">
-          Become a Member
-        </a>
-        <a href="/contact" class="btn border-2 border-white text-white hover:bg-white hover:text-shamrock-900">
-          Get in Touch
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Upcoming Fixtures Preview -->
-  {upcomingFixtures.length > 1 && (
-    <section class="py-12 md:py-16">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Upcoming Fixtures"
-          subtitle="Catch our teams in action"
-        />
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {upcomingFixtures.slice(0, 3).map((fixture) => (
-            <FixtureCard {...fixture} />
-          ))}
-        </div>
-
-        <div class="text-center mt-8">
-          <a href="/matches" class="btn btn-outline">
-            View Full Schedule
-          </a>
-        </div>
-      </div>
-    </section>
-  )}
-
   <!-- Sponsors Section -->
-  <section class="py-12 md:py-16 bg-gray-50 border-t border-gray-200">
+  <section class="py-10 md:py-14 border-t border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-10">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Our Sponsors</h2>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 uppercase tracking-tight">Our Sponsors</h2>
         <p class="text-gray-600">Proudly supported by our generous sponsors</p>
       </div>
 
@@ -241,7 +377,7 @@ const quickLinks = [
             target="_blank"
             rel="noopener noreferrer"
             class:list={[
-              "group flex flex-col items-center p-6 rounded-xl transition-all hover:shadow-lg bg-white",
+              "group flex flex-col items-center p-6 transition-all hover:shadow-lg bg-white",
               sponsor.tier === 'primary' ? 'shadow-md' : ''
             ]}
           >
@@ -276,7 +412,7 @@ const quickLinks = [
         <p class="text-sm text-gray-500 mb-4">
           Interested in sponsoring Brooklyn Shamrocks?
         </p>
-        <a href="/contact" class="text-shamrock-700 hover:text-shamrock-800 font-medium text-sm inline-flex items-center gap-1">
+        <a href="/contact" class="text-shamrock-700 hover:text-shamrock-800 font-bold text-sm inline-flex items-center gap-1 uppercase tracking-wide">
           Get in touch
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -286,3 +422,17 @@ const quickLinks = [
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  // Shop carousel scroll buttons
+  const shopCarousel = document.getElementById('shop-carousel');
+  const shopLeft = document.getElementById('shop-scroll-left');
+  const shopRight = document.getElementById('shop-scroll-right');
+
+  shopLeft?.addEventListener('click', () => {
+    shopCarousel?.scrollBy({ left: -280, behavior: 'smooth' });
+  });
+  shopRight?.addEventListener('click', () => {
+    shopCarousel?.scrollBy({ left: 280, behavior: 'smooth' });
+  });
+</script>

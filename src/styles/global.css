@@ -29,8 +29,18 @@
     @apply border-2 border-shamrock-700 text-shamrock-700 hover:bg-shamrock-700 hover:text-white;
   }
 
+  /* Sharp-edged button (CPFC style) */
+  .btn-sharp {
+    @apply rounded-none;
+  }
+
   .card {
     @apply bg-white rounded-xl shadow-md overflow-hidden transition-shadow duration-200 hover:shadow-lg;
+  }
+
+  /* Sharp-edged card variant for dark sections (CPFC style) */
+  .card-sharp {
+    @apply bg-white rounded-none shadow-md overflow-hidden transition-shadow duration-200 hover:shadow-lg;
   }
 
   .section-heading {
@@ -39,6 +49,20 @@
 
   .section-subheading {
     @apply text-lg text-gray-600 mt-2;
+  }
+
+  .carousel {
+    @apply flex gap-4 overflow-x-auto snap-x snap-mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-item {
+    @apply flex-shrink-0 snap-start;
   }
 }
 

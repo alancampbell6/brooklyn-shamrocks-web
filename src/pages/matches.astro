@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
 import FixtureCard from '../components/FixtureCard.astro';
 import ResultCard from '../components/ResultCard.astro';
 
@@ -49,14 +48,9 @@ const fixturesSchema = upcomingFixtures.length > 0 ? upcomingFixtures.map(fixtur
   "eventStatus": "https://schema.org/EventScheduled"
 })) : null;
 
-// Group fixtures by month
-const fixturesByMonth = upcomingFixtures.reduce((acc, fixture) => {
-  const date = new Date(fixture.date);
-  const monthKey = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-  if (!acc[monthKey]) acc[monthKey] = [];
-  acc[monthKey].push(fixture);
-  return acc;
-}, {} as Record<string, typeof upcomingFixtures>);
+// Split fixtures: first = featured, rest = rows
+const featuredFixture = upcomingFixtures[0] || null;
+const remainingFixtures = upcomingFixtures.slice(1);
 
 // --- Results ---
 
@@ -88,29 +82,51 @@ const resultsWithOutcome = sortedResults.map(result => {
   return {
     ...result,
     year: new Date(result.date).getFullYear(),
-    outcome: shamrocksTotal > opponentTotal ? 'win' : shamrocksTotal < opponentTotal ? 'loss' : 'draw',
+    outcome: shamrocksTotal > opponentTotal ? 'win' : shamrocksTotal < opponentTotal ? 'loss' : 'draw' as 'win' | 'loss' | 'draw',
     videoUrl: findVideoUrl(result)
   };
 });
+
+// Split results: first = featured, rest = rows
+const featuredResult = resultsWithOutcome[0] || null;
+const remainingResults = resultsWithOutcome.slice(1);
+
+// Helper: format date for rows
+function formatRowDate(dateStr: string) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return {
+    dayName: d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase(),
+    day: d.getDate(),
+    month: d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+    year: d.getFullYear(),
+    full: d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
+  };
+}
+
+const outcomeColors = {
+  win: 'bg-green-600',
+  loss: 'bg-red-600',
+  draw: 'bg-gray-500',
+};
+const outcomeLabels = {
+  win: 'W',
+  loss: 'L',
+  draw: 'D',
+};
 ---
 
 <BaseLayout title="Matches - Fixtures & Results" description="Brooklyn Shamrocks GAA match schedule and results. View upcoming Gaelic football fixtures, past scores, and competition details for all teams." schema={fixturesSchema}>
-  <Hero
-    title="Matches"
-    subtitle="Fixtures, results, and scores across all competitions"
-    size="small"
-  />
 
-  <section class="py-12 md:py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Tab Navigation -->
-      <div class="flex border-b border-gray-200 mb-8" role="tablist">
+  <!-- Tab Bar (CPFC-style bordered tabs) -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-0 flex justify-center">
+      <div class="inline-flex border border-gray-300 rounded-md overflow-hidden" role="tablist">
         <button
           id="tab-fixtures"
           role="tab"
           aria-selected="true"
           aria-controls="panel-fixtures"
-          class="tab-btn active px-6 py-3 text-sm font-semibold border-b-2 border-shamrock-700 text-shamrock-700 -mb-px"
+          class="tab-btn px-6 sm:px-8 py-2.5 text-base sm:text-lg font-bold uppercase tracking-wide text-shamrock-700 bg-white transition-colors"
         >
           Fixtures
         </button>
@@ -119,67 +135,169 @@ const resultsWithOutcome = sortedResults.map(result => {
           role="tab"
           aria-selected="false"
           aria-controls="panel-results"
-          class="tab-btn px-6 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 -mb-px"
+          class="tab-btn px-6 sm:px-8 py-2.5 text-base sm:text-lg font-bold uppercase tracking-wide text-gray-400 bg-white border-l border-gray-300 hover:text-shamrock-700 transition-colors"
         >
           Results
         </button>
       </div>
+    </div>
+  </div>
 
-      <!-- Fixtures Panel -->
+  <!-- Content -->
+  <section class="bg-gray-50 min-h-[60vh]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+      <!-- ==================== FIXTURES PANEL ==================== -->
       <div id="panel-fixtures" role="tabpanel" aria-labelledby="tab-fixtures">
-        <!-- Filter Controls -->
-        <div class="mb-8 flex flex-wrap gap-2" id="fixture-filter-controls">
-          <button
-            class="fixture-filter-btn active px-4 py-2 rounded-full text-sm font-medium transition-colors bg-shamrock-700 text-white"
-            data-filter="all"
-          >
-            All Teams
-          </button>
-          {fixtureTeams.map((team) => (
-            <button
-              class="fixture-filter-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200"
-              data-filter={team}
-            >
-              {team}
-            </button>
-          ))}
-        </div>
 
-        <!-- Fixtures List -->
-        {upcomingFixtures.length > 0 ? (
-          <div id="fixtures-container">
-            {Object.entries(fixturesByMonth).map(([month, fixtures]) => (
-              <div class="mb-12">
-                <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
-                  {month}
-                </h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {fixtures.map((fixture) => (
-                    <div class="fixture-item" data-team={fixture.team}>
-                      <FixtureCard {...fixture} />
-                    </div>
-                  ))}
-                </div>
-              </div>
+        <!-- Fixture Filters -->
+        {fixtureTeams.length > 0 && (
+          <div class="mb-6 flex flex-wrap gap-2" id="fixture-filter-controls">
+            <button
+              class="fixture-filter-btn active px-4 py-1.5 rounded-full text-sm font-semibold transition-colors bg-shamrock-700 text-white"
+              data-filter="all"
+            >
+              All Teams
+            </button>
+            {fixtureTeams.map((team) => (
+              <button
+                class="fixture-filter-btn px-4 py-1.5 rounded-full text-sm font-semibold transition-colors bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                data-filter={team}
+              >
+                {team}
+              </button>
             ))}
           </div>
+        )}
+
+        {upcomingFixtures.length > 0 ? (
+          <div id="fixtures-container">
+            {/* Featured Next Match */}
+            {featuredFixture && (
+              <div class="fixture-item bg-white rounded-lg shadow-sm border border-gray-100 p-6 md:p-8 mb-6" data-team={featuredFixture.team}>
+                <div class="text-center">
+                  <span class="inline-block px-3 py-1 bg-shamrock-600 text-white text-xs font-bold uppercase tracking-wider rounded-full mb-4">
+                    Next Match
+                  </span>
+                  <p class="text-sm text-gray-500 mb-6">
+                    {featuredFixture.competition} &middot; {featuredFixture.round || ''} &middot; {featuredFixture.venue}
+                  </p>
+
+                  {/* Teams & Date */}
+                  <div class="flex items-center justify-center gap-6 md:gap-10">
+                    {/* Home Team */}
+                    <div class="flex-1 text-center">
+                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+                        {featuredFixture.homeTeam === CLUB_NAME ? (
+                          <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
+                        ) : (
+                          <span class="text-gray-400 font-bold text-lg md:text-xl">{featuredFixture.homeTeam.substring(0, 2).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredFixture.homeTeam}</p>
+                    </div>
+
+                    {/* Date/Time Center */}
+                    <div class="flex-shrink-0 text-center">
+                      <div class="text-2xl md:text-3xl font-bold text-shamrock-700">
+                        {(() => {
+                          const d = formatRowDate(featuredFixture.date);
+                          return `${d.dayName} ${d.day} ${d.month}`;
+                        })()}
+                      </div>
+                      {featuredFixture.time && (
+                        <p class="text-lg font-semibold text-gray-600 mt-1">{featuredFixture.time}</p>
+                      )}
+                    </div>
+
+                    {/* Away Team */}
+                    <div class="flex-1 text-center">
+                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+                        {featuredFixture.awayTeam === CLUB_NAME ? (
+                          <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
+                        ) : (
+                          <span class="text-gray-400 font-bold text-lg md:text-xl">{featuredFixture.awayTeam.substring(0, 2).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredFixture.awayTeam}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Remaining Fixtures — Compact Rows */}
+            {remainingFixtures.length > 0 && (
+              <div class="bg-white rounded-lg shadow-sm border border-gray-100 divide-y divide-gray-100">
+                {remainingFixtures.map((fixture) => {
+                  const d = formatRowDate(fixture.date);
+                  return (
+                    <div class="fixture-item flex flex-col md:flex-row md:items-center gap-2 md:gap-4 px-4 py-4 md:px-6 hover:bg-gray-50 transition-colors" data-team={fixture.team}>
+                      {/* Date & Meta */}
+                      <div class="md:w-48 flex-shrink-0">
+                        <p class="font-bold text-gray-900 text-sm">{d.dayName} {d.day} {d.month} {d.year}</p>
+                        <p class="text-xs text-gray-500 truncate">{fixture.competition} &middot; {fixture.venue}</p>
+                      </div>
+
+                      {/* Matchup */}
+                      <div class="flex-1 flex items-center gap-3 justify-center md:justify-start">
+                        {/* Home */}
+                        <div class="flex items-center gap-2 flex-1 justify-end md:justify-end">
+                          <span class="font-semibold text-gray-900 text-sm text-right">{fixture.homeTeam}</span>
+                          <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {fixture.homeTeam === CLUB_NAME ? (
+                              <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                            ) : (
+                              <span class="text-gray-400 font-bold text-[10px]">{fixture.homeTeam.substring(0, 2).toUpperCase()}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* V */}
+                        <span class="text-xs font-bold text-gray-400 flex-shrink-0 w-6 text-center">V</span>
+
+                        {/* Away */}
+                        <div class="flex items-center gap-2 flex-1">
+                          <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {fixture.awayTeam === CLUB_NAME ? (
+                              <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                            ) : (
+                              <span class="text-gray-400 font-bold text-[10px]">{fixture.awayTeam.substring(0, 2).toUpperCase()}</span>
+                            )}
+                          </div>
+                          <span class="font-semibold text-gray-900 text-sm">{fixture.awayTeam}</span>
+                        </div>
+                      </div>
+
+                      {/* Time */}
+                      {fixture.time && (
+                        <div class="md:w-20 flex-shrink-0 text-right">
+                          <span class="text-sm font-semibold text-shamrock-700">{fixture.time}</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         ) : (
-          <div class="text-center py-12">
-            <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+          <div class="text-center py-16">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
               <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">No Upcoming Fixtures</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">No Upcoming Fixtures</h3>
             <p class="text-gray-500">Check back soon for our upcoming schedule.</p>
           </div>
         )}
 
         <noscript>
-          <style>.fixture-item { display: block !important; }</style>
+          <style>.fixture-item { display: flex !important; }</style>
         </noscript>
 
-        <div class="mt-8 text-center text-sm text-gray-500">
+        <p class="mt-6 text-center text-xs text-gray-400">
           Last updated: {new Date(fixturesData.lastUpdated).toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
@@ -187,25 +305,24 @@ const resultsWithOutcome = sortedResults.map(result => {
             hour: '2-digit',
             minute: '2-digit'
           })}
-        </div>
+        </p>
       </div>
 
-      <!-- Results Panel -->
+      <!-- ==================== RESULTS PANEL ==================== -->
       <div id="panel-results" role="tabpanel" aria-labelledby="tab-results" class="hidden">
-        <!-- Filter Controls -->
-        <div class="mb-8 space-y-4">
-          <!-- Year Filter -->
-          <div class="flex flex-wrap gap-2 justify-center" id="year-filter">
-            <span class="text-sm text-gray-500 self-center mr-2">Year:</span>
+
+        <!-- Result Filters -->
+        <div class="mb-6 space-y-3">
+          <div class="flex flex-wrap gap-2" id="year-filter">
             <button
-              class="year-btn active px-4 py-2 rounded-full text-sm font-medium transition-colors bg-shamrock-700 text-white"
+              class="year-btn active px-4 py-1.5 rounded-full text-sm font-semibold transition-colors bg-shamrock-700 text-white"
               data-year="all"
             >
               All Years
             </button>
             {years.map((year) => (
               <button
-                class="year-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200"
+                class="year-btn px-4 py-1.5 rounded-full text-sm font-semibold transition-colors bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
                 data-year={year}
               >
                 {year}
@@ -213,19 +330,17 @@ const resultsWithOutcome = sortedResults.map(result => {
             ))}
           </div>
 
-          <!-- Team Filter -->
           {resultTeams.length > 1 && (
-            <div class="flex flex-wrap gap-2 justify-center" id="team-filter">
-              <span class="text-sm text-gray-500 self-center mr-2">Team:</span>
+            <div class="flex flex-wrap gap-2" id="team-filter">
               <button
-                class="team-btn active px-4 py-2 rounded-full text-sm font-medium transition-colors bg-shamrock-700 text-white"
+                class="team-btn active px-4 py-1.5 rounded-full text-sm font-semibold transition-colors bg-shamrock-700 text-white"
                 data-team="all"
               >
                 All Teams
               </button>
               {resultTeams.map((team) => (
                 <button
-                  class="team-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  class="team-btn px-4 py-1.5 rounded-full text-sm font-semibold transition-colors bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
                   data-team={team}
                 >
                   {team}
@@ -235,43 +350,185 @@ const resultsWithOutcome = sortedResults.map(result => {
           )}
         </div>
 
-        <!-- Results List -->
         {sortedResults.length > 0 ? (
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="results-container">
-            {resultsWithOutcome.map((result) => (
-              <div class="result-item" data-team={result.team} data-year={result.year} data-outcome={result.outcome}>
-                <ResultCard {...result} />
+          <div id="results-container">
+            {/* Featured Latest Result */}
+            {featuredResult && (
+              <div class="result-item bg-white rounded-lg shadow-sm border border-gray-100 p-6 md:p-8 mb-6" data-team={featuredResult.team} data-year={featuredResult.year} data-outcome={featuredResult.outcome}>
+                <div class="text-center">
+                  <div class="flex items-center justify-center gap-3 mb-4">
+                    <span class={`inline-block w-7 h-7 rounded-full text-white text-xs font-bold flex items-center justify-center ${outcomeColors[featuredResult.outcome]}`}>
+                      {outcomeLabels[featuredResult.outcome]}
+                    </span>
+                    <span class="text-sm text-gray-500">
+                      {featuredResult.competition} &middot; {featuredResult.round}
+                    </span>
+                  </div>
+
+                  <p class="text-xs text-gray-400 mb-5">
+                    {formatRowDate(featuredResult.date).full} &middot; {featuredResult.venue}
+                  </p>
+
+                  {/* Teams & Score */}
+                  <div class="flex items-center justify-center gap-6 md:gap-10">
+                    {/* Home Team */}
+                    <div class="flex-1 text-center">
+                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+                        {featuredResult.homeTeam === CLUB_NAME ? (
+                          <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
+                        ) : (
+                          <span class="text-gray-400 font-bold text-lg md:text-xl">{featuredResult.homeTeam.substring(0, 2).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredResult.homeTeam}</p>
+                    </div>
+
+                    {/* Score Center */}
+                    <div class="flex-shrink-0 text-center">
+                      <div class="flex items-center gap-3">
+                        <span class={`text-3xl md:text-4xl font-bold ${featuredResult.homeTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-800'}`}>
+                          {featuredResult.homeScore}
+                        </span>
+                        <span class="text-gray-300 text-2xl">-</span>
+                        <span class={`text-3xl md:text-4xl font-bold ${featuredResult.awayTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-800'}`}>
+                          {featuredResult.awayScore}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Away Team */}
+                    <div class="flex-1 text-center">
+                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+                        {featuredResult.awayTeam === CLUB_NAME ? (
+                          <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
+                        ) : (
+                          <span class="text-gray-400 font-bold text-lg md:text-xl">{featuredResult.awayTeam.substring(0, 2).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredResult.awayTeam}</p>
+                    </div>
+                  </div>
+
+                  {/* Video Link */}
+                  {featuredResult.videoUrl && (
+                    <div class="mt-6">
+                      <a
+                        href={featuredResult.videoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-gold-500 hover:bg-gold-600 text-gray-900 text-sm font-bold uppercase tracking-wide transition-colors"
+                      >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Watch Full Match
+                      </a>
+                    </div>
+                  )}
+                </div>
               </div>
-            ))}
+            )}
+
+            {/* Remaining Results — Compact Rows */}
+            {remainingResults.length > 0 && (
+              <div class="bg-white rounded-lg shadow-sm border border-gray-100 divide-y divide-gray-100">
+                {remainingResults.map((result) => {
+                  const d = formatRowDate(result.date);
+                  return (
+                    <div class="result-item flex flex-col md:flex-row md:items-center gap-2 md:gap-4 px-4 py-4 md:px-6 hover:bg-gray-50 transition-colors" data-team={result.team} data-year={result.year} data-outcome={result.outcome}>
+                      {/* Date & Meta */}
+                      <div class="md:w-48 flex-shrink-0">
+                        <p class="font-bold text-gray-900 text-sm">{d.dayName} {d.day} {d.month} {d.year}</p>
+                        <p class="text-xs text-gray-500 truncate">{result.competition} &middot; {result.venue}</p>
+                      </div>
+
+                      {/* Matchup with Score */}
+                      <div class="flex-1 flex items-center gap-3 justify-center md:justify-start">
+                        {/* Home */}
+                        <div class="flex items-center gap-2 flex-1 justify-end">
+                          <span class="font-semibold text-gray-900 text-sm text-right">{result.homeTeam}</span>
+                          <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {result.homeTeam === CLUB_NAME ? (
+                              <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                            ) : (
+                              <span class="text-gray-400 font-bold text-[10px]">{result.homeTeam.substring(0, 2).toUpperCase()}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Score */}
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                          <span class={`text-sm font-bold ${result.homeTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>{result.homeScore}</span>
+                          <span class="text-xs text-gray-300">-</span>
+                          <span class={`text-sm font-bold ${result.awayTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>{result.awayScore}</span>
+                        </div>
+
+                        {/* Away */}
+                        <div class="flex items-center gap-2 flex-1">
+                          <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {result.awayTeam === CLUB_NAME ? (
+                              <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                            ) : (
+                              <span class="text-gray-400 font-bold text-[10px]">{result.awayTeam.substring(0, 2).toUpperCase()}</span>
+                            )}
+                          </div>
+                          <span class="font-semibold text-gray-900 text-sm">{result.awayTeam}</span>
+                        </div>
+                      </div>
+
+                      {/* Outcome Badge & Video */}
+                      <div class="md:w-24 flex-shrink-0 flex items-center justify-end gap-2">
+                        <span class={`w-6 h-6 rounded-full text-white text-[10px] font-bold inline-flex items-center justify-center ${outcomeColors[result.outcome]}`}>
+                          {outcomeLabels[result.outcome]}
+                        </span>
+                        {result.videoUrl && (
+                          <a
+                            href={result.videoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-gold-600 hover:text-gold-700 transition-colors"
+                            title="Watch Full Match"
+                          >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         ) : (
-          <div class="text-center py-12">
-            <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+          <div class="text-center py-16">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
               <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">No Results Yet</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">No Results Yet</h3>
             <p class="text-gray-500">Results will appear here once matches are played.</p>
           </div>
         )}
 
-        <!-- No Results Message (hidden by default) -->
-        <div id="no-results-message" class="hidden text-center py-12">
-          <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+        <!-- No Results Message (hidden by default, shown by JS filter) -->
+        <div id="no-results-message" class="hidden text-center py-16">
+          <div class="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
             <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">No Matches Found</h3>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">No Matches Found</h3>
           <p class="text-gray-500">No results match your selected filters.</p>
         </div>
 
         <noscript>
-          <style>.result-item { display: block !important; } #no-results-message { display: none !important; }</style>
+          <style>.result-item { display: flex !important; } #no-results-message { display: none !important; }</style>
         </noscript>
 
-        <div class="mt-8 text-center text-sm text-gray-500">
+        <p class="mt-6 text-center text-xs text-gray-400">
           Last updated: {new Date(resultsData.lastUpdated).toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
@@ -279,7 +536,7 @@ const resultsWithOutcome = sortedResults.map(result => {
             hour: '2-digit',
             minute: '2-digit'
           })}
-        </div>
+        </p>
       </div>
     </div>
   </section>
@@ -294,11 +551,8 @@ const resultsWithOutcome = sortedResults.map(result => {
   function switchTab(tab: string) {
     tabBtns.forEach(btn => {
       const isActive = btn.id === `tab-${tab}`;
-      btn.classList.toggle('active', isActive);
-      btn.classList.toggle('border-shamrock-700', isActive);
       btn.classList.toggle('text-shamrock-700', isActive);
-      btn.classList.toggle('border-transparent', !isActive);
-      btn.classList.toggle('text-gray-500', !isActive);
+      btn.classList.toggle('text-gray-400', !isActive);
       btn.setAttribute('aria-selected', String(isActive));
     });
 
@@ -331,10 +585,10 @@ const resultsWithOutcome = sortedResults.map(result => {
 
       fixtureFilterBtns.forEach(b => {
         b.classList.remove('active', 'bg-shamrock-700', 'text-white');
-        b.classList.add('bg-gray-100', 'text-gray-700');
+        b.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
       });
       btn.classList.add('active', 'bg-shamrock-700', 'text-white');
-      btn.classList.remove('bg-gray-100', 'text-gray-700');
+      btn.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
 
       fixtureItems.forEach(item => {
         const team = item.getAttribute('data-team');
@@ -390,10 +644,10 @@ const resultsWithOutcome = sortedResults.map(result => {
       const btnValue = btn.getAttribute(dataAttr);
       if (btnValue === activeValue) {
         btn.classList.add('active', 'bg-shamrock-700', 'text-white');
-        btn.classList.remove('bg-gray-100', 'text-gray-700');
+        btn.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
       } else {
         btn.classList.remove('active', 'bg-shamrock-700', 'text-white');
-        btn.classList.add('bg-gray-100', 'text-gray-700');
+        btn.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
       }
     });
   }

@@ -4,8 +4,8 @@ import { NAV_ITEMS } from '../lib/nav';
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="hidden md:flex items-center gap-1">
-  {NAV_ITEMS.map((item) => {
+<nav class="hidden md:flex items-center h-full">
+  {NAV_ITEMS.map((item, i) => {
     const isActive = currentPath === item.href ||
       (item.href !== '/' && currentPath.startsWith(item.href));
 
@@ -13,13 +13,16 @@ const currentPath = Astro.url.pathname;
       <a
         href={item.href}
         class:list={[
-          'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+          'flex items-center justify-center h-full px-5 lg:px-6 border-r border-shamrock-600/50 transition-colors',
           isActive
-            ? 'bg-shamrock-100 text-shamrock-700'
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
+            ? 'text-white bg-shamrock-800/60'
+            : 'text-shamrock-100 hover:text-white hover:bg-shamrock-800/40',
         ]}
+        style="transform: skewX(-25deg);"
       >
-        {item.label}
+        <span class="text-sm font-bold uppercase tracking-wide" style="transform: skewX(25deg);">
+          {item.label}
+        </span>
       </a>
     );
   })}

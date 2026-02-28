@@ -15,6 +15,29 @@ const aboutLinks = [
 ];
 ---
 
+<!-- Quote Bar with background image (CPFC style) -->
+<div class="relative overflow-hidden">
+  <div class="absolute inset-0">
+    <picture>
+      <source srcset="/images/hero-team-huddle.webp" type="image/webp" />
+      <img src="/images/hero-team-huddle.jpg" alt="" class="w-full h-full object-cover" loading="lazy" />
+    </picture>
+    <div class="absolute inset-0 bg-shamrock-900/85"></div>
+  </div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <blockquote class="text-white font-bold text-2xl md:text-4xl uppercase tracking-tight leading-tight max-w-3xl">
+      "Is ar sc&aacute;th a ch&eacute;ile a mhaireann na daoine"
+    </blockquote>
+    <p class="text-shamrock-300 text-sm mt-3 uppercase tracking-wide">&mdash; Seanfhocal</p>
+  </div>
+</div>
+
+<!-- Diagonal separator (CPFC style) -->
+<div class="relative h-16 md:h-24 overflow-hidden">
+  <div class="absolute inset-0 bg-shamrock-700" style="clip-path: polygon(0 0, 100% 0, 100% 0, 0 100%);"></div>
+  <div class="absolute inset-0 bg-gray-900" style="clip-path: polygon(100% 0, 100% 100%, 0 100%);"></div>
+</div>
+
 <footer class="bg-gray-900 text-gray-300">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
@@ -34,7 +57,7 @@ const aboutLinks = [
 
       <!-- Quick Links -->
       <div>
-        <h3 class="font-semibold text-white mb-4">Quick Links</h3>
+        <h3 class="font-bold text-white mb-4 uppercase tracking-wide text-sm">Quick Links</h3>
         <ul class="space-y-2">
           {quickLinks.map((link) => (
             <li>
@@ -48,7 +71,7 @@ const aboutLinks = [
 
       <!-- About -->
       <div>
-        <h3 class="font-semibold text-white mb-4">Club Info</h3>
+        <h3 class="font-bold text-white mb-4 uppercase tracking-wide text-sm">Club Info</h3>
         <ul class="space-y-2">
           {aboutLinks.map((link) => (
             <li>
@@ -62,7 +85,7 @@ const aboutLinks = [
 
       <!-- Social & Contact -->
       <div>
-        <h3 class="font-semibold text-white mb-4">Connect</h3>
+        <h3 class="font-bold text-white mb-4 uppercase tracking-wide text-sm">Follow Us</h3>
         <div class="flex gap-4 mb-4">
           <!-- Facebook -->
           <a href="https://www.facebook.com/BrooklynShamrocks/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-shamrock-700 transition-colors" aria-label="Facebook">

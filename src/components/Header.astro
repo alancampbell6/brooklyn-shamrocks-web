@@ -5,44 +5,80 @@ import { NAV_ITEMS } from '../lib/nav';
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16 md:h-20">
-      <!-- Logo -->
-      <a href="/" class="flex items-center gap-3 group">
-        <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks" width="48" height="48" class="w-10 h-10 md:w-12 md:h-12 object-contain" />
-        <div class="hidden sm:block">
-          <span class="font-bold text-lg md:text-xl text-gray-900 group-hover:text-shamrock-700 transition-colors">
-            Brooklyn Shamrocks
-          </span>
-          <span class="block text-xs text-gray-500 uppercase tracking-wider">GAA Club</span>
+<header class="sticky top-0 z-50 bg-shamrock-900 border-b border-shamrock-800">
+  <div class="relative max-w-[1440px] mx-auto">
+    <div class="flex items-center h-16 md:h-20">
+      <!-- Logo with skewed accent background (angle matches nav separators) -->
+      <a href="/" class="relative flex items-center gap-3 group h-full px-4 sm:px-6 lg:px-8 pr-6 sm:pr-10 z-10 flex-shrink-0 bg-shamrock-700 border-r border-shamrock-600/50" style="transform: skewX(-25deg);">
+        <div class="flex items-center gap-3" style="transform: skewX(25deg);">
+          <img src="/images/crest_white_bg.png" alt="Brooklyn Shamrocks" width="48" height="48" class="w-10 h-10 md:w-12 md:h-12 object-contain" />
+          <div class="hidden sm:block">
+            <span class="font-bold text-lg md:text-xl text-white group-hover:text-shamrock-100 transition-colors">
+              Brooklyn Shamrocks
+            </span>
+            <span class="block text-xs text-shamrock-200 uppercase tracking-wider">GAA Club</span>
+          </div>
         </div>
       </a>
 
-      <!-- Navigation -->
-      <Navigation />
+      <!-- Desktop Navigation (left-aligned, flows after logo like CPFC) -->
+      <div class="hidden md:flex items-center h-full flex-1">
+        <Navigation />
+      </div>
 
-      <!-- Mobile Menu Button -->
-      <button
-        id="mobile-menu-btn"
-        class="md:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-        aria-label="Open menu"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        <svg id="icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-        <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      <!-- Mobile Quick Nav — skewed links flush against logo accent (CPFC style) -->
+      <nav class="flex md:hidden items-center h-full flex-1">
+        {[
+          { href: '/updates', label: 'Updates' },
+          { href: '/matches', label: 'Matches' },
+          { href: '/shop', label: 'Shop' },
+        ].map((item, i) => {
+          const isActive = currentPath === item.href || currentPath.startsWith(item.href);
+          return (
+            <a
+              href={item.href}
+              class:list={[
+                'flex items-center justify-center h-full px-3 border-r border-shamrock-600/50 transition-colors',
+                isActive ? 'text-white' : 'text-shamrock-100 hover:text-white hover:bg-shamrock-800/50',
+              ]}
+              style="transform: skewX(-25deg);"
+            >
+              <span class="text-xs font-bold uppercase tracking-wide whitespace-nowrap" style="transform: skewX(25deg);">
+                {item.label}
+              </span>
+            </a>
+          );
+        })}
+      </nav>
+
+      <!-- Right Side: Shop + Burger (like CPFC's Shop/Tickets/Login utility area) -->
+      <div class="flex items-center gap-3 px-2 sm:px-4 lg:px-6 flex-shrink-0">
+        <a href="/shop" class="hidden md:inline-flex items-center gap-1.5 px-5 py-2 bg-gold-500 text-gray-900 text-sm font-bold uppercase tracking-wide hover:bg-gold-400 transition-colors">
+          Shop
+        </a>
+
+        <!-- Burger Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          class="p-2 text-shamrock-100 hover:text-white"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg id="icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white" aria-hidden="true">
-    <nav class="px-4 py-4 space-y-2">
+  <!-- Slide-out Menu (all nav items including Shop) -->
+  <div id="mobile-menu" class="hidden border-t border-shamrock-800 bg-shamrock-900" aria-hidden="true">
+    <nav class="px-4 py-4 space-y-1">
       {NAV_ITEMS.map((item) => {
         const isActive = currentPath === item.href ||
           (item.href !== '/' && currentPath.startsWith(item.href));
@@ -50,16 +86,22 @@ const currentPath = Astro.url.pathname;
           <a
             href={item.href}
             class:list={[
-              'block px-4 py-2 rounded-lg transition-colors',
+              'block px-4 py-2.5 uppercase text-sm font-bold tracking-wide transition-colors',
               isActive
-                ? 'bg-shamrock-100 text-shamrock-700 font-semibold'
-                : 'text-gray-700 hover:bg-shamrock-50 hover:text-shamrock-700',
+                ? 'bg-shamrock-800 text-white'
+                : 'text-shamrock-100 hover:bg-shamrock-800/50 hover:text-white',
             ]}
           >
             {item.label}
           </a>
         );
       })}
+      <a
+        href="/shop"
+        class="block px-4 py-2.5 bg-gold-500 text-gray-900 font-bold uppercase tracking-wide text-sm text-center mt-3"
+      >
+        Shop
+      </a>
     </nav>
   </div>
 
