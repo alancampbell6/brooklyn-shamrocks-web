@@ -27,7 +27,7 @@ const currentPath = Astro.url.pathname;
       </div>
 
       <!-- Mobile Quick Nav — skewed links flush against logo accent (CPFC style) -->
-      <nav class="flex md:hidden items-center h-full flex-1">
+      <nav id="mobile-quick-nav" class="flex md:hidden items-center h-full flex-1">
         {[
           { href: '/updates', label: 'Updates' },
           { href: '/matches', label: 'Matches' },
@@ -116,6 +116,7 @@ const currentPath = Astro.url.pathname;
   const mobileMenu = document.getElementById('mobile-menu');
   const iconOpen = document.getElementById('icon-open');
   const iconClose = document.getElementById('icon-close');
+  const quickNav = document.getElementById('mobile-quick-nav');
 
   menuBtn?.addEventListener('click', () => {
     const isOpen = mobileMenu?.classList.toggle('hidden') === false;
@@ -124,5 +125,6 @@ const currentPath = Astro.url.pathname;
     mobileMenu?.setAttribute('aria-hidden', String(!isOpen));
     iconOpen?.classList.toggle('hidden', isOpen);
     iconClose?.classList.toggle('hidden', !isOpen);
+    quickNav?.classList.toggle('hidden', isOpen);
   });
 </script>

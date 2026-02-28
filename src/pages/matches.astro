@@ -120,7 +120,7 @@ const outcomeLabels = OUTCOME_LABELS;
   </div>
 
   <!-- Content -->
-  <section class="bg-gray-50 min-h-[60vh]">
+  <section class="bg-gray-50 min-h-[40vh]">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
       <!-- ==================== FIXTURES PANEL ==================== -->
@@ -258,14 +258,20 @@ const outcomeLabels = OUTCOME_LABELS;
             )}
           </div>
         ) : (
-          <div class="text-center py-16">
+          <div class="text-center py-10">
             <div class="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
               <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
             <h3 class="text-lg font-bold text-gray-900 mb-2">No Upcoming Fixtures</h3>
-            <p class="text-gray-500">Check back soon for our upcoming schedule.</p>
+            <p class="text-gray-500 mb-4">Follow us on social media for schedule updates.</p>
+            <a href="/updates" class="inline-flex items-center gap-2 px-5 py-2 bg-shamrock-700 text-white text-sm font-bold uppercase tracking-wide hover:bg-shamrock-600 transition-colors rounded-full">
+              Stay Connected
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
           </div>
         )}
 
@@ -356,7 +362,7 @@ const outcomeLabels = OUTCOME_LABELS;
                           <span class="text-gray-400 font-bold text-lg md:text-xl">{featuredResult.homeTeam.substring(0, 2).toUpperCase()}</span>
                         )}
                       </div>
-                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredResult.homeTeam}</p>
+                      <p class="font-bold text-gray-900 text-sm md:text-base"><span class="hidden md:inline">{featuredResult.homeTeam}</span><span class="md:hidden">{featuredResult.homeTeam === CLUB_NAME ? 'Brooklyn' : featuredResult.homeTeam.split(' ')[0]}</span></p>
                     </div>
 
                     {/* Score Center */}
@@ -381,7 +387,7 @@ const outcomeLabels = OUTCOME_LABELS;
                           <span class="text-gray-400 font-bold text-lg md:text-xl">{featuredResult.awayTeam.substring(0, 2).toUpperCase()}</span>
                         )}
                       </div>
-                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredResult.awayTeam}</p>
+                      <p class="font-bold text-gray-900 text-sm md:text-base"><span class="hidden md:inline">{featuredResult.awayTeam}</span><span class="md:hidden">{featuredResult.awayTeam === CLUB_NAME ? 'Brooklyn' : featuredResult.awayTeam.split(' ')[0]}</span></p>
                     </div>
                   </div>
 
@@ -415,7 +421,7 @@ const outcomeLabels = OUTCOME_LABELS;
                       {/* Date & Meta */}
                       <div class="md:w-48 flex-shrink-0">
                         <p class="font-bold text-gray-900 text-sm">{d.dayName} {d.day} {d.month} {d.year}</p>
-                        <p class="text-xs text-gray-500 truncate">{result.competition} &middot; {result.venue}</p>
+                        <p class="text-xs text-gray-500 truncate" title={`${result.competition} · ${result.venue}`}>{result.competition} &middot; {result.venue}</p>
                       </div>
 
                       {/* Matchup with Score */}

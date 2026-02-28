@@ -106,8 +106,20 @@ const updateCards = [
               <FixtureCard {...nextFixture} />
             </div>
           ) : (
-            <div class="bg-white p-6 text-center text-gray-500">
-              No upcoming fixtures scheduled
+            <div class="bg-white p-6 text-center">
+              <svg class="w-10 h-10 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p class="font-semibold text-gray-700 mb-1">Season fixtures coming soon</p>
+              <p class="text-sm text-gray-400">Follow us for schedule updates</p>
+              <div class="flex justify-center gap-3 mt-4">
+                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" class="text-shamrock-300 hover:text-white transition-colors" aria-label="Instagram">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                </a>
+                <a href={SOCIAL_LINKS.x} target="_blank" rel="noopener noreferrer" class="text-shamrock-300 hover:text-white transition-colors" aria-label="X">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+              </div>
             </div>
           )}
           <a href="/matches" class="inline-flex items-center gap-2 mt-4 text-sm font-bold text-shamrock-300 hover:text-white uppercase tracking-wide transition-colors">
@@ -199,7 +211,7 @@ const updateCards = [
         <!-- Scroll buttons (sharp rectangle like CPFC) -->
         <button
           id="shop-scroll-left"
-          class="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-shamrock-700 items-center justify-center text-white hover:bg-shamrock-600 transition-colors"
+          class="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-shamrock-700 items-center justify-center text-white hover:bg-shamrock-600 transition-colors shadow-lg"
           aria-label="Scroll left"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,7 +249,7 @@ const updateCards = [
 
         <button
           id="shop-scroll-right"
-          class="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-shamrock-700 items-center justify-center text-white hover:bg-shamrock-600 transition-colors"
+          class="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-shamrock-700 items-center justify-center text-white hover:bg-shamrock-600 transition-colors shadow-lg"
           aria-label="Scroll right"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +264,7 @@ const updateCards = [
   <section class="py-10 md:py-14 bg-shamrock-900 relative overflow-hidden">
     <!-- Watermark text (like CPFC's "PALACE TV") -->
     <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
-      <span class="text-shamrock-800/30 text-[8rem] md:text-[12rem] font-black uppercase tracking-tighter leading-none">Shamrocks</span>
+      <span class="text-shamrock-800/30 text-[8rem] md:text-[12rem] font-bold uppercase tracking-tighter leading-none">Shamrocks</span>
     </div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -328,12 +340,18 @@ const updateCards = [
       />
       <div class="grid md:grid-cols-2 gap-6">
         {teamsData.teams.map((team) => (
-          <div class="bg-white border border-gray-200 p-6 hover:shadow-lg transition-shadow">
-            <h3 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-wide">{team.name}</h3>
-            <p class="text-sm text-gray-600 mb-4">{team.description}</p>
-            <div class="text-sm text-gray-500 space-y-1">
-              <p>Training: {team.trainingDays}, {team.trainingTime}</p>
-              <p>{team.trainingLocation}</p>
+          <div class="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+            <div class="h-1.5 bg-gradient-to-r from-shamrock-700 to-shamrock-500"></div>
+            <div class="p-6 flex gap-4">
+              <img src="/images/crest_white_bg.png" alt="" width="48" height="48" loading="lazy" class="w-12 h-12 object-contain flex-shrink-0 opacity-60" />
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-wide">{team.name}</h3>
+                <p class="text-sm text-gray-600 mb-4">{team.description}</p>
+                <div class="text-sm text-gray-500 space-y-1">
+                  <p>Training: {team.trainingDays}, {team.trainingTime}</p>
+                  <p>{team.trainingLocation}</p>
+                </div>
+              </div>
             </div>
           </div>
         ))}

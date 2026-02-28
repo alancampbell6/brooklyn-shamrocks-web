@@ -14,9 +14,9 @@ import Hero from '../components/Hero.astro';
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Facebook Feed (first on mobile, left column on desktop) -->
-        <div class="lg:col-span-1 lg:order-1 space-y-6">
+        <div class="lg:col-span-1 lg:order-1 space-y-4">
           <div id="fb-root"></div>
-          <div class="fb-feed-wrapper bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="fb-feed-wrapper bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative">
             <div
               class="fb-page"
               data-href="https://www.facebook.com/BrooklynShamrocks"
@@ -32,7 +32,16 @@ import Hero from '../components/Hero.astro';
                 <a href="https://www.facebook.com/BrooklynShamrocks">Brooklyn Shamrocks GAA</a>
               </blockquote>
             </div>
+            <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
           </div>
+          <a
+            href="https://www.facebook.com/BrooklynShamrocks"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block text-center text-sm font-semibold text-blue-600 hover:text-blue-700 py-2"
+          >
+            View more on Facebook &rarr;
+          </a>
 
           <!-- Fallback -->
           <noscript>
@@ -51,7 +60,7 @@ import Hero from '../components/Hero.astro';
         </div>
 
         <!-- Sidebar content (second on mobile, right column on desktop) -->
-        <div class="lg:col-span-2 lg:order-2 space-y-6">
+        <div class="lg:col-span-2 lg:order-2 space-y-4">
           <!-- About Card -->
           <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-3">Stay Connected</h2>
