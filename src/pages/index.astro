@@ -10,37 +10,26 @@ import resultsData from '../data/results.json';
 import videosData from '../data/videos.json';
 import productsData from '../data/products.json';
 import sponsorsData from '../data/sponsors.json';
-import { CLUB_NAME } from '../lib/constants';
-
-// Helper function to find video URL for a result
-function findVideoUrl(result: typeof resultsData.results[0]): string | undefined {
-  const opponent = result.homeTeam === CLUB_NAME ? result.awayTeam : result.homeTeam;
-  const video = videosData.videos.find(v => {
-    const opponentMatch = v.opponent.toLowerCase() === opponent.toLowerCase() ||
-                          opponent.toLowerCase().includes(v.opponent.toLowerCase()) ||
-                          v.opponent.toLowerCase().includes(opponent.toLowerCase());
-    const roundMatch = v.round.toLowerCase() === result.round.toLowerCase();
-    return opponentMatch && roundMatch;
-  });
-  return video?.url;
-}
+import teamsData from '../data/teams.json';
+import { CLUB_NAME, SOCIAL_LINKS } from '../lib/constants';
+import { findVideoUrl } from '../lib/gaa';
 
 // Compare date strings directly (YYYY-MM-DD sorts lexicographically) to avoid
 // timezone off-by-one issues when comparing UTC-parsed dates to local time.
-const todayStr = new Date().toLocaleDateString('en-CA'); // en-CA gives YYYY-MM-DD in local time
+const todayStr = new Date().toLocaleDateString('en-CA');
 const upcomingFixtures = fixturesData.fixtures
   .filter(f => f.date >= todayStr)
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
 const nextFixture = upcomingFixtures[0];
 
-// Get the latest result
-const latestResultRaw = resultsData.results
+// Get the latest result (spread to avoid mutating the imported array)
+const latestResultRaw = [...resultsData.results]
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
 
 const latestResult = latestResultRaw ? {
   ...latestResultRaw,
-  videoUrl: findVideoUrl(latestResultRaw)
+  videoUrl: findVideoUrl(latestResultRaw, videosData.videos)
 } : null;
 
 // Featured products for shop carousel
@@ -58,21 +47,21 @@ const updateCards = [
   {
     title: 'Follow on Instagram',
     description: 'Behind the scenes, training photos, and match day galleries.',
-    href: 'https://www.instagram.com/brooklynshamrocksgfc',
+    href: SOCIAL_LINKS.instagram,
     icon: 'instagram',
     external: true,
   },
   {
     title: 'Follow on X',
     description: 'Live match updates, scores, and breaking club news.',
-    href: 'https://x.com/bklynshamrocks',
+    href: SOCIAL_LINKS.x,
     icon: 'x',
     external: true,
   },
 ];
 ---
 
-<BaseLayout title="Gaelic Football in Brooklyn, NY" description="Brooklyn Shamrocks GAA - New York's oldest Gaelic football club, founded in 1955. Join us for matches, training, and Irish community events in Brooklyn.">
+<BaseLayout title="Gaelic Football in Brooklyn, NY" description="Brooklyn Shamrocks GAA - New York's oldest Gaelic football club, founded in 1955. Join us for matches, training, and Irish community events in Brooklyn." preloadHero={true}>
   <!-- Hero Section -->
   <Hero
     title="Brooklyn Shamrocks"
@@ -338,26 +327,16 @@ const updateCards = [
         subtitle="Two squads competing across New York GAA competitions"
       />
       <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-white border border-gray-200 p-6 hover:shadow-lg transition-shadow">
-          <h3 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-wide">Senior Football</h3>
-          <p class="text-sm text-gray-600 mb-4">
-            Our flagship team competing at the highest level in the NY Senior Football Championship and league competitions throughout the season.
-          </p>
-          <div class="text-sm text-gray-500 space-y-1">
-            <p>Training: Tue & Thu, 7:00 PM</p>
-            <p>Randalls Island Field 73</p>
+        {teamsData.teams.map((team) => (
+          <div class="bg-white border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+            <h3 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-wide">{team.name}</h3>
+            <p class="text-sm text-gray-600 mb-4">{team.description}</p>
+            <div class="text-sm text-gray-500 space-y-1">
+              <p>Training: {team.trainingDays}, {team.trainingTime}</p>
+              <p>{team.trainingLocation}</p>
+            </div>
           </div>
-        </div>
-        <div class="bg-white border border-gray-200 p-6 hover:shadow-lg transition-shadow">
-          <h3 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-wide">Junior Football</h3>
-          <p class="text-sm text-gray-600 mb-4">
-            A pathway for developing players and those returning to the game, competing in the NY Junior Football Championship with a focus on skill development.
-          </p>
-          <div class="text-sm text-gray-500 space-y-1">
-            <p>Training: Tue & Thu, 7:00 PM</p>
-            <p>Randalls Island Field 73</p>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   </section>

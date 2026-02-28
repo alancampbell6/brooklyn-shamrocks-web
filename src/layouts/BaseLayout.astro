@@ -2,22 +2,25 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import { CLUB_SITE, CLUB_EMAIL, SOCIAL_LINKS } from '../lib/constants';
 
 interface Props {
   title: string;
   description?: string;
   ogImage?: string;
-  schema?: object;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  preloadHero?: boolean;
 }
 
 const {
   title,
   description = 'Brooklyn Shamrocks GAA Club - Gaelic Athletic Association in Brooklyn, New York',
   ogImage = '/images/og-image.jpg',
-  schema
+  schema,
+  preloadHero = false
 } = Astro.props;
 
-const siteUrl = 'https://brooklynshamrocks.com';
+const siteUrl = CLUB_SITE;
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImageUrl = new URL(ogImage, siteUrl).toString();
 const fullTitle = `${title} | Brooklyn Shamrocks GAA`;
@@ -44,13 +47,13 @@ const organizationSchema = {
     }
   },
   "sameAs": [
-    "https://www.facebook.com/BrooklynShamrocks/",
-    "https://www.instagram.com/brooklynshamrocksgfc",
-    "https://x.com/bklynshamrocks"
+    SOCIAL_LINKS.facebook,
+    SOCIAL_LINKS.instagram,
+    SOCIAL_LINKS.x
   ],
   "contactPoint": {
     "@type": "ContactPoint",
-    "email": "info@brooklynshamrocks.com",
+    "email": CLUB_EMAIL,
     "contactType": "general"
   }
 };
@@ -91,8 +94,8 @@ const organizationSchema = {
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Preload critical images for LCP -->
-    <link rel="preload" href="/images/hero-team-huddle.webp" as="image" type="image/webp" />
+    <!-- Preload critical images for LCP (only on pages with Hero) -->
+    {preloadHero && <link rel="preload" href="/images/hero-team-huddle.webp" as="image" type="image/webp" />}
 
     <!-- Resource Hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

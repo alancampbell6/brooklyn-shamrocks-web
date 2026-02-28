@@ -1,6 +1,6 @@
 ---
 import { CLUB_NAME } from '../lib/constants';
-import { parseGAAScore } from '../lib/gaa';
+import { getOutcome, type MatchOutcome } from '../lib/gaa';
 
 interface Props {
   date: string;
@@ -27,22 +27,15 @@ const formattedDate = dateObj.toLocaleDateString('en-US', {
 const shamrocksIsHome = homeTeam === CLUB_NAME;
 const shamrocksScore = shamrocksIsHome ? homeScore : awayScore;
 const opponentScore = shamrocksIsHome ? awayScore : homeScore;
+const result = getOutcome(shamrocksScore, opponentScore);
 
-const shamrocksTotal = parseGAAScore(shamrocksScore);
-const opponentTotal = parseGAAScore(opponentScore);
-
-let result: 'win' | 'loss' | 'draw';
-if (shamrocksTotal > opponentTotal) result = 'win';
-else if (shamrocksTotal < opponentTotal) result = 'loss';
-else result = 'draw';
-
-const resultColors = {
+const resultColors: Record<MatchOutcome, string> = {
   win: 'bg-green-100 text-green-800 border-green-200',
   loss: 'bg-red-100 text-red-800 border-red-200',
   draw: 'bg-gray-100 text-gray-800 border-gray-200',
 };
 
-const resultLabels = {
+const resultLabels: Record<MatchOutcome, string> = {
   win: 'W',
   loss: 'L',
   draw: 'D',

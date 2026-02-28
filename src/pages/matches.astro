@@ -1,13 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FixtureCard from '../components/FixtureCard.astro';
-import ResultCard from '../components/ResultCard.astro';
 
 import fixturesData from '../data/fixtures.json';
 import resultsData from '../data/results.json';
 import videosData from '../data/videos.json';
 import { CLUB_NAME } from '../lib/constants';
-import { parseGAAScore } from '../lib/gaa';
+import { getOutcome, findVideoUrl, OUTCOME_COLORS, OUTCOME_LABELS } from '../lib/gaa';
 
 // --- Fixtures ---
 
@@ -54,18 +52,6 @@ const remainingFixtures = upcomingFixtures.slice(1);
 
 // --- Results ---
 
-function findVideoUrl(result: typeof resultsData.results[0]): string | undefined {
-  const opponent = result.homeTeam === CLUB_NAME ? result.awayTeam : result.homeTeam;
-  const video = videosData.videos.find(v => {
-    const opponentMatch = v.opponent.toLowerCase() === opponent.toLowerCase() ||
-                          opponent.toLowerCase().includes(v.opponent.toLowerCase()) ||
-                          v.opponent.toLowerCase().includes(opponent.toLowerCase());
-    const roundMatch = v.round.toLowerCase() === result.round.toLowerCase();
-    return opponentMatch && roundMatch;
-  });
-  return video?.url;
-}
-
 const sortedResults = [...resultsData.results].sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 );
@@ -77,13 +63,11 @@ const resultsWithOutcome = sortedResults.map(result => {
   const shamrocksIsHome = result.homeTeam === CLUB_NAME;
   const shamrocksScore = shamrocksIsHome ? result.homeScore : result.awayScore;
   const opponentScore = shamrocksIsHome ? result.awayScore : result.homeScore;
-  const shamrocksTotal = parseGAAScore(shamrocksScore);
-  const opponentTotal = parseGAAScore(opponentScore);
   return {
     ...result,
     year: new Date(result.date).getFullYear(),
-    outcome: shamrocksTotal > opponentTotal ? 'win' : shamrocksTotal < opponentTotal ? 'loss' : 'draw' as 'win' | 'loss' | 'draw',
-    videoUrl: findVideoUrl(result)
+    outcome: getOutcome(shamrocksScore, opponentScore),
+    videoUrl: findVideoUrl(result, videosData.videos)
   };
 });
 
@@ -103,16 +87,8 @@ function formatRowDate(dateStr: string) {
   };
 }
 
-const outcomeColors = {
-  win: 'bg-green-600',
-  loss: 'bg-red-600',
-  draw: 'bg-gray-500',
-};
-const outcomeLabels = {
-  win: 'W',
-  loss: 'L',
-  draw: 'D',
-};
+const outcomeColors = OUTCOME_COLORS;
+const outcomeLabels = OUTCOME_LABELS;
 ---
 
 <BaseLayout title="Matches - Fixtures & Results" description="Brooklyn Shamrocks GAA match schedule and results. View upcoming Gaelic football fixtures, past scores, and competition details for all teams." schema={fixturesSchema}>
@@ -545,8 +521,8 @@ const outcomeLabels = {
 <script>
   // --- Tab switching ---
   const tabBtns = document.querySelectorAll('.tab-btn');
-  const fixturesPanel = document.getElementById('panel-fixtures')!;
-  const resultsPanel = document.getElementById('panel-results')!;
+  const fixturesPanel = document.getElementById('panel-fixtures');
+  const resultsPanel = document.getElementById('panel-results');
 
   function switchTab(tab: string) {
     tabBtns.forEach(btn => {
@@ -556,8 +532,8 @@ const outcomeLabels = {
       btn.setAttribute('aria-selected', String(isActive));
     });
 
-    fixturesPanel.classList.toggle('hidden', tab !== 'fixtures');
-    resultsPanel.classList.toggle('hidden', tab !== 'results');
+    fixturesPanel?.classList.toggle('hidden', tab !== 'fixtures');
+    resultsPanel?.classList.toggle('hidden', tab !== 'results');
 
     // Update URL hash without scrolling
     history.replaceState(null, '', tab === 'fixtures' ? '/matches' : '/matches#results');
