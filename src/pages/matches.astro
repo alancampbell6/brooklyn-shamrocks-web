@@ -1,0 +1,416 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import FixtureCard from '../components/FixtureCard.astro';
+import ResultCard from '../components/ResultCard.astro';
+
+import fixturesData from '../data/fixtures.json';
+import resultsData from '../data/results.json';
+import videosData from '../data/videos.json';
+import { CLUB_NAME } from '../lib/constants';
+import { parseGAAScore } from '../lib/gaa';
+
+// --- Fixtures ---
+
+// Compare date strings directly (YYYY-MM-DD sorts lexicographically) to avoid
+// timezone off-by-one issues when comparing UTC-parsed dates to local time.
+const todayStr = new Date().toLocaleDateString('en-CA');
+const upcomingFixtures = fixturesData.fixtures
+  .filter(f => f.date >= todayStr)
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+const fixtureTeams = [...new Set(fixturesData.fixtures.map(f => f.team))].sort();
+
+// SportsEvent schema for upcoming fixtures
+const fixturesSchema = upcomingFixtures.length > 0 ? upcomingFixtures.map(fixture => ({
+  "@context": "https://schema.org",
+  "@type": "SportsEvent",
+  "name": `${fixture.homeTeam} vs ${fixture.awayTeam}`,
+  "startDate": fixture.date,
+  "location": {
+    "@type": "Place",
+    "name": fixture.venue || "Gaelic Park",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "addressCountry": "US"
+    }
+  },
+  "homeTeam": {
+    "@type": "SportsTeam",
+    "name": fixture.homeTeam
+  },
+  "awayTeam": {
+    "@type": "SportsTeam",
+    "name": fixture.awayTeam
+  },
+  "sport": "Gaelic Football",
+  "eventStatus": "https://schema.org/EventScheduled"
+})) : null;
+
+// Group fixtures by month
+const fixturesByMonth = upcomingFixtures.reduce((acc, fixture) => {
+  const date = new Date(fixture.date);
+  const monthKey = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  if (!acc[monthKey]) acc[monthKey] = [];
+  acc[monthKey].push(fixture);
+  return acc;
+}, {} as Record<string, typeof upcomingFixtures>);
+
+// --- Results ---
+
+function findVideoUrl(result: typeof resultsData.results[0]): string | undefined {
+  const opponent = result.homeTeam === CLUB_NAME ? result.awayTeam : result.homeTeam;
+  const video = videosData.videos.find(v => {
+    const opponentMatch = v.opponent.toLowerCase() === opponent.toLowerCase() ||
+                          opponent.toLowerCase().includes(v.opponent.toLowerCase()) ||
+                          v.opponent.toLowerCase().includes(opponent.toLowerCase());
+    const roundMatch = v.round.toLowerCase() === result.round.toLowerCase();
+    return opponentMatch && roundMatch;
+  });
+  return video?.url;
+}
+
+const sortedResults = [...resultsData.results].sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+const years = [...new Set(resultsData.results.map(r => new Date(r.date).getFullYear()))].sort((a, b) => b - a);
+const resultTeams = [...new Set(resultsData.results.map(r => r.team))].sort();
+
+const resultsWithOutcome = sortedResults.map(result => {
+  const shamrocksIsHome = result.homeTeam === CLUB_NAME;
+  const shamrocksScore = shamrocksIsHome ? result.homeScore : result.awayScore;
+  const opponentScore = shamrocksIsHome ? result.awayScore : result.homeScore;
+  const shamrocksTotal = parseGAAScore(shamrocksScore);
+  const opponentTotal = parseGAAScore(opponentScore);
+  return {
+    ...result,
+    year: new Date(result.date).getFullYear(),
+    outcome: shamrocksTotal > opponentTotal ? 'win' : shamrocksTotal < opponentTotal ? 'loss' : 'draw',
+    videoUrl: findVideoUrl(result)
+  };
+});
+---
+
+<BaseLayout title="Matches - Fixtures & Results" description="Brooklyn Shamrocks GAA match schedule and results. View upcoming Gaelic football fixtures, past scores, and competition details for all teams." schema={fixturesSchema}>
+  <Hero
+    title="Matches"
+    subtitle="Fixtures, results, and scores across all competitions"
+    size="small"
+  />
+
+  <section class="py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Tab Navigation -->
+      <div class="flex border-b border-gray-200 mb-8" role="tablist">
+        <button
+          id="tab-fixtures"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-fixtures"
+          class="tab-btn active px-6 py-3 text-sm font-semibold border-b-2 border-shamrock-700 text-shamrock-700 -mb-px"
+        >
+          Fixtures
+        </button>
+        <button
+          id="tab-results"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-results"
+          class="tab-btn px-6 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 -mb-px"
+        >
+          Results
+        </button>
+      </div>
+
+      <!-- Fixtures Panel -->
+      <div id="panel-fixtures" role="tabpanel" aria-labelledby="tab-fixtures">
+        <!-- Filter Controls -->
+        <div class="mb-8 flex flex-wrap gap-2" id="fixture-filter-controls">
+          <button
+            class="fixture-filter-btn active px-4 py-2 rounded-full text-sm font-medium transition-colors bg-shamrock-700 text-white"
+            data-filter="all"
+          >
+            All Teams
+          </button>
+          {fixtureTeams.map((team) => (
+            <button
+              class="fixture-filter-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200"
+              data-filter={team}
+            >
+              {team}
+            </button>
+          ))}
+        </div>
+
+        <!-- Fixtures List -->
+        {upcomingFixtures.length > 0 ? (
+          <div id="fixtures-container">
+            {Object.entries(fixturesByMonth).map(([month, fixtures]) => (
+              <div class="mb-12">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
+                  {month}
+                </h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {fixtures.map((fixture) => (
+                    <div class="fixture-item" data-team={fixture.team}>
+                      <FixtureCard {...fixture} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-12">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">No Upcoming Fixtures</h3>
+            <p class="text-gray-500">Check back soon for our upcoming schedule.</p>
+          </div>
+        )}
+
+        <noscript>
+          <style>.fixture-item { display: block !important; }</style>
+        </noscript>
+
+        <div class="mt-8 text-center text-sm text-gray-500">
+          Last updated: {new Date(fixturesData.lastUpdated).toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
+        </div>
+      </div>
+
+      <!-- Results Panel -->
+      <div id="panel-results" role="tabpanel" aria-labelledby="tab-results" class="hidden">
+        <!-- Filter Controls -->
+        <div class="mb-8 space-y-4">
+          <!-- Year Filter -->
+          <div class="flex flex-wrap gap-2 justify-center" id="year-filter">
+            <span class="text-sm text-gray-500 self-center mr-2">Year:</span>
+            <button
+              class="year-btn active px-4 py-2 rounded-full text-sm font-medium transition-colors bg-shamrock-700 text-white"
+              data-year="all"
+            >
+              All Years
+            </button>
+            {years.map((year) => (
+              <button
+                class="year-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200"
+                data-year={year}
+              >
+                {year}
+              </button>
+            ))}
+          </div>
+
+          <!-- Team Filter -->
+          {resultTeams.length > 1 && (
+            <div class="flex flex-wrap gap-2 justify-center" id="team-filter">
+              <span class="text-sm text-gray-500 self-center mr-2">Team:</span>
+              <button
+                class="team-btn active px-4 py-2 rounded-full text-sm font-medium transition-colors bg-shamrock-700 text-white"
+                data-team="all"
+              >
+                All Teams
+              </button>
+              {resultTeams.map((team) => (
+                <button
+                  class="team-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  data-team={team}
+                >
+                  {team}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- Results List -->
+        {sortedResults.length > 0 ? (
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="results-container">
+            {resultsWithOutcome.map((result) => (
+              <div class="result-item" data-team={result.team} data-year={result.year} data-outcome={result.outcome}>
+                <ResultCard {...result} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-12">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">No Results Yet</h3>
+            <p class="text-gray-500">Results will appear here once matches are played.</p>
+          </div>
+        )}
+
+        <!-- No Results Message (hidden by default) -->
+        <div id="no-results-message" class="hidden text-center py-12">
+          <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">No Matches Found</h3>
+          <p class="text-gray-500">No results match your selected filters.</p>
+        </div>
+
+        <noscript>
+          <style>.result-item { display: block !important; } #no-results-message { display: none !important; }</style>
+        </noscript>
+
+        <div class="mt-8 text-center text-sm text-gray-500">
+          Last updated: {new Date(resultsData.lastUpdated).toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // --- Tab switching ---
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const fixturesPanel = document.getElementById('panel-fixtures')!;
+  const resultsPanel = document.getElementById('panel-results')!;
+
+  function switchTab(tab: string) {
+    tabBtns.forEach(btn => {
+      const isActive = btn.id === `tab-${tab}`;
+      btn.classList.toggle('active', isActive);
+      btn.classList.toggle('border-shamrock-700', isActive);
+      btn.classList.toggle('text-shamrock-700', isActive);
+      btn.classList.toggle('border-transparent', !isActive);
+      btn.classList.toggle('text-gray-500', !isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+    });
+
+    fixturesPanel.classList.toggle('hidden', tab !== 'fixtures');
+    resultsPanel.classList.toggle('hidden', tab !== 'results');
+
+    // Update URL hash without scrolling
+    history.replaceState(null, '', tab === 'fixtures' ? '/matches' : '/matches#results');
+  }
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.id.replace('tab-', '');
+      switchTab(tab);
+    });
+  });
+
+  // Check hash on load
+  if (window.location.hash === '#results') {
+    switchTab('results');
+  }
+
+  // --- Fixtures filter ---
+  const fixtureFilterBtns = document.querySelectorAll('.fixture-filter-btn');
+  const fixtureItems = document.querySelectorAll('.fixture-item');
+
+  fixtureFilterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter');
+
+      fixtureFilterBtns.forEach(b => {
+        b.classList.remove('active', 'bg-shamrock-700', 'text-white');
+        b.classList.add('bg-gray-100', 'text-gray-700');
+      });
+      btn.classList.add('active', 'bg-shamrock-700', 'text-white');
+      btn.classList.remove('bg-gray-100', 'text-gray-700');
+
+      fixtureItems.forEach(item => {
+        const team = item.getAttribute('data-team');
+        if (filter === 'all' || team === filter) {
+          (item as HTMLElement).style.display = '';
+        } else {
+          (item as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // --- Results filters ---
+  let activeYear = 'all';
+  let activeTeam = 'all';
+
+  const yearBtns = document.querySelectorAll('.year-btn');
+  const teamBtns = document.querySelectorAll('.team-btn');
+  const resultItems = document.querySelectorAll('.result-item');
+  const resultsContainer = document.getElementById('results-container');
+  const noResultsMessage = document.getElementById('no-results-message');
+
+  function updateResultFilters() {
+    let visibleCount = 0;
+    resultItems.forEach(item => {
+      const itemYear = item.getAttribute('data-year');
+      const itemTeam = item.getAttribute('data-team');
+
+      const yearMatch = activeYear === 'all' || itemYear === activeYear;
+      const teamMatch = activeTeam === 'all' || itemTeam === activeTeam;
+
+      if (yearMatch && teamMatch) {
+        (item as HTMLElement).style.display = '';
+        visibleCount++;
+      } else {
+        (item as HTMLElement).style.display = 'none';
+      }
+    });
+
+    if (noResultsMessage && resultsContainer) {
+      if (visibleCount === 0) {
+        noResultsMessage.classList.remove('hidden');
+        resultsContainer.classList.add('hidden');
+      } else {
+        noResultsMessage.classList.add('hidden');
+        resultsContainer.classList.remove('hidden');
+      }
+    }
+  }
+
+  function setActiveButton(buttons: NodeListOf<Element>, activeValue: string, dataAttr: string) {
+    buttons.forEach(btn => {
+      const btnValue = btn.getAttribute(dataAttr);
+      if (btnValue === activeValue) {
+        btn.classList.add('active', 'bg-shamrock-700', 'text-white');
+        btn.classList.remove('bg-gray-100', 'text-gray-700');
+      } else {
+        btn.classList.remove('active', 'bg-shamrock-700', 'text-white');
+        btn.classList.add('bg-gray-100', 'text-gray-700');
+      }
+    });
+  }
+
+  yearBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeYear = btn.getAttribute('data-year') || 'all';
+      setActiveButton(yearBtns, activeYear, 'data-year');
+      updateResultFilters();
+    });
+  });
+
+  teamBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeTeam = btn.getAttribute('data-team') || 'all';
+      setActiveButton(teamBtns, activeTeam, 'data-team');
+      updateResultFilters();
+    });
+  });
+</script>

@@ -13,7 +13,7 @@ interface Props {
 const {
   title,
   description = 'Brooklyn Shamrocks GAA Club - Gaelic Athletic Association in Brooklyn, New York',
-  ogImage = '/images/crest_white_bg.png',
+  ogImage = '/images/og-image.jpg',
   schema
 } = Astro.props;
 
@@ -92,7 +92,7 @@ const organizationSchema = {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Preload critical images for LCP -->
-    <link rel="preload" href="/images/crest_white_bg.png" as="image" type="image/png" />
+    <link rel="preload" href="/images/hero-team-huddle.webp" as="image" type="image/webp" />
 
     <!-- Resource Hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -106,9 +106,13 @@ const organizationSchema = {
 
     <!-- JSON-LD Schema -->
     <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
-    {schema && (
+    {schema && Array.isArray(schema) ? (
+      schema.map((s: object) => (
+        <script type="application/ld+json" set:html={JSON.stringify(s)} />
+      ))
+    ) : schema ? (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-    )}
+    ) : null}
 
     <title>{fullTitle}</title>
   </head>

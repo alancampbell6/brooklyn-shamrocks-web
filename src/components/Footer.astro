@@ -5,17 +5,13 @@ const currentYear = new Date().getFullYear();
 
 const quickLinks = [
   { href: '/updates', label: 'Updates' },
-  { href: '/fixtures', label: 'Fixtures' },
-  { href: '/results', label: 'Results' },
-  { href: '/teams', label: 'Teams' },
+  { href: '/matches', label: 'Matches' },
   { href: '/shop', label: 'Shop' },
 ];
 
 const aboutLinks = [
-  { href: '/about', label: 'About Us' },
   { href: '/contact', label: 'Contact' },
-  { href: '/about#membership', label: 'Membership' },
-  { href: '/about#training', label: 'Training Schedule' },
+  { href: '/history', label: 'Club History' },
 ];
 ---
 
@@ -107,13 +103,17 @@ const aboutLinks = [
             class="bg-white rounded-lg px-4 py-3 hover:scale-105 transition-transform"
             aria-label={sponsor.name}
           >
-            <img
-              src={sponsor.logo}
-              alt={sponsor.name}
-              width="160"
-              height="40"
-              class:list={['w-auto', sponsor.tier === 'primary' ? 'h-10' : 'h-8']}
-            />
+            <picture>
+              <source srcset={sponsor.logo.replace('.png', '.webp')} type="image/webp" />
+              <img
+                src={sponsor.logo}
+                alt={sponsor.name}
+                width="160"
+                height="40"
+                loading="lazy"
+                class:list={['w-auto', sponsor.tier === 'primary' ? 'h-10' : 'h-8']}
+              />
+            </picture>
           </a>
         ))}
       </div>

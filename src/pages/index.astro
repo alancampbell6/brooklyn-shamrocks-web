@@ -44,22 +44,10 @@ const latestResult = latestResultRaw ? {
 
 const quickLinks = [
   {
-    title: 'Fixtures',
-    description: 'View all upcoming matches',
-    href: '/fixtures',
+    title: 'Matches',
+    description: 'Fixtures & results',
+    href: '/matches',
     icon: 'calendar',
-  },
-  {
-    title: 'Results',
-    description: 'Recent match results',
-    href: '/results',
-    icon: 'trophy',
-  },
-  {
-    title: 'Teams',
-    description: 'Our squads and training times',
-    href: '/teams',
-    icon: 'users',
   },
   {
     title: 'Club History',
@@ -70,13 +58,13 @@ const quickLinks = [
 ];
 ---
 
-<BaseLayout title="Gaelic Football in Brooklyn, NY">
+<BaseLayout title="Gaelic Football in Brooklyn, NY" description="Brooklyn Shamrocks GAA - New York's oldest Gaelic football club, founded in 1955. Join us for matches, training, and Irish community events in Brooklyn.">
   <!-- Hero Section -->
   <Hero
-    title="Brooklyn Shamrocks GAA"
+    title="Brooklyn Shamrocks"
     subtitle="Promoting Gaelic games and Irish culture in Brooklyn, New York. Join us on the field or in the stands."
     showCta={true}
-    size="small"
+    size="medium"
   />
 
   <!-- Next Fixture & Latest Result -->
@@ -96,7 +84,7 @@ const quickLinks = [
               No upcoming fixtures scheduled
             </div>
           )}
-          <a href="/fixtures" class="inline-flex items-center gap-1 mt-4 text-shamrock-700 hover:text-shamrock-800 font-medium text-sm">
+          <a href="/matches" class="inline-flex items-center gap-1 mt-4 text-shamrock-700 hover:text-shamrock-800 font-medium text-sm">
             View all fixtures
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -117,7 +105,7 @@ const quickLinks = [
               No results available
             </div>
           )}
-          <a href="/results" class="inline-flex items-center gap-1 mt-4 text-shamrock-700 hover:text-shamrock-800 font-medium text-sm">
+          <a href="/matches" class="inline-flex items-center gap-1 mt-4 text-shamrock-700 hover:text-shamrock-800 font-medium text-sm">
             View all results
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -136,23 +124,13 @@ const quickLinks = [
         subtitle="Everything you need to know about Brooklyn Shamrocks"
       />
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
         {quickLinks.map((link) => (
           <a href={link.href} class="card p-6 group hover:border-shamrock-200 border border-transparent">
             <div class="w-12 h-12 bg-shamrock-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-shamrock-200 transition-colors">
               {link.icon === 'calendar' && (
                 <svg class="w-6 h-6 text-shamrock-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              )}
-              {link.icon === 'trophy' && (
-                <svg class="w-6 h-6 text-shamrock-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                </svg>
-              )}
-              {link.icon === 'users' && (
-                <svg class="w-6 h-6 text-shamrock-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               )}
               {link.icon === 'book' && (
@@ -171,6 +149,38 @@ const quickLinks = [
     </div>
   </section>
 
+  <!-- Our Teams -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionHeading
+        title="Our Teams"
+        subtitle="Two squads competing across New York GAA competitions"
+      />
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card p-6 border border-gray-100">
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Senior Football</h3>
+          <p class="text-sm text-gray-600 mb-4">
+            Our flagship team competing at the highest level in the NY Senior Football Championship and league competitions throughout the season.
+          </p>
+          <div class="text-sm text-gray-500 space-y-1">
+            <p>Training: Tue & Thu, 7:00 PM</p>
+            <p>Randalls Island Field 73</p>
+          </div>
+        </div>
+        <div class="card p-6 border border-gray-100">
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Junior Football</h3>
+          <p class="text-sm text-gray-600 mb-4">
+            A pathway for developing players and those returning to the game, competing in the NY Junior Football Championship with a focus on skill development.
+          </p>
+          <div class="text-sm text-gray-500 space-y-1">
+            <p>Training: Tue & Thu, 7:00 PM</p>
+            <p>Randalls Island Field 73</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Club News / Announcements -->
   <section class="py-12 md:py-16 bg-shamrock-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -182,7 +192,7 @@ const quickLinks = [
         Training sessions, social events, and a community that feels like family.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/about#membership" class="btn btn-secondary">
+        <a href="/contact" class="btn btn-secondary">
           Become a Member
         </a>
         <a href="/contact" class="btn border-2 border-white text-white hover:bg-white hover:text-shamrock-900">
@@ -208,7 +218,7 @@ const quickLinks = [
         </div>
 
         <div class="text-center mt-8">
-          <a href="/fixtures" class="btn btn-outline">
+          <a href="/matches" class="btn btn-outline">
             View Full Schedule
           </a>
         </div>
@@ -239,14 +249,18 @@ const quickLinks = [
               "flex items-center justify-center mb-4",
               sponsor.tier === 'primary' ? 'h-28' : 'h-20'
             ]}>
-              <img
-                src={sponsor.logo}
-                alt={sponsor.name}
-                class:list={[
-                  "max-h-full w-auto object-contain group-hover:scale-105 transition-transform",
-                  sponsor.tier === 'primary' ? 'max-w-64' : 'max-w-48'
-                ]}
-              />
+              <picture>
+                <source srcset={sponsor.logo.replace('.png', '.webp')} type="image/webp" />
+                <img
+                  src={sponsor.logo}
+                  alt={sponsor.name}
+                  loading="lazy"
+                  class:list={[
+                    "max-h-full w-auto object-contain group-hover:scale-105 transition-transform",
+                    sponsor.tier === 'primary' ? 'max-w-64' : 'max-w-48'
+                  ]}
+                />
+              </picture>
             </div>
             <span class:list={[
               "text-sm font-medium",
