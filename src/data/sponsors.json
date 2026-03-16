@@ -11,7 +11,14 @@
       "name": "JT Magen",
       "url": "https://jtmagen.com",
       "logo": "/images/sponsors/jt-magen.png",
-      "tier": "secondary",
+      "tier": "primary",
+      "description": "Club Sponsor"
+    },
+    {
+      "name": "Skyline Windows",
+      "url": "https://www.skylinewindows.com",
+      "logo": "/images/sponsors/skyline-windows.png",
+      "tier": "primary",
       "description": "Club Sponsor"
     }
   ]
