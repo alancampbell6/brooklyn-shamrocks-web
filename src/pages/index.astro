@@ -367,50 +367,20 @@ const updateCards = [
         <p class="text-gray-600">Proudly supported by our generous sponsors</p>
       </div>
 
-      <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+      <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10">
         {sponsorsData.sponsors.map((sponsor) => (
           <a
-            href={sponsor.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class:list={[
-              "group flex flex-col items-center p-6 transition-all hover:shadow-lg bg-white",
-              sponsor.tier === 'primary' ? 'shadow-md' : ''
-            ]}
+            href="/sponsors"
+            class="group px-6 py-4 bg-white shadow-md hover:shadow-lg transition-all"
           >
-            <div class:list={[
-              "flex items-center justify-center mb-4",
-              sponsor.tier === 'primary' ? 'h-28' : 'h-20'
-            ]}>
-              <picture>
-                <source srcset={sponsor.logo.replace('.png', '.webp')} type="image/webp" />
-                <img
-                  src={sponsor.logo}
-                  alt={sponsor.name}
-                  loading="lazy"
-                  class:list={[
-                    "max-h-full w-auto object-contain group-hover:scale-105 transition-transform",
-                    sponsor.tier === 'primary' ? 'max-w-64' : 'max-w-48'
-                  ]}
-                />
-              </picture>
-            </div>
-            <span class:list={[
-              "text-sm font-semibold",
-              sponsor.tier === 'primary' ? 'text-gold-600' : 'text-gray-500'
-            ]}>
-              {sponsor.description}
-            </span>
+            <span class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-shamrock-700 transition-colors">{sponsor.name}</span>
           </a>
         ))}
       </div>
 
       <div class="text-center mt-10">
-        <p class="text-sm text-gray-500 mb-4">
-          Interested in sponsoring Brooklyn Shamrocks?
-        </p>
-        <a href="/contact" class="text-shamrock-700 hover:text-shamrock-800 font-bold text-sm inline-flex items-center gap-1 uppercase tracking-wide">
-          Get in touch
+        <a href="/sponsors" class="text-shamrock-700 hover:text-shamrock-800 font-bold text-sm inline-flex items-center gap-1 uppercase tracking-wide">
+          View all sponsors
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>

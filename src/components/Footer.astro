@@ -111,26 +111,13 @@ const aboutLinks = [
     <!-- Sponsors -->
     <div class="mt-12 pt-8 border-t border-gray-800">
       <p class="text-sm text-gray-500 text-center mb-4">Proudly sponsored by</p>
-      <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+      <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10">
         {sponsorsData.sponsors.map((sponsor) => (
           <a
-            href={sponsor.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="bg-white rounded-lg px-4 py-3 hover:scale-105 transition-transform"
-            aria-label={sponsor.name}
+            href="/sponsors"
+            class="text-white font-bold hover:text-shamrock-300 transition-colors"
           >
-            <picture>
-              <source srcset={sponsor.logo.replace('.png', '.webp')} type="image/webp" />
-              <img
-                src={sponsor.logo}
-                alt={sponsor.name}
-                width="160"
-                height="40"
-                loading="lazy"
-                class:list={['w-auto', sponsor.tier === 'primary' ? 'h-10' : 'h-8']}
-              />
-            </picture>
+            {sponsor.name}
           </a>
         ))}
       </div>

@@ -189,20 +189,9 @@ const uniqueIndividual = unique(individualSupporters);
             href={sponsor.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="group flex flex-col items-center p-8 bg-white shadow-md hover:shadow-lg transition-all overflow-hidden"
+            class="group flex flex-col items-center justify-center p-8 bg-white shadow-md hover:shadow-lg transition-all"
           >
-            <div class="flex items-center justify-center h-24 w-full mb-4">
-              <picture>
-                <source srcset={sponsor.logo.replace('.png', '.webp')} type="image/webp" />
-                <img
-                  src={sponsor.logo}
-                  alt={sponsor.name}
-                  loading="lazy"
-                  class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform"
-                />
-              </picture>
-            </div>
-            <span class="text-sm font-semibold text-gold-600">{sponsor.description}</span>
+            <span class="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-shamrock-700 transition-colors text-center">{sponsor.name}</span>
           </a>
         ))}
       </div>
