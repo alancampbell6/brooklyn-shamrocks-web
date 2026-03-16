@@ -6,14 +6,76 @@ import resultsData from '../data/results.json';
 import videosData from '../data/videos.json';
 import teamColors from '../data/teamColors.json';
 import { CLUB_NAME } from '../lib/constants';
-import { getOutcome, findVideoUrl, OUTCOME_COLORS, OUTCOME_LABELS, OUTCOME_ARIA_LABELS } from '../lib/gaa';
+import { getOutcome, parseGAAScore, findVideoUrl, OUTCOME_COLORS, OUTCOME_LABELS, OUTCOME_ARIA_LABELS } from '../lib/gaa';
 
 const colors = teamColors as Record<string, string>;
 function getColor(team: string) { return colors[team] || '#9ca3af'; }
 
-// --- League Tables ---
-const seniorTeams = [...new Set(fixturesData.fixtures.filter(f => f.team === 'Senior Football').flatMap(f => [f.homeTeam, f.awayTeam]))].sort();
-const juniorTeams = [...new Set(fixturesData.fixtures.filter(f => f.team === 'Junior Football').flatMap(f => [f.homeTeam, f.awayTeam]))].sort();
+// --- League Tables / Standings ---
+interface Standing {
+  team: string;
+  played: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  pointsFor: number;
+  pointsAgainst: number;
+  pointsDiff: number;
+  totalPoints: number;
+}
+
+function buildStandings(competition: string): Standing[] {
+  // Get all teams from fixtures for this competition
+  const teamSet = new Set<string>();
+  fixturesData.fixtures
+    .filter(f => f.competition === competition)
+    .forEach(f => { teamSet.add(f.homeTeam); teamSet.add(f.awayTeam); });
+
+  // Init standings
+  const map = new Map<string, Standing>();
+  for (const team of teamSet) {
+    map.set(team, { team, played: 0, wins: 0, draws: 0, losses: 0, pointsFor: 0, pointsAgainst: 0, pointsDiff: 0, totalPoints: 0 });
+  }
+
+  // Tally results (GAA: 2 pts for win, 1 for draw)
+  resultsData.results
+    .filter(r => r.competition === competition)
+    .forEach(r => {
+      const home = map.get(r.homeTeam);
+      const away = map.get(r.awayTeam);
+      if (!home || !away) return;
+
+      const homeTotal = parseGAAScore(r.homeScore);
+      const awayTotal = parseGAAScore(r.awayScore);
+
+      home.played++; away.played++;
+      home.pointsFor += homeTotal; home.pointsAgainst += awayTotal;
+      away.pointsFor += awayTotal; away.pointsAgainst += homeTotal;
+
+      if (homeTotal > awayTotal) {
+        home.wins++; away.losses++;
+        home.totalPoints += 2;
+      } else if (homeTotal < awayTotal) {
+        away.wins++; home.losses++;
+        away.totalPoints += 2;
+      } else {
+        home.draws++; away.draws++;
+        home.totalPoints += 1; away.totalPoints += 1;
+      }
+    });
+
+  // Compute diff and sort: points desc, then diff desc, then pointsFor desc
+  for (const s of map.values()) {
+    s.pointsDiff = s.pointsFor - s.pointsAgainst;
+  }
+
+  return [...map.values()].sort((a, b) =>
+    b.totalPoints - a.totalPoints || b.pointsDiff - a.pointsDiff || b.pointsFor - a.pointsFor || a.team.localeCompare(b.team)
+  );
+}
+
+const seniorStandings = buildStandings('NY Senior Football Championship');
+const juniorStandings = buildStandings('NY Junior Football Championship');
 
 // --- Fixtures ---
 
@@ -123,6 +185,15 @@ const outcomeLabels = OUTCOME_LABELS;
         >
           Results
         </button>
+        <button
+          id="tab-tables"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-tables"
+          class="tab-btn px-6 sm:px-8 py-2.5 text-base sm:text-lg font-bold uppercase tracking-wide text-gray-400 bg-white border-l border-gray-300 hover:text-shamrock-700 transition-colors"
+        >
+          Tables
+        </button>
       </div>
     </div>
   </div>
@@ -153,51 +224,6 @@ const outcomeLabels = OUTCOME_LABELS;
             ))}
           </div>
         )}
-
-        <!-- League Tables -->
-        <div class="mb-8 grid md:grid-cols-2 gap-6">
-          <!-- Senior Football -->
-          <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-shamrock-900 px-4 py-3">
-              <h3 class="text-sm font-bold text-white uppercase tracking-wide">NY Senior Football Championship</h3>
-            </div>
-            <div class="divide-y divide-gray-100">
-              {seniorTeams.map((team) => (
-                <div class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
-                  <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={team === CLUB_NAME ? '' : `background-color: ${getColor(team)}`}>
-                    {team === CLUB_NAME ? (
-                      <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
-                    ) : (
-                      <span class="text-white font-bold text-[10px]">{team.substring(0, 2).toUpperCase()}</span>
-                    )}
-                  </div>
-                  <span class={`text-sm font-semibold ${team === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-900'}`}>{team}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <!-- Junior Football -->
-          <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-shamrock-900 px-4 py-3">
-              <h3 class="text-sm font-bold text-white uppercase tracking-wide">NY Junior Football Championship</h3>
-            </div>
-            <div class="divide-y divide-gray-100">
-              {juniorTeams.map((team) => (
-                <div class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
-                  <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={team === CLUB_NAME ? '' : `background-color: ${getColor(team)}`}>
-                    {team === CLUB_NAME ? (
-                      <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
-                    ) : (
-                      <span class="text-white font-bold text-[10px]">{team.substring(0, 2).toUpperCase()}</span>
-                    )}
-                  </div>
-                  <span class={`text-sm font-semibold ${team === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-900'}`}>{team}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
 
         {upcomingFixtures.length > 0 ? (
           <div id="fixtures-container">
@@ -573,6 +599,123 @@ const outcomeLabels = OUTCOME_LABELS;
           })}
         </p>
       </div>
+
+      <!-- ==================== TABLES PANEL ==================== -->
+      <div id="panel-tables" role="tabpanel" aria-labelledby="tab-tables" class="hidden">
+        <div class="space-y-8">
+          {/* Senior Football Standings */}
+          {seniorStandings.length > 0 && (
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+              <div class="bg-shamrock-900 px-4 py-3">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wide">NY Senior Football Championship</h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-gray-200 bg-gray-50">
+                      <th class="text-left pl-4 pr-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-8">#</th>
+                      <th class="text-left px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide">Team</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-10">P</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-10">W</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-10">D</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-10">L</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-14 hidden sm:table-cell">F</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-14 hidden sm:table-cell">A</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-14">+/-</th>
+                      <th class="text-center px-2 pr-4 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-12">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    {seniorStandings.map((s, i) => (
+                      <tr class={`hover:bg-gray-50 transition-colors ${s.team === CLUB_NAME ? 'bg-shamrock-50' : ''}`}>
+                        <td class="pl-4 pr-2 py-3 text-gray-400 font-semibold">{i + 1}</td>
+                        <td class="px-2 py-3">
+                          <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={s.team === CLUB_NAME ? '' : `background-color: ${getColor(s.team)}`}>
+                              {s.team === CLUB_NAME ? (
+                                <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                              ) : (
+                                <span class="text-white font-bold text-[10px]">{s.team.substring(0, 2).toUpperCase()}</span>
+                              )}
+                            </div>
+                            <span class={`font-semibold ${s.team === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-900'}`}>{s.team}</span>
+                          </div>
+                        </td>
+                        <td class="text-center px-2 py-3 font-semibold text-gray-700">{s.played}</td>
+                        <td class="text-center px-2 py-3 text-gray-600">{s.wins}</td>
+                        <td class="text-center px-2 py-3 text-gray-600">{s.draws}</td>
+                        <td class="text-center px-2 py-3 text-gray-600">{s.losses}</td>
+                        <td class="text-center px-2 py-3 text-gray-600 hidden sm:table-cell">{s.pointsFor}</td>
+                        <td class="text-center px-2 py-3 text-gray-600 hidden sm:table-cell">{s.pointsAgainst}</td>
+                        <td class="text-center px-2 py-3 font-semibold text-gray-700">{s.pointsDiff > 0 ? `+${s.pointsDiff}` : s.pointsDiff}</td>
+                        <td class="text-center px-2 pr-4 py-3 font-bold text-shamrock-700">{s.totalPoints}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Junior Football Standings */}
+          {juniorStandings.length > 0 && (
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+              <div class="bg-shamrock-900 px-4 py-3">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wide">NY Junior Football Championship</h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-gray-200 bg-gray-50">
+                      <th class="text-left pl-4 pr-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-8">#</th>
+                      <th class="text-left px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide">Team</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-10">P</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-10">W</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-10">D</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-10">L</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-14 hidden sm:table-cell">F</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-14 hidden sm:table-cell">A</th>
+                      <th class="text-center px-2 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-14">+/-</th>
+                      <th class="text-center px-2 pr-4 py-3 font-bold text-gray-500 uppercase text-xs tracking-wide w-12">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    {juniorStandings.map((s, i) => (
+                      <tr class={`hover:bg-gray-50 transition-colors ${s.team === CLUB_NAME ? 'bg-shamrock-50' : ''}`}>
+                        <td class="pl-4 pr-2 py-3 text-gray-400 font-semibold">{i + 1}</td>
+                        <td class="px-2 py-3">
+                          <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={s.team === CLUB_NAME ? '' : `background-color: ${getColor(s.team)}`}>
+                              {s.team === CLUB_NAME ? (
+                                <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                              ) : (
+                                <span class="text-white font-bold text-[10px]">{s.team.substring(0, 2).toUpperCase()}</span>
+                              )}
+                            </div>
+                            <span class={`font-semibold ${s.team === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-900'}`}>{s.team}</span>
+                          </div>
+                        </td>
+                        <td class="text-center px-2 py-3 font-semibold text-gray-700">{s.played}</td>
+                        <td class="text-center px-2 py-3 text-gray-600">{s.wins}</td>
+                        <td class="text-center px-2 py-3 text-gray-600">{s.draws}</td>
+                        <td class="text-center px-2 py-3 text-gray-600">{s.losses}</td>
+                        <td class="text-center px-2 py-3 text-gray-600 hidden sm:table-cell">{s.pointsFor}</td>
+                        <td class="text-center px-2 py-3 text-gray-600 hidden sm:table-cell">{s.pointsAgainst}</td>
+                        <td class="text-center px-2 py-3 font-semibold text-gray-700">{s.pointsDiff > 0 ? `+${s.pointsDiff}` : s.pointsDiff}</td>
+                        <td class="text-center px-2 pr-4 py-3 font-bold text-shamrock-700">{s.totalPoints}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <p class="mt-6 text-center text-xs text-gray-400">
+          2 points for a win, 1 point for a draw. Sorted by points, then score difference.
+        </p>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -580,8 +723,7 @@ const outcomeLabels = OUTCOME_LABELS;
 <script>
   // --- Tab switching ---
   const tabBtns = document.querySelectorAll('.tab-btn');
-  const fixturesPanel = document.getElementById('panel-fixtures');
-  const resultsPanel = document.getElementById('panel-results');
+  const panels = ['fixtures', 'results', 'tables'];
 
   function switchTab(tab: string) {
     tabBtns.forEach(btn => {
@@ -591,11 +733,13 @@ const outcomeLabels = OUTCOME_LABELS;
       btn.setAttribute('aria-selected', String(isActive));
     });
 
-    fixturesPanel?.classList.toggle('hidden', tab !== 'fixtures');
-    resultsPanel?.classList.toggle('hidden', tab !== 'results');
+    panels.forEach(p => {
+      document.getElementById(`panel-${p}`)?.classList.toggle('hidden', p !== tab);
+    });
 
     // Update URL hash without scrolling
-    history.replaceState(null, '', tab === 'fixtures' ? '/matches' : '/matches#results');
+    const hash = tab === 'fixtures' ? '/matches' : `/matches#${tab}`;
+    history.replaceState(null, '', hash);
   }
 
   tabBtns.forEach(btn => {
@@ -606,8 +750,9 @@ const outcomeLabels = OUTCOME_LABELS;
   });
 
   // Check hash on load
-  if (window.location.hash === '#results') {
-    switchTab('results');
+  const hash = window.location.hash.replace('#', '');
+  if (panels.includes(hash)) {
+    switchTab(hash);
   }
 
   // --- Fixtures filter ---
