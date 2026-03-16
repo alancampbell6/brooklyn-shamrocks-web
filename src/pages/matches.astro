@@ -37,9 +37,9 @@ function buildStandings(competition: string): Standing[] {
     map.set(team, { team, played: 0, wins: 0, draws: 0, losses: 0, pointsFor: 0, pointsAgainst: 0, pointsDiff: 0, totalPoints: 0 });
   }
 
-  // Tally results (GAA: 2 pts for win, 1 for draw)
+  // Tally results (GAA: 2 pts for win, 1 for draw) — 2026 season only
   resultsData.results
-    .filter(r => r.competition === competition)
+    .filter(r => r.competition === competition && r.date >= '2026-01-01')
     .forEach(r => {
       const home = map.get(r.homeTeam);
       const away = map.get(r.awayTeam);
