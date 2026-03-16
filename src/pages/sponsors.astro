@@ -1,0 +1,286 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import sponsorsData from '../data/sponsors.json';
+
+// Title sponsors (existing data with logos)
+const titleSponsors = sponsorsData.sponsors;
+
+// All other sponsors grouped into categories
+const corporateSponsors = [
+  'IRL Systems',
+  'Skyline Windows',
+  'JT Magen',
+  'Pritchard Industries',
+  'Rolex',
+  'IGM Construction',
+  'Security 101',
+  'PDV Security',
+  'Brand Safeway',
+  'Mourne Contracting',
+  'AES Lighting Group',
+  'Crosstown Glass Systems',
+  'Structuretone',
+  'Orchard Contracting',
+  'Connect Drywall & Acoustics',
+  'Jantile Specialities LLC',
+  'Reval Solutions Inc',
+  'Highline Construction',
+  'PKF-OD Accountants',
+  'Admore HVAC',
+  'MGF Building Supplies',
+  'BUA',
+  'Law Offices of Darren T. Moore',
+  'Metropolitan Woodwork',
+  'Brisk Contracting',
+  'Cloonagh Electrical',
+  'Carey Glass',
+  'Metro R Services Inc',
+  'PC Floors',
+  'Top Rock Interiors',
+  'Rivco Construction',
+  'ACON - Aidan Conlon',
+  'Stagg Group',
+  'Titanium Construction',
+  'McCann Texas',
+  'McLane Security',
+  'Affect Group',
+  'Folor GCs',
+  'Constructive Enterprise',
+  'All City Stone',
+  'Riverdale Electric',
+  'Forkhill',
+  'MC Electrical',
+  'Dimensional Interiors Inc',
+  'All State Electric',
+  'Ground Effects Inc',
+  'TSS Integrated Systems',
+  'McCann Enterprises',
+  'S.E. Electrical',
+  'AMR Electric',
+  'Sullivan & Galleshaw',
+  'Honig Conte Porrino',
+  'Mike Osman Around Electric',
+  'Steadfast',
+  'SKC Sarah Krom Accountants',
+  'SBS Associates',
+  'Wesbuilt',
+  'ESE Empire State Electric',
+  'Allcom Electric',
+  'ABECO',
+  'Centrifugal Electric',
+  'David Clifford Electric',
+  'LCD Elevator',
+  'Hands of Gold Chiropractors',
+  'CM Plumbing',
+  'Duffy\'s Floor Services',
+  'STM',
+  'PNC Painting',
+  'Cregan Contracting Corp',
+  'Triboro Electric',
+  'Garland Fire',
+  'Alarmingly Affordable',
+  'Lee & Kane Law',
+  'Corbocon Construction',
+  'Barton Construction LLC',
+  'KV House of Design',
+  'O\'Hagan Construction',
+  'Giovanni\'s Multiple Services',
+  'Hudson Valley Building Restoration',
+  'Miles Fisher Fire & Building Code Services',
+  'NYPD Emerald Society',
+  'Aim to Serve',
+];
+
+const barsAndRestaurants = [
+  'Hartley\'s Irish Pub Brooklyn',
+  'Mean Fiddler',
+  'Triona\'s Bar',
+  'Bar Americano',
+  'Grace\'s Pub NYC',
+  'The Parkgate',
+  'Paddy\'s of Park Slope',
+  'Stout',
+  'Gibney\'s',
+  'Ernie O\'Malley\'s',
+  'Wolfhound',
+  'Badger\'s Bar Derry',
+  'Feile Bar',
+  'The Monro Pub',
+  'Kitty Kiernan\'s Bar',
+  'John Devoy\'s',
+  'Irish Haven',
+  'Indigo Murphy\'s',
+  'Mahoney\'s Irish Pub & Steakhouse',
+  'Bar Americano',
+  'Armada',
+  'Alba',
+];
+
+const individualSupporters = [
+  'Liam Collins',
+  'Jerry Kiely',
+  'Dermot York',
+  'John & Siobhan Moore',
+  'John Lennon',
+  'Bernie Kennedy',
+  'Mark Solberg Olmstead',
+  'The Conlon Family',
+  'Janet McCreesh',
+  'Rory McCreesh',
+  'Mercer',
+  'Micky Cunningham',
+  'Fabian Cruz',
+  'Donal Dennehy',
+  'Gavin Family',
+  'Roisin Devaney',
+  'Katie and Ally',
+  'Barry Carr and Family',
+  'Fearghal O\'Brien',
+  'Declan and Karen McAleer',
+  'Mike Conlon',
+  'Kevin and Mary Brennan',
+  'Doherty Family',
+  'McCloskey Family',
+  'Byrne Family',
+  'McCone Family',
+  'Donie O\'Sullivan',
+  'Brooklyn Irish Parade',
+  'Love Corn',
+  'Art Designs by Lia',
+  'ODR GAA',
+];
+
+// Deduplicate each list
+function unique(arr: string[]) {
+  const seen = new Set<string>();
+  return arr.filter(s => {
+    const key = s.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+const uniqueCorporate = unique(corporateSponsors);
+const uniqueBars = unique(barsAndRestaurants);
+const uniqueIndividual = unique(individualSupporters);
+---
+
+<BaseLayout title="Sponsors" description="Brooklyn Shamrocks GAA proudly thanks all our sponsors and supporters. From title sponsors to individual donors, your generosity makes our club possible." breadcrumbs={[{ name: 'Sponsors', href: '/sponsors' }]}>
+  <Hero
+    title="Our Sponsors"
+    subtitle="Brooklyn Shamrocks GAA is deeply grateful to every sponsor and supporter who makes our club possible. Your generosity funds our teams, our players, and our community."
+    size="small"
+    bottomColor="#f9fafb"
+  />
+
+  <!-- Title Sponsors -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-2">Title Sponsors</h2>
+        <p class="text-gray-600">Our principal partners who lead the way in supporting Brooklyn Shamrocks</p>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+        {titleSponsors.map((sponsor) => (
+          <a
+            href={sponsor.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex flex-col items-center p-8 bg-white shadow-md hover:shadow-lg transition-all"
+          >
+            <div class="flex items-center justify-center h-28 mb-4">
+              <picture>
+                <source srcset={sponsor.logo.replace('.png', '.webp')} type="image/webp" />
+                <img
+                  src={sponsor.logo}
+                  alt={sponsor.name}
+                  loading="lazy"
+                  class="max-h-full w-auto object-contain max-w-64 group-hover:scale-105 transition-transform"
+                />
+              </picture>
+            </div>
+            <span class="text-sm font-semibold text-gold-600">{sponsor.description}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Corporate & Business Sponsors -->
+  <section class="py-12 md:py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-2">Corporate & Business Sponsors</h2>
+        <p class="text-gray-600">The businesses that back our club season after season</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {uniqueCorporate.map((name) => (
+          <div class="bg-gray-50 border border-gray-100 px-4 py-4 flex items-center justify-center text-center hover:bg-shamrock-50 hover:border-shamrock-200 transition-colors">
+            <span class="text-sm font-semibold text-gray-800">{name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Bars & Restaurants -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-2">Bars & Restaurants</h2>
+        <p class="text-gray-600">The pubs and restaurants that are part of our Shamrocks community</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {uniqueBars.map((name) => (
+          <div class="bg-white border border-gray-100 px-4 py-4 flex items-center justify-center text-center hover:bg-shamrock-50 hover:border-shamrock-200 transition-colors">
+            <span class="text-sm font-semibold text-gray-800">{name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Individual Supporters -->
+  <section class="py-12 md:py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-2">Individual Supporters</h2>
+        <p class="text-gray-600">The individuals and families whose generosity keeps our club thriving</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {uniqueIndividual.map((name) => (
+          <div class="bg-gray-50 border border-gray-100 px-4 py-4 flex items-center justify-center text-center hover:bg-shamrock-50 hover:border-shamrock-200 transition-colors">
+            <span class="text-sm font-semibold text-gray-800">{name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Thank You CTA -->
+  <section class="py-12 md:py-16 bg-shamrock-900">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-tight mb-4">Thank You</h2>
+      <p class="text-shamrock-100 mb-4">
+        Brooklyn Shamrocks GAA would not exist without the incredible support of our sponsors, businesses, and individual donors. Every contribution — big or small — goes directly toward keeping Gaelic football alive in New York.
+      </p>
+      <p class="text-shamrock-100 mb-8">
+        From covering pitch fees and equipment, to supporting our players and events, your generosity is the backbone of this club. We are forever grateful.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contact" class="btn btn-secondary btn-sharp uppercase tracking-wide">
+          Become a Sponsor
+        </a>
+        <a href="/contact" class="btn btn-sharp border-2 border-white text-white hover:bg-white hover:text-shamrock-900 uppercase tracking-wide">
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

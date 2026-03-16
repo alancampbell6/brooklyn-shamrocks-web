@@ -8,5 +8,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/matches', label: 'Matches' },
   { href: '/history', label: 'History' },
   { href: '/honours', label: 'Honours' },
+  { href: '/sponsors', label: 'Sponsors' },
   { href: '/contact', label: 'Contact' },
 ];
