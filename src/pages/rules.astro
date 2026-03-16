@@ -1,0 +1,303 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+
+const officialGuides = [
+  {
+    title: 'Official Guide Part 1',
+    description: 'The official rulebook of the GAA covering all playing rules, governance, and organizational structure.',
+    date: '21.05.2025',
+    url: 'https://www.gaa.ie/api/images/image/upload/t_q-best/prd/efpxmlrx9gbvafzj4gzo.pdf',
+    type: 'pdf',
+  },
+  {
+    title: 'Official Guide Part 2',
+    description: 'Continuation of the official GAA rulebook covering additional regulations and procedures.',
+    date: '22.05.2025',
+    url: 'https://www.gaa.ie/api/images/image/upload/t_q-best/prd/ux74p4f8n5ywzz3rb3fi.pdf',
+    type: 'pdf',
+  },
+  {
+    title: 'Codes 2025',
+    description: 'The complete GAA disciplinary codes and infractions for the current season.',
+    date: '26.05.2025',
+    url: 'https://www.gaa.ie/api/images/image/upload/t_q-best/prd/o8dqgs8ywq4xgnbnhj3i.pdf',
+    type: 'pdf',
+  },
+  {
+    title: 'Code of Conduct',
+    description: 'Expected standards of behaviour for players, officials, mentors, and supporters.',
+    url: 'https://www.gaa.ie/api/images/image/upload/t_q-best/ectlzpvl71cp2lpjd7my.pdf',
+    type: 'pdf',
+  },
+];
+
+const disciplinaryForms = [
+  {
+    title: 'Notice of Disciplinary Action — On Foot of a Referee\'s Report',
+    url: 'https://www.gaa.ie/api/images/image/upload/t_q-best/aquhlmfkyhfpg8t2rkad.pdf',
+    type: 'pdf',
+  },
+  {
+    title: 'Notice of Disciplinary Action — Cases Not Arising from Referee\'s Report',
+    url: 'https://www.gaa.ie/api/images/image/upload/t_q-best/fbv4nnfg809i7sd3xrqn.pdf',
+    type: 'pdf',
+  },
+  {
+    title: 'D Notice of Disciplinary Action — Cases Where Hearing Not Available',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/pctxerbtjtu2y7gsnfef.docx',
+    type: 'docx',
+  },
+  {
+    title: 'A Disciplinary Report',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/otipbhdc83dzejho0fnw.docx',
+    type: 'docx',
+  },
+  {
+    title: 'E. Reply to Notification of Disciplinary Action',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/avoicd49n0eaohjndoog.docx',
+    type: 'docx',
+  },
+  {
+    title: 'F Notification of Hearing Date',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/pfnfvl2txmzeimvgl81k.docx',
+    type: 'docx',
+  },
+  {
+    title: 'Notice of Decision on a Hearing',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/tchovgse2vduppm5ciks.docx',
+    type: 'docx',
+  },
+  {
+    title: 'Notice of Decision on an Appeal',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/oyqaucik53mrh3jhggsa.docx',
+    type: 'docx',
+  },
+  {
+    title: 'Notice of Decision on an Objection/Counter-Objection',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/jn9tpru8tnvplsgh9l5q.docx',
+    type: 'docx',
+  },
+  {
+    title: 'Directive re. Alternative Penalty',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/laf9d0ke2dhyvoytdx0d.docx',
+    type: 'docx',
+  },
+  {
+    title: 'Guidelines for Clarification of the Referee\'s Report',
+    url: 'https://www.gaa.ie/api/images/image/upload/t_q-best/xnsy8y0ohkcvgr7nbyrw.pdf',
+    type: 'pdf',
+  },
+  {
+    title: 'Rules Advisory Committee — Request for Advice Form',
+    url: 'https://www.gaa.ie/api/images/raw/upload/t_q-best/pj6ya69khcpnyr6col4w.docx',
+    type: 'docx',
+  },
+];
+
+const processSteps = [
+  {
+    step: 1,
+    title: 'Proposed Penalty',
+    description: 'The Competitions Control Committee (CCC) reviews the referee\'s report and proposes a penalty. The player or team official may accept or reject the proposed penalty.',
+  },
+  {
+    step: 2,
+    title: 'Hearing',
+    description: 'If the proposed penalty is rejected, the matter proceeds to a hearing before the Hearings Committee.',
+  },
+  {
+    step: 3,
+    title: 'Hearings Committee Decision',
+    description: 'The Hearings Committee examines evidence and either imposes a penalty or exonerates the individual.',
+  },
+  {
+    step: 4,
+    title: 'Appeal',
+    description: 'If the penalty is rejected, the individual may appeal to the Appeals Committee.',
+  },
+  {
+    step: 5,
+    title: 'Appeals Committee Decision',
+    description: 'The Appeals Committee makes a final decision within the GAA. An appeal can only succeed where there has been a clear infringement of a rule or a compromise of fair hearing procedures.',
+  },
+  {
+    step: 6,
+    title: 'Disputes Resolution Authority (DRA)',
+    description: 'If the matter remains unresolved, it may be referred to the DRA — an external, independent body that provides a final resolution.',
+  },
+];
+---
+
+<BaseLayout title="Rules & Discipline" description="GAA rules, disciplinary codes, and official guides. Download the Official Guide, Code of Conduct, and disciplinary forms used in New York GAA." breadcrumbs={[{ name: 'Rules & Discipline', href: '/rules' }]}>
+  <Hero
+    title="Rules & Discipline"
+    subtitle="The GAA's disciplinary process ensures fair play across all levels of the game. All players and officials are bound by the Official Guide and Code of Conduct."
+    size="small"
+    bottomColor="#f9fafb"
+  />
+
+  <!-- Official Guides & Codes -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-2">Official Guides & Codes</h2>
+        <p class="text-gray-600">The core GAA rulebooks and codes that govern the game</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6">
+        {officialGuides.map((doc) => (
+          <a
+            href={doc.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group bg-white border border-gray-200 p-6 hover:shadow-lg hover:border-shamrock-200 transition-all"
+          >
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-red-200 transition-colors">
+                <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-gray-900 group-hover:text-shamrock-700 transition-colors">{doc.title}</h3>
+                <p class="text-sm text-gray-500 mt-1">{doc.description}</p>
+                <div class="flex items-center gap-3 mt-3">
+                  <span class="inline-block px-2 py-0.5 bg-red-50 text-red-700 text-xs font-bold uppercase rounded">{doc.type}</span>
+                  {doc.date && <span class="text-xs text-gray-400">Updated {doc.date}</span>}
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Disciplinary Process -->
+  <section class="py-12 md:py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-2">Disciplinary Process</h2>
+        <p class="text-gray-600">How misconduct at games is handled under GAA rules</p>
+      </div>
+
+      <div class="space-y-0">
+        {processSteps.map((item, i) => (
+          <div class="flex gap-4 md:gap-6">
+            {/* Step indicator with connecting line */}
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 bg-shamrock-700 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
+                {item.step}
+              </div>
+              {i < processSteps.length - 1 && (
+                <div class="w-0.5 bg-shamrock-200 flex-1 my-1"></div>
+              )}
+            </div>
+
+            {/* Content */}
+            <div class="pb-8">
+              <h3 class="font-bold text-gray-900 text-lg">{item.title}</h3>
+              <p class="text-sm text-gray-600 mt-1">{item.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Central Disciplinary Committees -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-2">Central Disciplinary Committees</h2>
+        <p class="text-gray-600">The bodies responsible for disciplinary matters at central level</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white border border-gray-200 p-6">
+          <div class="h-1.5 bg-gradient-to-r from-shamrock-700 to-shamrock-500 -mx-6 -mt-6 mb-6"></div>
+          <h3 class="font-bold text-gray-900 text-lg mb-1">An Larchoiste Eisteachta</h3>
+          <p class="text-sm text-shamrock-700 font-semibold mb-3">The Central Hearings Committee</p>
+          <p class="text-sm text-gray-600 mb-4">
+            Adjudicates hearing requests for disciplinary matters involving rule enforcement from Central Council competitions,
+            Provincial Inter-County Senior Championship misconduct, and match regulation breaches.
+          </p>
+          <p class="text-xs text-gray-500">
+            <strong>Exception:</strong> Objection/Counter-Objection hearings are handled by the Central Competitions Control Committee.
+          </p>
+        </div>
+
+        <div class="bg-white border border-gray-200 p-6">
+          <div class="h-1.5 bg-gradient-to-r from-shamrock-700 to-shamrock-500 -mx-6 -mt-6 mb-6"></div>
+          <h3 class="font-bold text-gray-900 text-lg mb-1">An Larchoiste Achomhairc</h3>
+          <p class="text-sm text-shamrock-700 font-semibold mb-3">The Central Appeals Committee</p>
+          <p class="text-sm text-gray-600 mb-4">
+            Hears all central-level appeals and reviews suspension applications per Rule 7.12,
+            making recommendations to Central Council.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disciplinary Forms & Documents -->
+  <section class="py-12 md:py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-2">Disciplinary Forms & Documents</h2>
+        <p class="text-gray-600">Official forms and templates used in the disciplinary process</p>
+      </div>
+
+      <div class="bg-white rounded-lg border border-gray-200 divide-y divide-gray-100">
+        {disciplinaryForms.map((doc) => (
+          <a
+            href={doc.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-4 px-4 py-4 md:px-6 hover:bg-gray-50 transition-colors group"
+          >
+            <div class={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${doc.type === 'pdf' ? 'bg-red-100' : 'bg-blue-100'}`}>
+              {doc.type === 'pdf' ? (
+                <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                </svg>
+              ) : (
+                <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                </svg>
+              )}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-gray-900 text-sm group-hover:text-shamrock-700 transition-colors truncate">{doc.title}</p>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <span class={`inline-block px-2 py-0.5 text-xs font-bold uppercase rounded ${doc.type === 'pdf' ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'}`}>{doc.type}</span>
+              <svg class="w-4 h-4 text-gray-400 group-hover:text-shamrock-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- External Links -->
+  <section class="py-12 md:py-16 bg-shamrock-900">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-tight mb-4">Official GAA Resources</h2>
+      <p class="text-shamrock-100 mb-8">
+        For the most up-to-date rules, regulations, and disciplinary codes, visit the official GAA website.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="https://www.gaa.ie/the-gaa/rules-regulations/gaa-discipline" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sharp uppercase tracking-wide">
+          GAA Discipline
+        </a>
+        <a href="https://www.gaa.ie/the-gaa/rules-regulations" target="_blank" rel="noopener noreferrer" class="btn btn-sharp border-2 border-white text-white hover:bg-white hover:text-shamrock-900 uppercase tracking-wide">
+          GAA Rules & Regulations
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
