@@ -1,5 +1,6 @@
 ---
 import { CLUB_NAME } from '../lib/constants';
+import teamColors from '../data/teamColors.json';
 
 interface Props {
   date: string;
@@ -16,6 +17,9 @@ const { date, time, homeTeam, awayTeam, venue, competition } = Astro.props;
 const dateObj = new Date(date + 'T00:00:00');
 const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
 const monthDay = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+const homeColor = (teamColors as Record<string, string>)[homeTeam] || '#9ca3af';
+const awayColor = (teamColors as Record<string, string>)[awayTeam] || '#9ca3af';
 ---
 
 <article class="card">
@@ -31,17 +35,14 @@ const monthDay = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'num
     <div class="flex items-center justify-between gap-4 mb-4">
       <!-- Home Team -->
       <div class="flex-1 text-center">
-        <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+        <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={homeTeam === CLUB_NAME ? '' : `background-color: ${homeColor}`}>
           {homeTeam === CLUB_NAME ? (
             <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
-            <span class="text-gray-400 font-bold text-sm">{homeTeam.substring(0, 2).toUpperCase()}</span>
+            <span class="text-white font-bold text-sm">{homeTeam.substring(0, 2).toUpperCase()}</span>
           )}
         </div>
         <p class="font-semibold text-gray-900 text-sm md:text-base">{homeTeam}</p>
-        {homeTeam === CLUB_NAME && (
-          <span class="text-xs text-shamrock-600">(Home)</span>
-        )}
       </div>
 
       <!-- VS -->
@@ -51,17 +52,14 @@ const monthDay = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'num
 
       <!-- Away Team -->
       <div class="flex-1 text-center">
-        <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+        <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={awayTeam === CLUB_NAME ? '' : `background-color: ${awayColor}`}>
           {awayTeam === CLUB_NAME ? (
             <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
-            <span class="text-gray-400 font-bold text-sm">{awayTeam.substring(0, 2).toUpperCase()}</span>
+            <span class="text-white font-bold text-sm">{awayTeam.substring(0, 2).toUpperCase()}</span>
           )}
         </div>
         <p class="font-semibold text-gray-900 text-sm md:text-base">{awayTeam}</p>
-        {awayTeam === CLUB_NAME && (
-          <span class="text-xs text-shamrock-600">(Away)</span>
-        )}
       </div>
     </div>
 

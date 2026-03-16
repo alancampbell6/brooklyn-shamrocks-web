@@ -1,6 +1,7 @@
 ---
 import { CLUB_NAME } from '../lib/constants';
 import { getOutcome, OUTCOME_ARIA_LABELS, type MatchOutcome } from '../lib/gaa';
+import teamColors from '../data/teamColors.json';
 
 interface Props {
   date: string;
@@ -40,6 +41,9 @@ const resultLabels: Record<MatchOutcome, string> = {
   loss: 'L',
   draw: 'D',
 };
+
+const homeColor = (teamColors as Record<string, string>)[homeTeam] || '#9ca3af';
+const awayColor = (teamColors as Record<string, string>)[awayTeam] || '#9ca3af';
 ---
 
 <article class="card">
@@ -58,11 +62,11 @@ const resultLabels: Record<MatchOutcome, string> = {
     <div class="flex items-center justify-between gap-4 mb-4">
       <!-- Home Team -->
       <div class="flex-1 text-center">
-        <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+        <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={homeTeam === CLUB_NAME ? '' : `background-color: ${homeColor}`}>
           {homeTeam === CLUB_NAME ? (
             <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
-            <span class="text-gray-400 font-bold text-sm">{homeTeam.substring(0, 2).toUpperCase()}</span>
+            <span class="text-white font-bold text-sm">{homeTeam.substring(0, 2).toUpperCase()}</span>
           )}
         </div>
         <p class="font-semibold text-gray-900 text-sm">{homeTeam}</p>
@@ -84,11 +88,11 @@ const resultLabels: Record<MatchOutcome, string> = {
 
       <!-- Away Team -->
       <div class="flex-1 text-center">
-        <div class="w-12 h-12 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+        <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={awayTeam === CLUB_NAME ? '' : `background-color: ${awayColor}`}>
           {awayTeam === CLUB_NAME ? (
             <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
-            <span class="text-gray-400 font-bold text-sm">{awayTeam.substring(0, 2).toUpperCase()}</span>
+            <span class="text-white font-bold text-sm">{awayTeam.substring(0, 2).toUpperCase()}</span>
           )}
         </div>
         <p class="font-semibold text-gray-900 text-sm">{awayTeam}</p>
