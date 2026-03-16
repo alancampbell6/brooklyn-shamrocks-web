@@ -4,22 +4,19 @@
       "name": "IRL Systems",
       "url": "https://www.irlsystems.com",
       "logo": "/images/sponsors/irl-systems.png",
-      "tier": "primary",
-      "description": "Principal Sponsor"
+      "tier": "principal"
     },
     {
       "name": "JT Magen",
       "url": "https://jtmagen.com",
       "logo": "/images/sponsors/jt-magen.png",
-      "tier": "primary",
-      "description": "Club Sponsor"
+      "tier": "club"
     },
     {
       "name": "Skyline Windows",
       "url": "https://www.skylinewindows.com",
       "logo": "/images/sponsors/skyline-windows.png",
-      "tier": "primary",
-      "description": "Club Sponsor"
+      "tier": "club"
     }
   ]
 }

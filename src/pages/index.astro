@@ -367,8 +367,26 @@ const updateCards = [
         <p class="text-gray-600">Proudly supported by our generous sponsors</p>
       </div>
 
+      {/* Principal Sponsor */}
+      {sponsorsData.sponsors.filter(s => s.tier === 'principal').map((sponsor) => (
+        <div class="flex justify-center mb-8">
+          <a href="/sponsors" class="group p-6 bg-white shadow-md hover:shadow-lg transition-all">
+            <picture>
+              <source srcset={sponsor.logo.replace('.png', '.webp')} type="image/webp" />
+              <img
+                src={sponsor.logo}
+                alt={sponsor.name}
+                loading="lazy"
+                class="h-24 md:h-32 w-auto object-contain group-hover:scale-105 transition-transform"
+              />
+            </picture>
+          </a>
+        </div>
+      ))}
+
+      {/* Club Sponsors */}
       <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10">
-        {sponsorsData.sponsors.map((sponsor) => (
+        {sponsorsData.sponsors.filter(s => s.tier === 'club').map((sponsor) => (
           <a
             href="/sponsors"
             class="group px-6 py-4 bg-white shadow-md hover:shadow-lg transition-all"
