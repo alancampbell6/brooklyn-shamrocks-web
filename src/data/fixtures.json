@@ -1,5 +1,149 @@
 {
   "lastUpdated": "2026-03-16T09:08:54.691Z",
   "source": "https://www.finalwhistle.ie/gaelic/team/brooklyn-shamrocks/",
-  "fixtures": []
+  "fixtures": [
+    {
+      "id": "fix-2026-06-05-0",
+      "date": "2026-06-05",
+      "time": "6:30 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Cavan",
+      "competition": "NY Junior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Junior Football"
+    },
+    {
+      "id": "fix-2026-06-14-0",
+      "date": "2026-06-14",
+      "time": "12:30 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Sligo",
+      "competition": "NY Senior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "fix-2026-06-19-0",
+      "date": "2026-06-19",
+      "time": "8:00 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Rangers",
+      "competition": "NY Junior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Junior Football"
+    },
+    {
+      "id": "fix-2026-06-21-0",
+      "date": "2026-06-21",
+      "time": "12:30 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Cork",
+      "competition": "NY Senior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "fix-2026-06-25-0",
+      "date": "2026-06-25",
+      "time": "8:00 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Shannon Gaels",
+      "competition": "NY Junior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Junior Football"
+    },
+    {
+      "id": "fix-2026-06-28-0",
+      "date": "2026-06-28",
+      "time": "12:30 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Barnabas",
+      "competition": "NY Senior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "fix-2026-06-29-0",
+      "date": "2026-06-29",
+      "time": "TBD",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Tyrone",
+      "competition": "NY Junior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Junior Football"
+    },
+    {
+      "id": "fix-2026-07-06-0",
+      "date": "2026-07-06",
+      "time": "8:00 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "St. Pat's",
+      "competition": "NY Junior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Junior Football"
+    },
+    {
+      "id": "fix-2026-07-16-0",
+      "date": "2026-07-16",
+      "time": "6:30 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Rockland",
+      "competition": "NY Junior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Junior Football"
+    },
+    {
+      "id": "fix-2026-07-18-0",
+      "date": "2026-07-18",
+      "time": "4:15 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Cavan",
+      "competition": "NY Senior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "fix-2026-07-20-0",
+      "date": "2026-07-20",
+      "time": "6:30 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "ODR",
+      "competition": "NY Junior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Junior Football"
+    },
+    {
+      "id": "fix-2026-08-02-0",
+      "date": "2026-08-02",
+      "time": "12:30 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Shannon Gaels",
+      "competition": "NY Senior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    },
+    {
+      "id": "fix-2026-08-08-0",
+      "date": "2026-08-08",
+      "time": "5:45 PM",
+      "homeTeam": "Brooklyn Shamrocks",
+      "awayTeam": "Kerry",
+      "competition": "NY Senior Football Championship",
+      "round": "",
+      "venue": "Gaelic Park, Bronx",
+      "team": "Senior Football"
+    }
+  ]
 }
