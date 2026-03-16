@@ -183,22 +183,22 @@ const uniqueIndividual = unique(individualSupporters);
         <p class="text-gray-600">Our principal partners who lead the way in supporting Brooklyn Shamrocks</p>
       </div>
 
-      <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+      <div class="grid md:grid-cols-2 gap-8 md:gap-12 max-w-2xl mx-auto">
         {titleSponsors.map((sponsor) => (
           <a
             href={sponsor.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="group flex flex-col items-center p-8 bg-white shadow-md hover:shadow-lg transition-all"
+            class="group flex flex-col items-center p-8 bg-white shadow-md hover:shadow-lg transition-all overflow-hidden"
           >
-            <div class="flex items-center justify-center h-28 mb-4">
+            <div class="flex items-center justify-center h-24 w-full mb-4">
               <picture>
                 <source srcset={sponsor.logo.replace('.png', '.webp')} type="image/webp" />
                 <img
                   src={sponsor.logo}
                   alt={sponsor.name}
                   loading="lazy"
-                  class="max-h-full w-auto object-contain max-w-64 group-hover:scale-105 transition-transform"
+                  class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform"
                 />
               </picture>
             </div>
