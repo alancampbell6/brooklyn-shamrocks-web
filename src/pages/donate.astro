@@ -4,8 +4,6 @@ import Hero from '../components/Hero.astro';
 
 const venmoUser = 'brooklyn-shamrocksgfc';
 const donationNote = 'Brooklyn Shamrocks Donation';
-const amounts = [10, 25, 50, 100];
-const highlightAmount = 50;
 ---
 
 <BaseLayout title="Donate" description="Support Brooklyn Shamrocks GAA with a donation via Venmo. Every dollar goes toward pitch fees, equipment, and keeping Gaelic football alive in Brooklyn." breadcrumbs={[{ name: 'Donate', href: '/donate' }]}>
@@ -26,36 +24,18 @@ const highlightAmount = 50;
         </div>
 
         <p class="text-gray-600 mb-8 text-lg">
-          Quick, easy, and every dollar counts. Tap an amount below to donate via Venmo.
+          Quick, easy, and every dollar counts. Donate via Venmo to support the club.
         </p>
 
-        <!-- Amount buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-8">
-          {amounts.map((amount) => (
-            <button
-              type="button"
-              data-amount={amount}
-              class:list={[
-                'venmo-btn px-8 py-4 text-lg md:text-xl font-bold rounded transition-all cursor-pointer',
-                amount === highlightAmount
-                  ? 'text-white hover:opacity-90'
-                  : 'bg-white border-2 border-gray-200 text-gray-900 hover:border-[#008CFF] hover:bg-blue-50',
-              ]}
-              style={amount === highlightAmount ? 'background-color: #008CFF; border: 2px solid #008CFF;' : ''}
-            >
-              ${amount}
-            </button>
-          ))}
-          <button
-            type="button"
-            data-amount="other"
-            class="venmo-btn px-8 py-4 text-lg md:text-xl font-bold rounded bg-white border-2 border-gray-200 text-gray-900 hover:border-[#008CFF] hover:bg-blue-50 transition-all cursor-pointer"
-          >
-            Other
-          </button>
-        </div>
+        <button
+          type="button"
+          id="venmo-donate-btn"
+          class="px-10 py-4 text-lg md:text-xl font-bold rounded text-white hover:opacity-90 transition-all cursor-pointer mb-6"
+          style="background-color: #008CFF;"
+        >
+          Donate
+        </button>
 
-        <!-- Venmo handle -->
         <p class="text-gray-500">
           Or send directly to
           <a
@@ -95,17 +75,14 @@ const highlightAmount = 50;
 </BaseLayout>
 
 <script define:vars={{ venmoUser, donationNote }}>
-  function openVenmo(amount) {
+  function openVenmo() {
     const note = encodeURIComponent(donationNote);
-    const amountParam = amount !== 'other' ? `&amount=${amount}` : '';
-    const venmoApp = `venmo://paycharge?txn=pay&recipients=${venmoUser}${amountParam}&note=${note}`;
-    const venmoWeb = `https://venmo.com/${venmoUser}?txn=pay${amountParam}&note=${note}`;
+    const venmoApp = `venmo://paycharge?txn=pay&recipients=${venmoUser}&note=${note}`;
+    const venmoWeb = `https://venmo.com/${venmoUser}?txn=pay&note=${note}`;
 
-    // Simple mobile detection
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     if (isMobile) {
-      // Try app scheme, fall back to web after 1.5s
       const fallbackTimer = setTimeout(() => {
         window.location.href = venmoWeb;
       }, 1500);
@@ -116,10 +93,5 @@ const highlightAmount = 50;
     }
   }
 
-  document.querySelectorAll('.venmo-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const amount = btn.getAttribute('data-amount');
-      openVenmo(amount === 'other' ? 'other' : Number(amount));
-    });
-  });
+  document.getElementById('venmo-donate-btn').addEventListener('click', openVenmo);
 </script>
