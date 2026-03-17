@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+
+const venmoUser = 'brooklyn-shamrocksgfc';
+const donationNote = 'Brooklyn Shamrocks Donation';
+const amounts = [10, 25, 50, 100];
+const highlightAmount = 50;
+---
+
+<BaseLayout title="Donate" description="Support Brooklyn Shamrocks GAA with a donation via Venmo. Every dollar goes toward pitch fees, equipment, and keeping Gaelic football alive in Brooklyn." breadcrumbs={[{ name: 'Donate', href: '/donate' }]}>
+  <Hero
+    title="Support the Club"
+    subtitle="Every donation goes directly toward pitch fees, equipment, and keeping Gaelic football alive in Brooklyn."
+    size="small"
+    bottomColor="#ffffff"
+  />
+
+  <section class="py-12 md:py-20 bg-white">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Venmo Card -->
+      <div class="bg-white border-2 border-gray-100 shadow-lg rounded-lg p-8 md:p-12 text-center">
+        <!-- Venmo branding -->
+        <div class="mb-6">
+          <span class="inline-block text-3xl md:text-4xl font-extrabold" style="color: #008CFF;">Venmo</span>
+        </div>
+
+        <p class="text-gray-600 mb-8 text-lg">
+          Quick, easy, and every dollar counts. Tap an amount below to donate via Venmo.
+        </p>
+
+        <!-- Amount buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-8">
+          {amounts.map((amount) => (
+            <button
+              type="button"
+              data-amount={amount}
+              class:list={[
+                'venmo-btn px-8 py-4 text-lg md:text-xl font-bold rounded transition-all cursor-pointer',
+                amount === highlightAmount
+                  ? 'text-white hover:opacity-90'
+                  : 'bg-white border-2 border-gray-200 text-gray-900 hover:border-[#008CFF] hover:bg-blue-50',
+              ]}
+              style={amount === highlightAmount ? 'background-color: #008CFF; border: 2px solid #008CFF;' : ''}
+            >
+              ${amount}
+            </button>
+          ))}
+          <button
+            type="button"
+            data-amount="other"
+            class="venmo-btn px-8 py-4 text-lg md:text-xl font-bold rounded bg-white border-2 border-gray-200 text-gray-900 hover:border-[#008CFF] hover:bg-blue-50 transition-all cursor-pointer"
+          >
+            Other
+          </button>
+        </div>
+
+        <!-- Venmo handle -->
+        <p class="text-gray-500">
+          Or send directly to
+          <a
+            href={`https://venmo.com/u/${venmoUser}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-bold hover:underline"
+            style="color: #008CFF;"
+          >@{venmoUser}</a>
+        </p>
+      </div>
+
+      <!-- Additional info -->
+      <div class="mt-10 text-center text-gray-500 text-sm">
+        <p>Brooklyn Shamrocks GAA is a community-run Gaelic football club. All donations go directly to supporting our teams and programs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Become a Sponsor CTA -->
+  <section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-4">Want to Sponsor the Club?</h2>
+      <p class="text-gray-600 mb-8">
+        If you or your business would like to become an official sponsor, we'd love to hear from you.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/sponsors" class="btn btn-primary btn-sharp uppercase tracking-wide">
+          View Our Sponsors
+        </a>
+        <a href="/contact" class="btn btn-sharp border-2 border-gray-300 text-gray-700 hover:bg-gray-100 uppercase tracking-wide">
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ venmoUser, donationNote }}>
+  function openVenmo(amount) {
+    const note = encodeURIComponent(donationNote);
+    const amountParam = amount !== 'other' ? `&amount=${amount}` : '';
+    const venmoApp = `venmo://paycharge?txn=pay&recipients=${venmoUser}${amountParam}&note=${note}`;
+    const venmoWeb = `https://venmo.com/${venmoUser}?txn=pay${amountParam}&note=${note}`;
+
+    // Simple mobile detection
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      // Try app scheme, fall back to web after 1.5s
+      const fallbackTimer = setTimeout(() => {
+        window.location.href = venmoWeb;
+      }, 1500);
+      window.location.href = venmoApp;
+      window.addEventListener('blur', () => clearTimeout(fallbackTimer), { once: true });
+    } else {
+      window.open(venmoWeb, '_blank', 'noopener,noreferrer');
+    }
+  }
+
+  document.querySelectorAll('.venmo-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const amount = btn.getAttribute('data-amount');
+      openVenmo(amount === 'other' ? 'other' : Number(amount));
+    });
+  });
+</script>

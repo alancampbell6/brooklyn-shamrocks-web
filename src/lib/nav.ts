@@ -14,6 +14,7 @@ export const NAV_ITEMS: NavItem[] = [
 /** Full nav items shown in the burger menu and footer */
 export const ALL_NAV_ITEMS: NavItem[] = [
   ...NAV_ITEMS,
+  { href: '/donate', label: 'Donate' },
   { href: '/honours', label: 'Honours' },
   { href: '/rules', label: 'Rules' },
   { href: '/contact', label: 'Contact' },
