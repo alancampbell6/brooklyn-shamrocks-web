@@ -1,6 +1,6 @@
 ---
 import Navigation from './Navigation.astro';
-import { NAV_ITEMS } from '../lib/nav';
+import { NAV_ITEMS, ALL_NAV_ITEMS } from '../lib/nav';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -75,7 +75,7 @@ const currentPath = Astro.url.pathname;
   <!-- Slide-out Menu (all nav items including Shop) -->
   <div id="mobile-menu" class="hidden border-t border-shamrock-800 bg-shamrock-900" aria-hidden="true">
     <nav class="px-4 py-4 space-y-1">
-      {NAV_ITEMS.map((item) => {
+      {ALL_NAV_ITEMS.map((item) => {
         const isActive = currentPath === item.href ||
           (item.href !== '/' && currentPath.startsWith(item.href));
         return (
