@@ -182,36 +182,40 @@ const timeline = [
           </p>
         </div>
       </div>
+    </div>
 
-      <!-- Timeline -->
-      <div class="mb-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-8">Timeline</h2>
-        <div class="relative">
-          <!-- Timeline Line -->
-          <div class="absolute left-4 md:left-8 top-0 bottom-0 w-0.5 bg-shamrock-200"></div>
+    <!-- Timeline -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-10 uppercase tracking-tight">Timeline</h2>
+      <div class="relative">
+        <!-- Timeline Line -->
+        <div class="absolute left-6 lg:left-1/2 lg:-translate-x-px top-0 bottom-0 w-0.5 bg-gradient-to-b from-shamrock-300 via-shamrock-400 to-gold-400 pointer-events-none"></div>
 
-          <!-- Timeline Items -->
-          <div id="timeline-container" class="space-y-8">
-            {timeline.map((item, index) => (
-              <div class={`timeline-item relative pl-12 md:pl-20 ${index >= 8 ? 'hidden' : ''}`} data-index={index}>
-                <!-- Dot -->
-                <div class={`absolute left-2 md:left-6 w-5 h-5 rounded-full border-4 border-white ${item.highlight ? 'bg-gold-500 ring-4 ring-gold-100' : 'bg-shamrock-600'}`}></div>
-
-                <!-- Content -->
-                <div class={`${item.highlight ? 'bg-gradient-to-r from-shamrock-50 to-gold-50 border-l-4 border-shamrock-600' : 'bg-white border border-gray-100'} rounded-xl overflow-hidden`}>
+        <!-- Timeline Items -->
+        <div id="timeline-container" class="space-y-12 lg:space-y-16">
+          {timeline.map((item, index) => (
+            <div
+              class={`timeline-item relative pl-16 lg:pl-0 lg:flex lg:items-start lg:gap-8 ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} ${index >= 8 ? 'timeline-hidden' : ''}`}
+              data-index={index}
+              data-side={index % 2 === 0 ? 'left' : 'right'}
+            >
+              <!-- Card -->
+              <div class="lg:flex-1">
+                <div class={`${item.highlight ? 'bg-gradient-to-br from-shamrock-50 via-white to-gold-50 border border-shamrock-200 shadow-lg' : 'bg-white border border-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300'} rounded-xl overflow-hidden`}>
+                  {item.highlight && (
+                    <div class="h-1 bg-gradient-to-r from-shamrock-600 via-gold-500 to-shamrock-600"></div>
+                  )}
                   {item.image && (
                     <button
                       type="button"
-                      class="w-full aspect-[16/9] overflow-hidden bg-gray-100 cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-shamrock-500"
+                      class="w-full overflow-hidden bg-gray-100 cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-shamrock-500"
                       data-lightbox={item.image}
                       data-caption={item.imageCaption || item.title}
                     >
                       <img
                         src={item.image}
                         alt={item.imageCaption || item.title}
-                        width="800"
-                        height="450"
-                        class={`w-full h-full object-cover hover:scale-105 transition-transform duration-300 ${item.imagePosition === 'top' ? 'object-top' : ''}`}
+                        class={`w-full h-auto max-h-[28rem] object-contain hover:scale-105 transition-transform duration-300 ${item.imagePosition === 'top' ? 'object-top' : ''}`}
                         loading="lazy"
                       />
                     </button>
@@ -221,16 +225,14 @@ const timeline = [
                       {item.images.map((img, idx) => (
                         <button
                           type="button"
-                          class="aspect-[4/3] overflow-hidden cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-shamrock-500"
+                          class="overflow-hidden cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-shamrock-500"
                           data-lightbox={img}
                           data-caption={`${item.imageCaption || item.title} - Photo ${idx + 1}`}
                         >
                           <img
                             src={img}
                             alt={`${item.title} - Photo ${idx + 1}`}
-                            width="400"
-                            height="300"
-                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            class="w-full h-auto max-h-72 object-cover hover:scale-105 transition-transform duration-300"
                             loading="lazy"
                           />
                         </button>
@@ -238,9 +240,8 @@ const timeline = [
                     </div>
                   )}
                   <div class="p-6">
-                    <span class="text-shamrock-700 font-bold text-lg">{item.year}</span>
-                    <h3 class="text-xl font-bold text-gray-900 mt-1">{item.title}</h3>
-                    <p class="text-gray-600 mt-2">{item.description}</p>
+                    <h3 class="text-xl font-bold text-gray-900 leading-snug">{item.title}</h3>
+                    <p class="text-gray-600 mt-2 text-sm leading-relaxed">{item.description}</p>
                     {item.imageCaption && (
                       <p class="text-xs text-gray-400 mt-3 italic">{item.imageCaption}</p>
                     )}
@@ -255,31 +256,43 @@ const timeline = [
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
 
-          <!-- Show all history items when JS is disabled -->
-          <noscript>
-            <style>.timeline-item { display: block !important; } #load-more-container { display: none !important; }</style>
-          </noscript>
+              <!-- Year Badge -->
+              <div class="absolute left-0 top-0 lg:static lg:flex-shrink-0 z-10">
+                <div class={`w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center font-bold text-xs lg:text-sm ring-4 ring-white ${item.highlight ? 'bg-gold-500 text-shamrock-950 shadow-lg' : 'bg-shamrock-700 text-white shadow-md'}`}>
+                  {item.year}
+                </div>
+              </div>
 
-          <!-- Load More Button -->
-          <div id="load-more-container" class="mt-8 text-center">
-            <button
-              id="load-more-btn"
-              type="button"
-              class="inline-flex items-center gap-2 px-6 py-3 bg-shamrock-700 text-white font-semibold rounded-xl hover:bg-shamrock-800 transition-colors"
-            >
-              <span>Load More History</span>
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <p id="load-more-count" class="text-sm text-gray-500 mt-2"></p>
-          </div>
+              <!-- Spacer -->
+              <div class="hidden lg:block lg:flex-1"></div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Show all history items when JS is disabled -->
+        <noscript>
+          <style>.timeline-hidden { display: block !important; } .timeline-item { opacity: 1 !important; transform: none !important; } #load-more-container { display: none !important; }</style>
+        </noscript>
+
+        <!-- Load More Button -->
+        <div id="load-more-container" class="mt-12 text-center">
+          <button
+            id="load-more-btn"
+            type="button"
+            class="inline-flex items-center gap-2 px-8 py-3 bg-shamrock-700 text-white font-bold uppercase tracking-wider text-sm rounded-none hover:bg-shamrock-800 transition-colors focus:ring-2 focus:ring-shamrock-500 focus:ring-offset-2"
+          >
+            <span>Load More</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <p id="load-more-count" class="text-sm text-gray-500 mt-2"></p>
         </div>
       </div>
+    </div>
 
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Lightbox Modal -->
       <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Image viewer">
         <button
@@ -360,6 +373,40 @@ const timeline = [
   </section>
 </BaseLayout>
 
+<style is:global>
+  .timeline-hidden {
+    display: none !important;
+  }
+
+  .timeline-item {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  @media (min-width: 1024px) {
+    .timeline-item[data-side="left"] {
+      transform: translateX(-2rem) translateY(0);
+    }
+    .timeline-item[data-side="right"] {
+      transform: translateX(2rem) translateY(0);
+    }
+  }
+
+  .timeline-item.is-visible {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .timeline-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
 <script>
   // Load More functionality
   const ITEMS_PER_PAGE = 8;
@@ -383,15 +430,39 @@ const timeline = [
     const nextCount = Math.min(visibleCount + ITEMS_PER_PAGE, totalItems);
     timelineItems.forEach((item, index) => {
       if (index < nextCount) {
-        item.classList.remove('hidden');
+        item.classList.remove('timeline-hidden');
       }
     });
     visibleCount = nextCount;
     updateLoadMoreButton();
+    requestAnimationFrame(() => observeVisibleItems());
   }
 
   loadMoreBtn?.addEventListener('click', showMoreItems);
   updateLoadMoreButton();
+
+  // Scroll-triggered entrance animations
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: '0px 0px -60px 0px', threshold: 0.1 }
+  );
+
+  function observeVisibleItems() {
+    document.querySelectorAll('.timeline-item:not(.timeline-hidden)').forEach((item) => {
+      if (!item.classList.contains('is-visible')) {
+        observer.observe(item);
+      }
+    });
+  }
+
+  observeVisibleItems();
 
   // Lightbox functionality
   const lightbox = document.getElementById('lightbox');
