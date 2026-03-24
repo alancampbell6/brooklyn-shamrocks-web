@@ -9,7 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "scrape": "node scripts/scrape-fixtures.js"
+    "scrape": "node scripts/scrape-sharepoint-fixtures.js"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.1.6",
