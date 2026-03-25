@@ -46,7 +46,11 @@ const COMP_MAP = {
  */
 async function getTempAuthUrl() {
   console.log('Launching browser to get tempauth token...');
-  const browser = await chromium.launch({ headless: true });
+  const launchOptions = { headless: true };
+  if (process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH) {
+    launchOptions.executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+  }
+  const browser = await chromium.launch(launchOptions);
   const page = await browser.newPage();
 
   let contentUrl = null;
