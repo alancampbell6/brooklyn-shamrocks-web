@@ -16,7 +16,7 @@
  */
 
 import XLSX from 'xlsx';
-import { writeFileSync, readFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { chromium } from 'playwright';
@@ -240,8 +240,8 @@ function extractBrooklynFixtures(rows) {
       fixtures.push({
         date,
         time,
-        homeTeam: normalizeTeam(parsed.home),
-        awayTeam: normalizeTeam(parsed.away),
+        team1: normalizeTeam(parsed.home),
+        team2: normalizeTeam(parsed.away),
         competition: compInfo.competition,
         team: compInfo.team,
         venue: venueMap[venue] || venue,
@@ -293,42 +293,17 @@ async function main() {
   console.log(`Found ${brooklynFixtures.length} Brooklyn Shamrocks fixtures:\n`);
 
   for (const f of brooklynFixtures) {
-    console.log(`  ${f.date} ${f.time.padEnd(8)} ${f.homeTeam} vs ${f.awayTeam} (${f.competition}) @ ${f.venue}`);
+    console.log(`  ${f.date} ${f.time.padEnd(8)} ${f.team1} vs ${f.team2} (${f.competition}) @ ${f.venue}`);
   }
-
-  // Step 5: Load existing fixtures and merge
-  let existing = { fixtures: [] };
-  try {
-    existing = JSON.parse(readFileSync(OUTPUT_PATH, 'utf-8'));
-  } catch {
-    // No existing file
-  }
-
-  // Keep non-Brooklyn fixtures (other teams' SFC games, playoffs, etc.)
-  const nonBrooklyn = existing.fixtures.filter(
-    (f) =>
-      !f.homeTeam.includes('Brooklyn') &&
-      !f.awayTeam.includes('Brooklyn') &&
-      f.homeTeam !== 'TBD'
-  );
-
-  // Keep TBD playoff/semi/final entries
-  const playoffs = existing.fixtures.filter(
-    (f) => f.homeTeam === 'TBD' && f.awayTeam === 'TBD'
-  );
-
-  const allFixtures = [...brooklynFixtures, ...nonBrooklyn, ...playoffs].sort(
-    (a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time)
-  );
 
   const output = {
     lastUpdated: new Date().toISOString(),
     source: SHAREPOINT_URL,
-    fixtures: allFixtures,
+    fixtures: brooklynFixtures,
   };
 
   writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
-  console.log(`\nSaved ${allFixtures.length} fixtures to ${OUTPUT_PATH}`);
+  console.log(`\nSaved ${brooklynFixtures.length} fixtures to ${OUTPUT_PATH}`);
 }
 
 main().catch((err) => {

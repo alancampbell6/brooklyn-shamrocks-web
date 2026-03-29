@@ -45,8 +45,8 @@ export const OUTCOME_ARIA_LABELS: Record<MatchOutcome, string> = {
 };
 
 interface MatchResult {
-  homeTeam: string;
-  awayTeam: string;
+  team1: string;
+  team2: string;
   round: string;
 }
 
@@ -57,7 +57,7 @@ interface Video {
 }
 
 export function findVideoUrl(result: MatchResult, videos: Video[]): string | undefined {
-  const opponent = result.homeTeam === CLUB_NAME ? result.awayTeam : result.homeTeam;
+  const opponent = result.team1 === CLUB_NAME ? result.team2 : result.team1;
   const video = videos.find(v => {
     const opponentMatch = v.opponent.toLowerCase() === opponent.toLowerCase() ||
                           opponent.toLowerCase().includes(v.opponent.toLowerCase()) ||

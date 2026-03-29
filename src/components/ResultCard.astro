@@ -5,16 +5,16 @@ import teamColors from '../data/teamColors.json';
 
 interface Props {
   date: string;
-  homeTeam: string;
-  awayTeam: string;
-  homeScore: string;
-  awayScore: string;
+  team1: string;
+  team2: string;
+  score1: string;
+  score2: string;
   competition: string;
   venue?: string;
   videoUrl?: string;
 }
 
-const { date, homeTeam, awayTeam, homeScore, awayScore, competition, venue, videoUrl } = Astro.props;
+const { date, team1, team2, score1, score2, competition, venue, videoUrl } = Astro.props;
 
 // Parse the date for display
 const dateObj = new Date(date + 'T00:00:00');
@@ -25,9 +25,9 @@ const formattedDate = dateObj.toLocaleDateString('en-US', {
 });
 
 // Determine if Shamrocks won, lost, or drew
-const shamrocksIsHome = homeTeam === CLUB_NAME;
-const shamrocksScore = shamrocksIsHome ? homeScore : awayScore;
-const opponentScore = shamrocksIsHome ? awayScore : homeScore;
+const isShamrocksTeam1 = team1 === CLUB_NAME;
+const shamrocksScore = isShamrocksTeam1 ? score1 : score2;
+const opponentScore = isShamrocksTeam1 ? score2 : score1;
 const result = getOutcome(shamrocksScore, opponentScore);
 
 const resultColors: Record<MatchOutcome, string> = {
@@ -42,8 +42,8 @@ const resultLabels: Record<MatchOutcome, string> = {
   draw: 'D',
 };
 
-const homeColor = (teamColors as Record<string, string>)[homeTeam] || '#9ca3af';
-const awayColor = (teamColors as Record<string, string>)[awayTeam] || '#9ca3af';
+const team1Color = (teamColors as Record<string, string>)[team1] || '#9ca3af';
+const team2Color = (teamColors as Record<string, string>)[team2] || '#9ca3af';
 ---
 
 <article class="card">
@@ -60,42 +60,40 @@ const awayColor = (teamColors as Record<string, string>)[awayTeam] || '#9ca3af';
 
     <!-- Scores -->
     <div class="flex items-center justify-between gap-4 mb-4">
-      <!-- Home Team -->
       <div class="flex-1 text-center">
-        <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={homeTeam === CLUB_NAME ? '' : `background-color: ${homeColor}`}>
-          {homeTeam === CLUB_NAME ? (
+        <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={team1 === CLUB_NAME ? '' : `background-color: ${team1Color}`}>
+          {team1 === CLUB_NAME ? (
             <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
-            <span class="text-white font-bold text-sm">{homeTeam.substring(0, 2).toUpperCase()}</span>
+            <span class="text-white font-bold text-sm">{team1.substring(0, 2).toUpperCase()}</span>
           )}
         </div>
-        <p class="font-semibold text-gray-900 text-sm">{homeTeam}</p>
+        <p class="font-semibold text-gray-900 text-sm">{team1}</p>
       </div>
 
       <!-- Score Display -->
       <div class="flex-shrink-0 text-center">
         <div class="flex items-center gap-2">
-          <span class={`text-2xl md:text-3xl font-bold ${homeTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>
-            {homeScore}
+          <span class={`text-2xl md:text-3xl font-bold ${team1 === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>
+            {score1}
           </span>
           <span class="text-gray-300 text-xl">-</span>
-          <span class={`text-2xl md:text-3xl font-bold ${awayTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>
-            {awayScore}
+          <span class={`text-2xl md:text-3xl font-bold ${team2 === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>
+            {score2}
           </span>
         </div>
         <p class="text-xs text-gray-400 mt-1">Final</p>
       </div>
 
-      <!-- Away Team -->
       <div class="flex-1 text-center">
-        <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={awayTeam === CLUB_NAME ? '' : `background-color: ${awayColor}`}>
-          {awayTeam === CLUB_NAME ? (
+        <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={team2 === CLUB_NAME ? '' : `background-color: ${team2Color}`}>
+          {team2 === CLUB_NAME ? (
             <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
           ) : (
-            <span class="text-white font-bold text-sm">{awayTeam.substring(0, 2).toUpperCase()}</span>
+            <span class="text-white font-bold text-sm">{team2.substring(0, 2).toUpperCase()}</span>
           )}
         </div>
-        <p class="font-semibold text-gray-900 text-sm">{awayTeam}</p>
+        <p class="font-semibold text-gray-900 text-sm">{team2}</p>
       </div>
     </div>
 

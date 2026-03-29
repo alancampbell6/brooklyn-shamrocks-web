@@ -11,6 +11,14 @@ import { getOutcome, parseGAAScore, findVideoUrl, OUTCOME_COLORS, OUTCOME_LABELS
 const colors = teamColors as Record<string, string>;
 function getColor(team: string) { return colors[team] || '#9ca3af'; }
 
+// Competition badge colors
+function compBadge(comp: string): { bg: string; text: string } {
+  if (comp.includes('Junior')) return { bg: 'bg-amber-100', text: 'text-amber-800' };
+  if (comp.includes('League')) return { bg: 'bg-sky-100', text: 'text-sky-800' };
+  if (comp.includes('Intermediate')) return { bg: 'bg-purple-100', text: 'text-purple-800' };
+  return { bg: 'bg-shamrock-100', text: 'text-shamrock-800' }; // Senior Championship default
+}
+
 // --- League Tables / Standings ---
 interface Standing {
   team: string;
@@ -29,7 +37,7 @@ function buildStandings(competition: string): Standing[] {
   const teamSet = new Set<string>();
   fixturesData.fixtures
     .filter(f => f.competition === competition)
-    .forEach(f => { teamSet.add(f.homeTeam); teamSet.add(f.awayTeam); });
+    .forEach(f => { teamSet.add(f.team1); teamSet.add(f.team2); });
 
   // Init standings
   const map = new Map<string, Standing>();
@@ -41,12 +49,12 @@ function buildStandings(competition: string): Standing[] {
   resultsData.results
     .filter(r => r.competition === competition && r.date >= '2026-01-01')
     .forEach(r => {
-      const home = map.get(r.homeTeam);
-      const away = map.get(r.awayTeam);
+      const home = map.get(r.team1);
+      const away = map.get(r.team2);
       if (!home || !away) return;
 
-      const homeTotal = parseGAAScore(r.homeScore);
-      const awayTotal = parseGAAScore(r.awayScore);
+      const homeTotal = parseGAAScore(r.score1);
+      const awayTotal = parseGAAScore(r.score2);
 
       home.played++; away.played++;
       home.pointsFor += homeTotal; home.pointsAgainst += awayTotal;
@@ -92,7 +100,7 @@ const fixtureTeams = [...new Set(fixturesData.fixtures.map(f => f.team))].sort()
 const fixturesSchema = upcomingFixtures.length > 0 ? upcomingFixtures.map(fixture => ({
   "@context": "https://schema.org",
   "@type": "SportsEvent",
-  "name": `${fixture.homeTeam} vs ${fixture.awayTeam}`,
+  "name": `${fixture.team1} vs ${fixture.team2}`,
   "startDate": fixture.date,
   "location": {
     "@type": "Place",
@@ -104,14 +112,10 @@ const fixturesSchema = upcomingFixtures.length > 0 ? upcomingFixtures.map(fixtur
       "addressCountry": "US"
     }
   },
-  "homeTeam": {
-    "@type": "SportsTeam",
-    "name": fixture.homeTeam
-  },
-  "awayTeam": {
-    "@type": "SportsTeam",
-    "name": fixture.awayTeam
-  },
+  "competitor": [
+    { "@type": "SportsTeam", "name": fixture.team1 },
+    { "@type": "SportsTeam", "name": fixture.team2 }
+  ],
   "sport": "Gaelic Football",
   "eventStatus": "https://schema.org/EventScheduled"
 })) : null;
@@ -130,9 +134,9 @@ const years = [...new Set(resultsData.results.map(r => new Date(r.date).getFullY
 const resultTeams = [...new Set(resultsData.results.map(r => r.team))].sort();
 
 const resultsWithOutcome = sortedResults.map(result => {
-  const shamrocksIsHome = result.homeTeam === CLUB_NAME;
-  const shamrocksScore = shamrocksIsHome ? result.homeScore : result.awayScore;
-  const opponentScore = shamrocksIsHome ? result.awayScore : result.homeScore;
+  const isShamrocksTeam1 = result.team1 === CLUB_NAME;
+  const shamrocksScore = isShamrocksTeam1 ? result.score1 : result.score2;
+  const opponentScore = isShamrocksTeam1 ? result.score2 : result.score1;
   return {
     ...result,
     year: new Date(result.date).getFullYear(),
@@ -234,22 +238,25 @@ const outcomeLabels = OUTCOME_LABELS;
                   <span class="inline-block px-3 py-1 bg-shamrock-600 text-white text-xs font-bold uppercase tracking-wider rounded-full mb-4">
                     Next Match
                   </span>
-                  <p class="text-sm text-gray-500 mb-6">
-                    {featuredFixture.competition} &middot; {featuredFixture.round || ''} &middot; {featuredFixture.venue}
-                  </p>
+                  <div class="flex items-center justify-center gap-2 mb-6 flex-wrap">
+                    <span class={`inline-block px-3 py-0.5 text-xs font-bold rounded-full ${compBadge(featuredFixture.competition).bg} ${compBadge(featuredFixture.competition).text}`}>
+                      {featuredFixture.competition}
+                    </span>
+                    <span class="text-sm text-gray-500">{featuredFixture.round ? `${featuredFixture.round} · ` : ''}{featuredFixture.venue}</span>
+                  </div>
 
                   {/* Teams & Date */}
                   <div class="flex items-center justify-center gap-6 md:gap-10">
-                    {/* Home Team */}
+                    {/* Team 1 */}
                     <div class="flex-1 text-center">
-                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredFixture.homeTeam === CLUB_NAME ? '' : `background-color: ${getColor(featuredFixture.homeTeam)}`}>
-                        {featuredFixture.homeTeam === CLUB_NAME ? (
+                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredFixture.team1 === CLUB_NAME ? '' : `background-color: ${getColor(featuredFixture.team1)}`}>
+                        {featuredFixture.team1 === CLUB_NAME ? (
                           <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
                         ) : (
-                          <span class="text-white font-bold text-lg md:text-xl">{featuredFixture.homeTeam.substring(0, 2).toUpperCase()}</span>
+                          <span class="text-white font-bold text-lg md:text-xl">{featuredFixture.team1.substring(0, 2).toUpperCase()}</span>
                         )}
                       </div>
-                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredFixture.homeTeam}</p>
+                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredFixture.team1}</p>
                     </div>
 
                     {/* Date/Time Center */}
@@ -265,16 +272,16 @@ const outcomeLabels = OUTCOME_LABELS;
                       )}
                     </div>
 
-                    {/* Away Team */}
+                    {/* Team 2 */}
                     <div class="flex-1 text-center">
-                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredFixture.awayTeam === CLUB_NAME ? '' : `background-color: ${getColor(featuredFixture.awayTeam)}`}>
-                        {featuredFixture.awayTeam === CLUB_NAME ? (
+                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredFixture.team2 === CLUB_NAME ? '' : `background-color: ${getColor(featuredFixture.team2)}`}>
+                        {featuredFixture.team2 === CLUB_NAME ? (
                           <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
                         ) : (
-                          <span class="text-white font-bold text-lg md:text-xl">{featuredFixture.awayTeam.substring(0, 2).toUpperCase()}</span>
+                          <span class="text-white font-bold text-lg md:text-xl">{featuredFixture.team2.substring(0, 2).toUpperCase()}</span>
                         )}
                       </div>
-                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredFixture.awayTeam}</p>
+                      <p class="font-bold text-gray-900 text-sm md:text-base">{featuredFixture.team2}</p>
                     </div>
                   </div>
                 </div>
@@ -289,21 +296,26 @@ const outcomeLabels = OUTCOME_LABELS;
                   return (
                     <div class="fixture-item flex flex-col md:flex-row md:items-center gap-2 md:gap-4 px-4 py-4 md:px-6 hover:bg-gray-50 transition-colors" data-team={fixture.team}>
                       {/* Date & Meta */}
-                      <div class="md:w-48 flex-shrink-0">
+                      <div class="md:w-56 flex-shrink-0">
                         <p class="font-bold text-gray-900 text-sm">{d.dayName} {d.day} {d.month} {d.year}</p>
-                        <p class="text-xs text-gray-500 truncate">{fixture.competition} &middot; {fixture.venue}</p>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                          <span class={`inline-block px-2 py-0.5 text-[10px] font-bold rounded-full whitespace-nowrap ${compBadge(fixture.competition).bg} ${compBadge(fixture.competition).text}`}>
+                            {fixture.competition}
+                          </span>
+                          <span class="text-xs text-gray-400 truncate">{fixture.venue}</span>
+                        </div>
                       </div>
 
                       {/* Matchup */}
                       <div class="flex-1 flex items-center gap-3 justify-center md:justify-start">
                         {/* Home */}
                         <div class="flex items-center gap-2 flex-1 justify-end md:justify-end">
-                          <span class="font-semibold text-gray-900 text-sm text-right">{fixture.homeTeam}</span>
-                          <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={fixture.homeTeam === CLUB_NAME ? '' : `background-color: ${getColor(fixture.homeTeam)}`}>
-                            {fixture.homeTeam === CLUB_NAME ? (
+                          <span class="font-semibold text-gray-900 text-sm text-right">{fixture.team1}</span>
+                          <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={fixture.team1 === CLUB_NAME ? '' : `background-color: ${getColor(fixture.team1)}`}>
+                            {fixture.team1 === CLUB_NAME ? (
                               <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
                             ) : (
-                              <span class="text-white font-bold text-[10px]">{fixture.homeTeam.substring(0, 2).toUpperCase()}</span>
+                              <span class="text-white font-bold text-[10px]">{fixture.team1.substring(0, 2).toUpperCase()}</span>
                             )}
                           </div>
                         </div>
@@ -313,14 +325,14 @@ const outcomeLabels = OUTCOME_LABELS;
 
                         {/* Away */}
                         <div class="flex items-center gap-2 flex-1">
-                          <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={fixture.awayTeam === CLUB_NAME ? '' : `background-color: ${getColor(fixture.awayTeam)}`}>
-                            {fixture.awayTeam === CLUB_NAME ? (
+                          <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={fixture.team2 === CLUB_NAME ? '' : `background-color: ${getColor(fixture.team2)}`}>
+                            {fixture.team2 === CLUB_NAME ? (
                               <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
                             ) : (
-                              <span class="text-white font-bold text-[10px]">{fixture.awayTeam.substring(0, 2).toUpperCase()}</span>
+                              <span class="text-white font-bold text-[10px]">{fixture.team2.substring(0, 2).toUpperCase()}</span>
                             )}
                           </div>
-                          <span class="font-semibold text-gray-900 text-sm">{fixture.awayTeam}</span>
+                          <span class="font-semibold text-gray-900 text-sm">{fixture.team2}</span>
                         </div>
                       </div>
 
@@ -421,9 +433,10 @@ const outcomeLabels = OUTCOME_LABELS;
                     <span class={`inline-block w-7 h-7 rounded-full text-white text-xs font-bold flex items-center justify-center ${outcomeColors[featuredResult.outcome]}`} aria-label={OUTCOME_ARIA_LABELS[featuredResult.outcome]}>
                       {outcomeLabels[featuredResult.outcome]}
                     </span>
-                    <span class="text-sm text-gray-500">
-                      {featuredResult.competition} &middot; {featuredResult.round}
+                    <span class={`inline-block px-3 py-0.5 text-xs font-bold rounded-full ${compBadge(featuredResult.competition).bg} ${compBadge(featuredResult.competition).text}`}>
+                      {featuredResult.competition}
                     </span>
+                    <span class="text-sm text-gray-500">{featuredResult.round}</span>
                   </div>
 
                   <p class="text-xs text-gray-400 mb-5">
@@ -432,41 +445,41 @@ const outcomeLabels = OUTCOME_LABELS;
 
                   {/* Teams & Score */}
                   <div class="flex items-center justify-center gap-6 md:gap-10">
-                    {/* Home Team */}
+                    {/* Team 1 */}
                     <div class="flex-1 text-center">
-                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredResult.homeTeam === CLUB_NAME ? '' : `background-color: ${getColor(featuredResult.homeTeam)}`}>
-                        {featuredResult.homeTeam === CLUB_NAME ? (
+                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredResult.team1 === CLUB_NAME ? '' : `background-color: ${getColor(featuredResult.team1)}`}>
+                        {featuredResult.team1 === CLUB_NAME ? (
                           <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
                         ) : (
-                          <span class="text-white font-bold text-lg md:text-xl">{featuredResult.homeTeam.substring(0, 2).toUpperCase()}</span>
+                          <span class="text-white font-bold text-lg md:text-xl">{featuredResult.team1.substring(0, 2).toUpperCase()}</span>
                         )}
                       </div>
-                      <p class="font-bold text-gray-900 text-sm md:text-base"><span class="hidden md:inline">{featuredResult.homeTeam}</span><span class="md:hidden">{featuredResult.homeTeam === CLUB_NAME ? 'Brooklyn' : featuredResult.homeTeam.split(' ')[0]}</span></p>
+                      <p class="font-bold text-gray-900 text-sm md:text-base"><span class="hidden md:inline">{featuredResult.team1}</span><span class="md:hidden">{featuredResult.team1 === CLUB_NAME ? 'Brooklyn' : featuredResult.team1.split(' ')[0]}</span></p>
                     </div>
 
                     {/* Score Center */}
                     <div class="flex-shrink-0 text-center">
                       <div class="flex items-center gap-3">
-                        <span class={`text-3xl md:text-4xl font-bold ${featuredResult.homeTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-800'}`}>
-                          {featuredResult.homeScore}
+                        <span class={`text-3xl md:text-4xl font-bold ${featuredResult.team1 === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-800'}`}>
+                          {featuredResult.score1}
                         </span>
                         <span class="text-gray-300 text-2xl">-</span>
-                        <span class={`text-3xl md:text-4xl font-bold ${featuredResult.awayTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-800'}`}>
-                          {featuredResult.awayScore}
+                        <span class={`text-3xl md:text-4xl font-bold ${featuredResult.team2 === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-800'}`}>
+                          {featuredResult.score2}
                         </span>
                       </div>
                     </div>
 
-                    {/* Away Team */}
+                    {/* Team 2 */}
                     <div class="flex-1 text-center">
-                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredResult.awayTeam === CLUB_NAME ? '' : `background-color: ${getColor(featuredResult.awayTeam)}`}>
-                        {featuredResult.awayTeam === CLUB_NAME ? (
+                      <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredResult.team2 === CLUB_NAME ? '' : `background-color: ${getColor(featuredResult.team2)}`}>
+                        {featuredResult.team2 === CLUB_NAME ? (
                           <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
                         ) : (
-                          <span class="text-white font-bold text-lg md:text-xl">{featuredResult.awayTeam.substring(0, 2).toUpperCase()}</span>
+                          <span class="text-white font-bold text-lg md:text-xl">{featuredResult.team2.substring(0, 2).toUpperCase()}</span>
                         )}
                       </div>
-                      <p class="font-bold text-gray-900 text-sm md:text-base"><span class="hidden md:inline">{featuredResult.awayTeam}</span><span class="md:hidden">{featuredResult.awayTeam === CLUB_NAME ? 'Brooklyn' : featuredResult.awayTeam.split(' ')[0]}</span></p>
+                      <p class="font-bold text-gray-900 text-sm md:text-base"><span class="hidden md:inline">{featuredResult.team2}</span><span class="md:hidden">{featuredResult.team2 === CLUB_NAME ? 'Brooklyn' : featuredResult.team2.split(' ')[0]}</span></p>
                     </div>
                   </div>
 
@@ -498,42 +511,47 @@ const outcomeLabels = OUTCOME_LABELS;
                   return (
                     <div class="result-item flex flex-col md:flex-row md:items-center gap-2 md:gap-4 px-4 py-4 md:px-6 hover:bg-gray-50 transition-colors" data-team={result.team} data-year={result.year} data-outcome={result.outcome}>
                       {/* Date & Meta */}
-                      <div class="md:w-48 flex-shrink-0">
+                      <div class="md:w-56 flex-shrink-0">
                         <p class="font-bold text-gray-900 text-sm">{d.dayName} {d.day} {d.month} {d.year}</p>
-                        <p class="text-xs text-gray-500 truncate" title={`${result.competition} · ${result.venue}`}>{result.competition} &middot; {result.venue}</p>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                          <span class={`inline-block px-2 py-0.5 text-[10px] font-bold rounded-full whitespace-nowrap ${compBadge(result.competition).bg} ${compBadge(result.competition).text}`}>
+                            {result.competition}
+                          </span>
+                          <span class="text-xs text-gray-400 truncate">{result.venue}</span>
+                        </div>
                       </div>
 
                       {/* Matchup with Score */}
                       <div class="flex-1 flex items-center gap-3 justify-center md:justify-start">
                         {/* Home */}
                         <div class="flex items-center gap-2 flex-1 justify-end">
-                          <span class="font-semibold text-gray-900 text-sm text-right">{result.homeTeam}</span>
-                          <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={result.homeTeam === CLUB_NAME ? '' : `background-color: ${getColor(result.homeTeam)}`}>
-                            {result.homeTeam === CLUB_NAME ? (
+                          <span class="font-semibold text-gray-900 text-sm text-right">{result.team1}</span>
+                          <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={result.team1 === CLUB_NAME ? '' : `background-color: ${getColor(result.team1)}`}>
+                            {result.team1 === CLUB_NAME ? (
                               <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
                             ) : (
-                              <span class="text-white font-bold text-[10px]">{result.homeTeam.substring(0, 2).toUpperCase()}</span>
+                              <span class="text-white font-bold text-[10px]">{result.team1.substring(0, 2).toUpperCase()}</span>
                             )}
                           </div>
                         </div>
 
                         {/* Score */}
                         <div class="flex items-center gap-1.5 flex-shrink-0">
-                          <span class={`text-sm font-bold ${result.homeTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>{result.homeScore}</span>
+                          <span class={`text-sm font-bold ${result.team1 === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>{result.score1}</span>
                           <span class="text-xs text-gray-300">-</span>
-                          <span class={`text-sm font-bold ${result.awayTeam === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>{result.awayScore}</span>
+                          <span class={`text-sm font-bold ${result.team2 === CLUB_NAME ? 'text-shamrock-700' : 'text-gray-700'}`}>{result.score2}</span>
                         </div>
 
                         {/* Away */}
                         <div class="flex items-center gap-2 flex-1">
-                          <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={result.awayTeam === CLUB_NAME ? '' : `background-color: ${getColor(result.awayTeam)}`}>
-                            {result.awayTeam === CLUB_NAME ? (
+                          <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={result.team2 === CLUB_NAME ? '' : `background-color: ${getColor(result.team2)}`}>
+                            {result.team2 === CLUB_NAME ? (
                               <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
                             ) : (
-                              <span class="text-white font-bold text-[10px]">{result.awayTeam.substring(0, 2).toUpperCase()}</span>
+                              <span class="text-white font-bold text-[10px]">{result.team2.substring(0, 2).toUpperCase()}</span>
                             )}
                           </div>
-                          <span class="font-semibold text-gray-900 text-sm">{result.awayTeam}</span>
+                          <span class="font-semibold text-gray-900 text-sm">{result.team2}</span>
                         </div>
                       </div>
 
