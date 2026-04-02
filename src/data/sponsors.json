@@ -17,6 +17,12 @@
       "url": "https://www.skylinewindows.com",
       "logo": "/images/sponsors/skyline-windows.png",
       "tier": "club"
+    },
+    {
+      "name": "Club Tia",
+      "url": "https://clubtia.com",
+      "logo": "",
+      "tier": "club"
     }
   ]
 }
