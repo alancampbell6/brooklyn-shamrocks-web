@@ -46,12 +46,16 @@ const COMP_MAP = {
  */
 async function getTempAuthUrl() {
   console.log('Launching browser to get tempauth token...');
-  const launchOpts = { headless: true };
+  const launchOpts = {
+    headless: true,
+    args: ['--ignore-certificate-errors', '--no-sandbox', '--disable-setuid-sandbox'],
+  };
   if (process.env.PLAYWRIGHT_EXECUTABLE_PATH) {
     launchOpts.executablePath = process.env.PLAYWRIGHT_EXECUTABLE_PATH;
   }
   const browser = await chromium.launch(launchOpts);
-  const page = await browser.newPage();
+  const context = await browser.newContext({ ignoreHTTPSErrors: true });
+  const page = await context.newPage();
 
   let contentUrl = null;
 
