@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-28T10:23:49.397Z",
+  "lastUpdated": "2026-04-29T10:14:49.174Z",
   "source": "https://gaanewyork-my.sharepoint.com/:x:/p/info/IQCUKgVucYSNTIBVbDYIO-PTAZCE7aLc9D8tbqCXI7i4drQ?e=S2bsch",
   "fixtures": [
     {
@@ -11,6 +11,17 @@
       "competition": "NY Senior Football League",
       "team": "Senior Football",
       "venue": "Redmond",
+      "round": ""
+    },
+    {
+      "id": "fix-2026-05-03-sfl1",
+      "date": "2026-05-03",
+      "time": "2:30 PM",
+      "team1": "Brooklyn Shamrocks",
+      "team2": "Sligo",
+      "competition": "NY Senior Football League",
+      "team": "Senior Football",
+      "venue": "Gaelic Park, Bronx",
       "round": ""
     },
     {
@@ -104,7 +115,7 @@
     {
       "id": "fix-2026-07-16-jb1",
       "date": "2026-07-16",
-      "time": "6:30 PM",
+      "time": "8:00 PM",
       "team1": "Rockland",
       "team2": "Brooklyn Shamrocks",
       "competition": "NY Junior B Football Championship",
@@ -126,7 +137,7 @@
     {
       "id": "fix-2026-07-20-jb1",
       "date": "2026-07-20",
-      "time": "6:30 PM",
+      "time": "8:00 PM",
       "team1": "Brooklyn Shamrocks",
       "team2": "ODR",
       "competition": "NY Junior B Football Championship",
