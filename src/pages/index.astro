@@ -5,14 +5,20 @@ import FixtureCard from '../components/FixtureCard.astro';
 import ResultCard from '../components/ResultCard.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 
-import fixturesData from '../data/fixtures.json';
-import resultsData from '../data/results.json';
+import { getFixtures, getResults } from '../lib/foireann.js';
 import videosData from '../data/videos.json';
 import productsData from '../data/products.json';
 import sponsorsData from '../data/sponsors.json';
 import teamsData from '../data/teams.json';
 import { CLUB_NAME, SOCIAL_LINKS } from '../lib/constants';
 import { findVideoUrl } from '../lib/gaa';
+
+// Server-render on demand and fetch live Foireann data (5-minute edge cache).
+export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
+const fixturesData = { fixtures: await getFixtures() };
+const resultsData = { results: await getResults() };
 
 // Compare date strings directly (YYYY-MM-DD sorts lexicographically) to avoid
 // timezone off-by-one issues when comparing UTC-parsed dates to local time.
