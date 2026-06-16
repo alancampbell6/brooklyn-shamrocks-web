@@ -7,7 +7,15 @@
 // for server-side code; Vercel provides real env vars at runtime. Using
 // process.env via the env() helper keeps this file fully testable in node:test.
 
-import { selectBrooklyn, mapFixture } from './foireann-transform.js';
+import {
+  selectBrooklyn,
+  mapFixture,
+  isBrooklynName,
+  canonicalCompetition,
+  groupLabel,
+  standingsSortKey,
+  standingRows,
+} from './foireann-transform.js';
 
 export const BASE = 'https://api.foireann.ie/open-data';
 export const TTL_MS = 5 * 60 * 1000; // 5 minutes
@@ -49,6 +57,7 @@ const cache = {};
 export function __resetCache() {
   delete cache.fixtures;
   delete cache.results;
+  delete cache.standings;
 }
 
 // ─── Core loader ──────────────────────────────────────────────────────────────
@@ -115,6 +124,14 @@ async function load(cacheKey, isResult, sort) {
   }
 }
 
+// ─── Season helper ────────────────────────────────────────────────────────────
+
+/** Current season: first value of FOIREANN_SEASONS, default '2026'. */
+function currentSeason() {
+  const raw = env('FOIREANN_SEASONS');
+  return (raw ? raw.split(',')[0].trim() : '') || '2026';
+}
+
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 /** Upcoming fixtures for the Brooklyn Shamrocks (ascending by start date). */
@@ -125,4 +142,52 @@ export async function getFixtures() {
 /** Past results for the Brooklyn Shamrocks (descending by start date). */
 export async function getResults() {
   return load('results', true, 'startDate,desc');
+}
+
+/** Official standings for each competition the club plays in (5-minute cache). */
+export async function getStandings() {
+  const entry = cache.standings;
+  if (entry && now() < entry.expires) return entry.value;
+
+  const key = env('FOIREANN_API_KEY');
+  const org = env('FOIREANN_NY_ORG_ID');
+  if (!key || !org) {
+    console.warn('[foireann] not configured — FOIREANN_API_KEY and/or FOIREANN_NY_ORG_ID missing');
+    return [];
+  }
+
+  const params = new URLSearchParams({ 'owner.id': org, season: currentSeason(), size: '200' });
+  const url = `${BASE}/v1/competitions?${params}`;
+
+  try {
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${key}`, Accept: 'application/json' },
+    });
+    if (!res.ok) {
+      console.warn(`[foireann] HTTP ${res.status} fetching competitions`);
+      return [];
+    }
+    const comps = (await res.json()).data ?? [];
+    const tables = [];
+    for (const c of comps) {
+      for (const dv of c.divisions ?? []) {
+        for (const lg of dv.leagues ?? []) {
+          const teams = lg.teams ?? [];
+          if (teams.some((t) => isBrooklynName(t.name))) {
+            tables.push({
+              competition: canonicalCompetition(c.name),
+              group: groupLabel(dv.name, c.name),
+              rows: standingRows(teams),
+            });
+          }
+        }
+      }
+    }
+    tables.sort((a, b) => standingsSortKey(a.competition) - standingsSortKey(b.competition));
+    cache.standings = { value: tables, expires: now() + TTL_MS };
+    return tables;
+  } catch (err) {
+    console.warn('[foireann] competitions fetch error:', err?.message ?? err);
+    return [];
+  }
 }
