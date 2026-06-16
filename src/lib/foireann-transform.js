@@ -132,3 +132,23 @@ export function selectBrooklyn(fixtures) {
     return teamName(fx, 'home') !== 'TBC' && teamName(fx, 'away') !== 'TBC';
   });
 }
+
+/** The division's distinguishing suffix (e.g. "League Division 1"); '' when none. */
+export function groupLabel(divisionName, competitionName) {
+  if (!divisionName) return '';
+  let s = String(divisionName).trim();
+  const comp = String(competitionName ?? '').trim();
+  if (comp && s.toLowerCase().startsWith(comp.toLowerCase())) {
+    s = s.slice(comp.length);
+  }
+  return s.replace(/^[\s\-–—:]+/, '').trim();
+}
+
+/** Display order for standings tables: championship before league, senior→junior, football before hurling. */
+export function standingsSortKey(name) {
+  const n = (name ?? '').toLowerCase();
+  const sport = n.includes('hurling') ? 1 : 0;
+  const kind = n.includes('league') ? 1 : 0;
+  const tier = n.includes('junior') ? 2 : n.includes('intermediate') ? 1 : 0;
+  return sport * 100 + kind * 10 + tier;
+}

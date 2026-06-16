@@ -173,3 +173,25 @@ test('selectBrooklyn keeps only Brooklyn games, drops BYE and TBC', () => {
   assert.equal(kept.length, 1);
   assert.equal(kept[0].awayTeam.name, 'Cavan');
 });
+
+// Task 1 (standings plan): groupLabel + standingsSortKey
+import { groupLabel, standingsSortKey } from './foireann-transform.js';
+
+test('groupLabel strips the competition name and separators from the division name', () => {
+  assert.equal(groupLabel('Senior Football Championship - League Division 1', 'Senior Football Championship'), 'League Division 1');
+  assert.equal(groupLabel('Senior Football League - League Division 1', 'Senior Football League'), 'League Division 1');
+  assert.equal(groupLabel('Junior B Football Championship ', 'Junior B Football Championship'), '');
+  assert.equal(groupLabel('Group A', 'Senior Football Championship'), 'Group A');
+  assert.equal(groupLabel(undefined, 'x'), '');
+});
+
+test('standingsSortKey orders championships before leagues, senior→junior, football before hurling', () => {
+  const order = [
+    'NY Senior Football Championship',
+    'NY Junior Football Championship',
+    'NY Senior Football League',
+    'NY Senior Hurling Championship',
+  ].map(standingsSortKey);
+  // strictly increasing in the intended display order
+  assert.ok(order[0] < order[1] && order[1] < order[2] && order[2] < order[3]);
+});
