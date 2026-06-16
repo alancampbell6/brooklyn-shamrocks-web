@@ -3,21 +3,23 @@
   "type": "module",
   "version": "1.0.0",
   "description": "Brooklyn Shamrocks GAA Club Website",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "scrape": "node scripts/scrape-sharepoint-fixtures.js"
+    "test": "node --test src/lib/*.test.js"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/vercel": "^7.8.2",
     "astro": "^4.16.0",
-    "playwright": "^1.58.2",
-    "tailwindcss": "^3.4.0",
-    "xlsx": "^0.18.5"
+    "tailwindcss": "^3.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
