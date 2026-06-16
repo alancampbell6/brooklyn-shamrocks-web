@@ -195,3 +195,30 @@ test('standingsSortKey orders championships before leagues, senior→junior, foo
   // strictly increasing in the intended display order
   assert.ok(order[0] < order[1] && order[1] < order[2] && order[2] < order[3]);
 });
+
+// Task 2 (standings plan): standingRows
+import { standingRows } from './foireann-transform.js';
+
+test('standingRows maps Foireann league teams, flags the club, and sorts by rank', () => {
+  const teams = [
+    { name: 'Kerry GFC', rank: 1, played: 1, won: 1, drawn: 0, lost: 0, pointsFor: 23, pointsAgainst: 13, totalPoints: 2 },
+    { name: 'Brooklyn shamrocks', rank: 2, played: 1, won: 1, drawn: 0, lost: 0, pointsFor: 23, pointsAgainst: 21, totalPoints: 2 },
+  ];
+  const rows = standingRows(teams);
+  assert.equal(rows[0].team, 'Kerry GFC');
+  assert.deepEqual(rows[1], {
+    team: 'Brooklyn Shamrocks', rank: 2, played: 1, wins: 1, draws: 0, losses: 0,
+    pointsFor: 23, pointsAgainst: 21, pointsDiff: 2, totalPoints: 2, isClub: true,
+  });
+  assert.equal(rows[0].isClub, false);
+});
+
+test('standingRows defaults missing numbers to 0 and sorts a clubless table by rank', () => {
+  const rows = standingRows([
+    { name: 'B', rank: 2 },
+    { name: 'A', rank: 1, played: 0, won: 0, drawn: 0, lost: 0, pointsFor: 0, pointsAgainst: 0, totalPoints: 0 },
+  ]);
+  assert.equal(rows[0].team, 'A');
+  assert.equal(rows[1].played, 0);
+  assert.equal(rows[1].pointsDiff, 0);
+});

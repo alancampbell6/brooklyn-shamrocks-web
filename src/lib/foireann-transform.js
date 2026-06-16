@@ -152,3 +152,33 @@ export function standingsSortKey(name) {
   const tier = n.includes('junior') ? 2 : n.includes('intermediate') ? 1 : 0;
   return sport * 100 + kind * 10 + tier;
 }
+
+/** Map Foireann league teams to standings rows (club normalized + flagged), sorted. */
+export function standingRows(teams) {
+  const rows = (teams ?? []).map((t) => {
+    const pointsFor = t.pointsFor ?? 0;
+    const pointsAgainst = t.pointsAgainst ?? 0;
+    return {
+      team: normalizeTeamName(t.name ?? ''),
+      rank: t.rank ?? null,
+      played: t.played ?? 0,
+      wins: t.won ?? 0,
+      draws: t.drawn ?? 0,
+      losses: t.lost ?? 0,
+      pointsFor,
+      pointsAgainst,
+      pointsDiff: pointsFor - pointsAgainst,
+      totalPoints: t.totalPoints ?? 0,
+      isClub: isBrooklynName(t.name),
+    };
+  });
+  rows.sort(
+    (a, b) =>
+      (a.rank ?? 999) - (b.rank ?? 999) ||
+      b.totalPoints - a.totalPoints ||
+      b.pointsDiff - a.pointsDiff ||
+      b.pointsFor - a.pointsFor ||
+      a.team.localeCompare(b.team),
+  );
+  return rows;
+}
