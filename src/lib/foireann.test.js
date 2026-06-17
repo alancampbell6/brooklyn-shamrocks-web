@@ -190,3 +190,58 @@ test('getFixtures requests isResult=false', async () => {
   const url = getCalls()[0].url;
   assert.ok(url.includes('isResult=false'), `URL should include isResult=false, got: ${url}`);
 });
+
+// ─── getStandings tests ───────────────────────────────────────────────────────
+import { getStandings } from './foireann.js';
+
+test('getStandings returns only leagues containing Brooklyn, mapped and labelled', async () => {
+  __resetCache();
+  process.env.FOIREANN_API_KEY = 'k';
+  process.env.FOIREANN_NY_ORG_ID = 'o';
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      data: [
+        {
+          name: 'Senior Football Championship',
+          divisions: [
+            { name: 'Senior Football Championship - League Division 1',
+              leagues: [{ teams: [
+                { name: 'Kerry GFC', rank: 1, played: 1, won: 1, drawn: 0, lost: 0, pointsFor: 23, pointsAgainst: 13, totalPoints: 2 },
+                { name: 'Brooklyn Shamrocks', rank: 2, played: 1, won: 1, drawn: 0, lost: 0, pointsFor: 23, pointsAgainst: 21, totalPoints: 2 },
+              ] }] },
+            { name: 'Senior Football Championship - League Division 2',
+              leagues: [{ teams: [ { name: 'Cork GFC', rank: 1 } ] }] }, // no Brooklyn → excluded
+          ],
+        },
+      ],
+    }),
+  });
+  const tables = await getStandings();
+  assert.equal(tables.length, 1);
+  assert.equal(tables[0].competition, 'NY Senior Football Championship');
+  assert.equal(tables[0].group, 'League Division 1');
+  assert.equal(tables[0].rows.length, 2);
+  assert.equal(tables[0].rows[1].team, 'Brooklyn Shamrocks');
+  assert.equal(tables[0].rows[1].isClub, true);
+  delete process.env.FOIREANN_API_KEY; delete process.env.FOIREANN_NY_ORG_ID;
+});
+
+test('getStandings returns [] without fetching when the key is missing', async () => {
+  __resetCache();
+  delete process.env.FOIREANN_API_KEY;
+  let called = false;
+  globalThis.fetch = async () => { called = true; return { ok: true, json: async () => ({}) }; };
+  const tables = await getStandings();
+  assert.deepEqual(tables, []);
+  assert.equal(called, false);
+});
+
+test('getStandings returns [] on a non-200 response', async () => {
+  __resetCache();
+  process.env.FOIREANN_API_KEY = 'k';
+  process.env.FOIREANN_NY_ORG_ID = 'o';
+  globalThis.fetch = async () => ({ ok: false, status: 503, json: async () => ({}) });
+  assert.deepEqual(await getStandings(), []);
+  delete process.env.FOIREANN_API_KEY; delete process.env.FOIREANN_NY_ORG_ID;
+});

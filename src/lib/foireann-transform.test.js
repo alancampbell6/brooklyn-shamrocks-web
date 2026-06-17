@@ -173,3 +173,52 @@ test('selectBrooklyn keeps only Brooklyn games, drops BYE and TBC', () => {
   assert.equal(kept.length, 1);
   assert.equal(kept[0].awayTeam.name, 'Cavan');
 });
+
+// Task 1 (standings plan): groupLabel + standingsSortKey
+import { groupLabel, standingsSortKey } from './foireann-transform.js';
+
+test('groupLabel strips the competition name and separators from the division name', () => {
+  assert.equal(groupLabel('Senior Football Championship - League Division 1', 'Senior Football Championship'), 'League Division 1');
+  assert.equal(groupLabel('Senior Football League - League Division 1', 'Senior Football League'), 'League Division 1');
+  assert.equal(groupLabel('Junior B Football Championship ', 'Junior B Football Championship'), '');
+  assert.equal(groupLabel('Group A', 'Senior Football Championship'), 'Group A');
+  assert.equal(groupLabel(undefined, 'x'), '');
+});
+
+test('standingsSortKey orders championships before leagues, senior→junior, football before hurling', () => {
+  const order = [
+    'NY Senior Football Championship',
+    'NY Junior Football Championship',
+    'NY Senior Football League',
+    'NY Senior Hurling Championship',
+  ].map(standingsSortKey);
+  // strictly increasing in the intended display order
+  assert.ok(order[0] < order[1] && order[1] < order[2] && order[2] < order[3]);
+});
+
+// Task 2 (standings plan): standingRows
+import { standingRows } from './foireann-transform.js';
+
+test('standingRows maps Foireann league teams, flags the club, and sorts by rank', () => {
+  const teams = [
+    { name: 'Kerry GFC', rank: 1, played: 1, won: 1, drawn: 0, lost: 0, pointsFor: 23, pointsAgainst: 13, totalPoints: 2 },
+    { name: 'Brooklyn shamrocks', rank: 2, played: 1, won: 1, drawn: 0, lost: 0, pointsFor: 23, pointsAgainst: 21, totalPoints: 2 },
+  ];
+  const rows = standingRows(teams);
+  assert.equal(rows[0].team, 'Kerry GFC');
+  assert.deepEqual(rows[1], {
+    team: 'Brooklyn Shamrocks', rank: 2, played: 1, wins: 1, draws: 0, losses: 0,
+    pointsFor: 23, pointsAgainst: 21, pointsDiff: 2, totalPoints: 2, isClub: true,
+  });
+  assert.equal(rows[0].isClub, false);
+});
+
+test('standingRows defaults missing numbers to 0 and sorts a clubless table by rank', () => {
+  const rows = standingRows([
+    { name: 'B', rank: 2 },
+    { name: 'A', rank: 1, played: 0, won: 0, drawn: 0, lost: 0, pointsFor: 0, pointsAgainst: 0, totalPoints: 0 },
+  ]);
+  assert.equal(rows[0].team, 'A');
+  assert.equal(rows[1].played, 0);
+  assert.equal(rows[1].pointsDiff, 0);
+});

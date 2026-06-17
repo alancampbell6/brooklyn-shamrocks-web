@@ -132,3 +132,53 @@ export function selectBrooklyn(fixtures) {
     return teamName(fx, 'home') !== 'TBC' && teamName(fx, 'away') !== 'TBC';
   });
 }
+
+/** The division's distinguishing suffix (e.g. "League Division 1"); '' when none. */
+export function groupLabel(divisionName, competitionName) {
+  if (!divisionName) return '';
+  let s = String(divisionName).trim();
+  const comp = String(competitionName ?? '').trim();
+  if (comp && s.toLowerCase().startsWith(comp.toLowerCase())) {
+    s = s.slice(comp.length);
+  }
+  return s.replace(/^[\s\-–—:]+/, '').trim();
+}
+
+/** Display order for standings tables: championship before league, senior→junior, football before hurling. */
+export function standingsSortKey(name) {
+  const n = (name ?? '').toLowerCase();
+  const sport = n.includes('hurling') ? 1 : 0;
+  const kind = n.includes('league') ? 1 : 0;
+  const tier = n.includes('junior') ? 2 : n.includes('intermediate') ? 1 : 0;
+  return sport * 100 + kind * 10 + tier;
+}
+
+/** Map Foireann league teams to standings rows (club normalized + flagged), sorted. */
+export function standingRows(teams) {
+  const rows = (teams ?? []).map((t) => {
+    const pointsFor = t.pointsFor ?? 0;
+    const pointsAgainst = t.pointsAgainst ?? 0;
+    return {
+      team: normalizeTeamName(t.name ?? ''),
+      rank: t.rank ?? null,
+      played: t.played ?? 0,
+      wins: t.won ?? 0,
+      draws: t.drawn ?? 0,
+      losses: t.lost ?? 0,
+      pointsFor,
+      pointsAgainst,
+      pointsDiff: pointsFor - pointsAgainst,
+      totalPoints: t.totalPoints ?? 0,
+      isClub: isBrooklynName(t.name),
+    };
+  });
+  rows.sort(
+    (a, b) =>
+      (a.rank ?? 999) - (b.rank ?? 999) ||
+      b.totalPoints - a.totalPoints ||
+      b.pointsDiff - a.pointsDiff ||
+      b.pointsFor - a.pointsFor ||
+      a.team.localeCompare(b.team),
+  );
+  return rows;
+}
