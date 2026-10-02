@@ -1,0 +1,371 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CLUB_SITE, CLUB_EMAIL } from '../lib/constants';
+import { MAX_TICKETS } from '../lib/venmo.js';
+
+const venmoUser = 'brooklyn-shamrocksgfc';
+const ticketPrice = 150;
+
+const venue = {
+  name: 'Bayridge Manor',
+  street: '476 76th Street',
+  city: 'Brooklyn, NY',
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Bayridge+Manor+476+76th+Street+Brooklyn+NY',
+};
+
+const schedule = [
+  { label: 'Cocktail Hour', time: '7:30pm – 8:30pm' },
+  { label: 'Dinner & Dance', time: '8:30pm – 12:30am' },
+];
+
+const awardees = [
+  { award: 'Guest of Honor', name: 'JJ Devaney' },
+  { award: 'Clubman of the Year', name: 'Redmond Hanna' },
+  { award: 'Lifetime Achievement Award', name: 'Declan McAleer' },
+  { award: 'Senior Player of the Year', name: 'Pat Guerin' },
+  { award: 'Junior Player of the Year', name: 'Stephen Moloney' },
+];
+
+const eventSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: 'Brooklyn Shamrocks GFC Annual Dinner Dance',
+  description: 'A night to celebrate our club and our Junior B Champions, with the presentation of the trophy, winners medals and club awards.',
+  startDate: '2026-11-13T19:30:00-05:00',
+  endDate: '2026-11-14T00:30:00-05:00',
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  image: [`${CLUB_SITE}/images/dinner-dance-2026.jpg`],
+  location: {
+    '@type': 'Place',
+    name: venue.name,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: venue.street,
+      addressLocality: 'Brooklyn',
+      addressRegion: 'NY',
+      addressCountry: 'US',
+    },
+  },
+  offers: {
+    '@type': 'Offer',
+    price: ticketPrice,
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+    url: `${CLUB_SITE}/dinner-dance#tickets`,
+  },
+  organizer: { '@type': 'SportsOrganization', name: 'Brooklyn Shamrocks GAA', url: CLUB_SITE },
+};
+---
+
+<BaseLayout
+  title="Annual Dinner Dance 2026"
+  description="Brooklyn Shamrocks GFC Annual Dinner Dance — Friday, November 13th at Bayridge Manor, Brooklyn. Celebrating our Junior B Champions. Tickets $150 per person via Venmo."
+  schema={eventSchema}
+  breadcrumbs={[{ name: 'Dinner Dance', href: '/dinner-dance' }]}
+>
+  <Fragment slot="head">
+    <link rel="preload" href="/images/dinner-dance-2026.webp" as="image" type="image/webp" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <!-- Hero -->
+  <section class="dd-hero relative overflow-hidden text-white">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+      <div class="text-center lg:text-left">
+        <p class="text-xs sm:text-sm tracking-[0.35em] uppercase text-shamrock-200 mb-4">Brooklyn Shamrocks GFC</p>
+        <h1 class="dd-serif dd-gold text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[0.95] mb-4">
+          Annual<br />Dinner Dance
+        </h1>
+        <p class="text-sm sm:text-base tracking-[0.3em] uppercase text-white/90 mb-8">A night to celebrate our club</p>
+
+        <div class="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-3 mb-10 text-left">
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.25em] text-gold-300/80">When</p>
+            <p class="dd-serif text-xl font-bold">Friday, Nov 13th</p>
+          </div>
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.25em] text-gold-300/80">Where</p>
+            <p class="dd-serif text-xl font-bold">{venue.name}</p>
+          </div>
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.25em] text-gold-300/80">Tickets</p>
+            <p class="dd-serif text-xl font-bold">${ticketPrice} pp</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <a href="#tickets" class="dd-btn-gold inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold uppercase tracking-wider">
+            Buy Tickets
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+          </a>
+          <a href="#details" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold uppercase tracking-wider border border-gold-400/60 text-gold-200 hover:bg-white/5 transition-colors">
+            Event Details
+          </a>
+        </div>
+      </div>
+
+      <a href="/images/dinner-dance-2026.jpg" target="_blank" rel="noopener" class="block mx-auto w-full max-w-sm lg:max-w-md group" aria-label="Open the full event poster">
+        <picture>
+          <source srcset="/images/dinner-dance-2026.webp" type="image/webp" />
+          <img
+            src="/images/dinner-dance-2026.jpg"
+            alt="Brooklyn Shamrocks GFC Annual Dinner Dance poster: Friday November 13th, Bayridge Manor, $150 per person"
+            width="1024"
+            height="1536"
+            fetchpriority="high"
+            class="w-full h-auto shadow-2xl ring-1 ring-gold-400/40 transition-transform duration-500 group-hover:-rotate-1 group-hover:scale-[1.02] lg:rotate-2"
+          />
+        </picture>
+      </a>
+    </div>
+  </section>
+
+  <!-- Celebrating -->
+  <section class="bg-shamrock-950 text-white border-y border-gold-500/20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 text-center">
+      <p class="text-xs tracking-[0.35em] uppercase text-gold-300 mb-3">Celebrating our</p>
+      <h2 class="dd-serif dd-gold text-3xl sm:text-4xl md:text-5xl font-bold mb-3">Junior B Champions</h2>
+      <p class="text-shamrock-100 tracking-[0.2em] uppercase text-sm">Presentation of trophy and winners medals</p>
+    </div>
+  </section>
+
+  <!-- Details -->
+  <section id="details" class="bg-white py-14 md:py-20 scroll-mt-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-8 text-center">The Night</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="border border-gray-200 p-6">
+          <p class="text-xs font-bold uppercase tracking-widest text-shamrock-700 mb-2">Date</p>
+          <p class="text-xl font-bold text-gray-900">Friday, November 13th, 2026</p>
+          <p class="text-gray-500 mt-1">Doors open 7:30pm</p>
+        </div>
+        <div class="border border-gray-200 p-6">
+          <p class="text-xs font-bold uppercase tracking-widest text-shamrock-700 mb-2">Venue</p>
+          <p class="text-xl font-bold text-gray-900">{venue.name}</p>
+          <p class="text-gray-500 mt-1">{venue.street}, {venue.city}</p>
+          <a href={venue.mapsUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 mt-3 text-sm font-bold text-shamrock-700 hover:text-shamrock-900 uppercase tracking-wide">
+            Get directions
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          </a>
+        </div>
+        <div class="border border-gray-200 p-6">
+          <p class="text-xs font-bold uppercase tracking-widest text-shamrock-700 mb-2">Schedule</p>
+          <ul class="space-y-2">
+            {schedule.map((s) => (
+              <li class="flex justify-between gap-4">
+                <span class="font-bold text-gray-900">{s.label}</span>
+                <span class="text-gray-500 whitespace-nowrap">{s.time}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p class="text-center text-gray-500 mt-8 uppercase tracking-[0.25em] text-xs sm:text-sm">Good food &nbsp;|&nbsp; Great company &nbsp;|&nbsp; A stronger tomorrow</p>
+    </div>
+  </section>
+
+  <!-- Awardees -->
+  <section class="bg-gray-50 py-14 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-tight mb-8 text-center">Awardees</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {awardees.map((a) => (
+          <div class="bg-shamrock-900 text-center px-4 py-6 border-t-4 border-gold-500">
+            <p class="text-[11px] uppercase tracking-widest text-shamrock-200 mb-2 min-h-[2.2em]">{a.award}</p>
+            <p class="dd-serif dd-gold text-xl font-bold">{a.name}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Tickets -->
+  <section id="tickets" class="dd-hero relative py-14 md:py-20 scroll-mt-20 text-white">
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <p class="text-xs tracking-[0.35em] uppercase text-gold-300 mb-3">${ticketPrice} per person</p>
+        <h2 class="dd-serif dd-gold text-4xl md:text-5xl font-bold">Get Your Tickets</h2>
+      </div>
+
+      <form id="ticket-form" class="bg-white text-gray-900 shadow-2xl grid md:grid-cols-[1fr_auto]" novalidate>
+        <div class="p-6 sm:p-8 md:p-10">
+          <!-- Quantity -->
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-3" for="qty">Tickets</label>
+          <div class="flex items-center gap-4 mb-8">
+            <div class="inline-flex items-stretch border-2 border-gray-200">
+              <button type="button" data-step="-1" class="w-12 h-12 text-2xl font-bold text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Remove a ticket">−</button>
+              <input id="qty" name="qty" type="number" inputmode="numeric" min="1" max={MAX_TICKETS} value="1" class="w-16 text-center text-xl font-bold border-x-2 border-gray-200 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
+              <button type="button" data-step="1" class="w-12 h-12 text-2xl font-bold text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Add a ticket">+</button>
+            </div>
+            <span class="text-gray-500">× ${ticketPrice}</span>
+          </div>
+
+          <!-- Name -->
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2" for="buyer">Name for the guest list</label>
+          <input id="buyer" name="buyer" type="text" autocomplete="name" placeholder="e.g. Pat Guerin" class="w-full border-2 border-gray-200 px-4 py-3 text-lg focus:border-shamrock-600 focus:outline-none" />
+          <p id="buyer-error" class="hidden text-sm text-red-600 mt-2">Add a name so we can put you on the list.</p>
+          <p class="text-sm text-gray-500 mt-2">Buying for a group? Add their names too — it goes in the Venmo note.</p>
+
+          <!-- Total + pay -->
+          <div class="flex items-end justify-between border-t border-gray-200 mt-8 pt-6 mb-6">
+            <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Total</span>
+            <span id="total" class="text-4xl font-extrabold text-gray-900" aria-live="polite">${ticketPrice}</span>
+          </div>
+
+          <button type="submit" id="pay-btn" class="w-full flex items-center justify-center gap-3 py-4 text-lg font-bold text-white transition-all hover:brightness-110 active:scale-[0.99]" style="background-color:#008CFF;">
+            <span id="pay-label">Pay ${ticketPrice} with Venmo</span>
+          </button>
+          <p class="text-center text-sm text-gray-500 mt-4">
+            Opens Venmo with the amount and note filled in. Sending to
+            <a href={`https://venmo.com/u/${venmoUser}`} target="_blank" rel="noopener noreferrer" class="font-bold hover:underline" style="color:#008CFF;">@Brooklyn-Shamrocksgfc</a>
+          </p>
+        </div>
+
+        <!-- QR (desktop) -->
+        <div class="hidden md:flex flex-col items-center justify-center gap-4 bg-gray-50 border-l border-gray-200 p-8 w-72">
+          <p class="text-xs font-bold uppercase tracking-widest text-gray-500 text-center">On a computer?<br />Scan with your phone</p>
+          <div id="qr" class="w-48 h-48 bg-white p-2 ring-1 ring-gray-200" role="img" aria-label="QR code that opens Venmo with your ticket payment filled in"></div>
+          <p id="qr-caption" class="text-xs text-gray-500 text-center">1 ticket · $150</p>
+        </div>
+      </form>
+
+      <!-- How it works -->
+      <ol class="grid sm:grid-cols-3 gap-6 mt-10 text-sm">
+        <li class="flex gap-3">
+          <span class="dd-serif flex-shrink-0 w-8 h-8 grid place-items-center border border-gold-400 text-gold-300 font-bold">1</span>
+          <span class="text-shamrock-100">Pick your tickets and add the name(s) for the guest list.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="dd-serif flex-shrink-0 w-8 h-8 grid place-items-center border border-gold-400 text-gold-300 font-bold">2</span>
+          <span class="text-shamrock-100">Venmo opens pre-filled — just confirm the payment.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="dd-serif flex-shrink-0 w-8 h-8 grid place-items-center border border-gold-400 text-gold-300 font-bold">3</span>
+          <span class="text-shamrock-100">That's it. Your Venmo payment is your ticket — names will be on the door.</span>
+        </li>
+      </ol>
+
+      <p class="text-center text-shamrock-200 text-sm mt-10">
+        Questions about tables or tickets? <a href={`mailto:${CLUB_EMAIL}`} class="font-bold text-gold-300 hover:text-gold-200 underline underline-offset-4">{CLUB_EMAIL}</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .dd-serif {
+    font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
+  }
+  .dd-gold {
+    background: linear-gradient(180deg, #fde68a 0%, #eab308 45%, #b7791f 70%, #fcd34d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .dd-hero {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34, 197, 94, 0.22), transparent 70%),
+      radial-gradient(ellipse 60% 50% at 100% 100%, rgba(234, 179, 8, 0.08), transparent 70%),
+      #052e16;
+  }
+  .dd-btn-gold {
+    background: linear-gradient(180deg, #fcd34d, #eab308);
+    color: #1c1917;
+    transition: filter 0.2s, transform 0.2s;
+  }
+  .dd-btn-gold:hover {
+    filter: brightness(1.08);
+  }
+  .dd-btn-gold:active {
+    transform: scale(0.98);
+  }
+</style>
+
+<script>
+  import QRCode from 'qrcode';
+  import { clampQty, ticketNote, venmoLinks, MAX_TICKETS } from '../lib/venmo.js';
+
+  const VENMO_USER = 'brooklyn-shamrocksgfc';
+  const PRICE = 150;
+
+  const form = document.getElementById('ticket-form') as HTMLFormElement;
+  const qtyInput = document.getElementById('qty') as HTMLInputElement;
+  const buyerInput = document.getElementById('buyer') as HTMLInputElement;
+  const buyerError = document.getElementById('buyer-error')!;
+  const totalEl = document.getElementById('total')!;
+  const payLabel = document.getElementById('pay-label')!;
+  const qrEl = document.getElementById('qr')!;
+  const qrCaption = document.getElementById('qr-caption')!;
+  const stepBtns = form.querySelectorAll<HTMLButtonElement>('[data-step]');
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  function current() {
+    const qty = clampQty(qtyInput.value);
+    const amount = qty * PRICE;
+    const links = venmoLinks({ user: VENMO_USER, amount, note: ticketNote(qty, buyerInput.value) });
+    return { qty, amount, links };
+  }
+
+  let qrTimer: ReturnType<typeof setTimeout> | undefined;
+  function render() {
+    const { qty, amount, links } = current();
+    totalEl.textContent = `$${amount.toLocaleString()}`;
+    payLabel.textContent = `Pay $${amount.toLocaleString()} with Venmo`;
+    qrCaption.textContent = `${qty} ticket${qty === 1 ? '' : 's'} · $${amount.toLocaleString()}`;
+    stepBtns.forEach((b) => {
+      const step = Number(b.dataset.step);
+      b.disabled = step < 0 ? qty <= 1 : qty >= MAX_TICKETS;
+    });
+
+    // Debounce so typing a name doesn't redraw the QR on every keystroke
+    clearTimeout(qrTimer);
+    qrTimer = setTimeout(async () => {
+      if (getComputedStyle(qrEl.parentElement!).display === 'none') return;
+      qrEl.innerHTML = await QRCode.toString(links.web, {
+        type: 'svg',
+        margin: 0,
+        errorCorrectionLevel: 'M',
+        color: { dark: '#052e16', light: '#ffffff' },
+      });
+    }, 150);
+  }
+
+  stepBtns.forEach((b) =>
+    b.addEventListener('click', () => {
+      qtyInput.value = String(clampQty(Number(qtyInput.value) + Number(b.dataset.step)));
+      render();
+    })
+  );
+  qtyInput.addEventListener('input', render);
+  qtyInput.addEventListener('blur', () => {
+    qtyInput.value = String(clampQty(qtyInput.value));
+    render();
+  });
+  buyerInput.addEventListener('input', () => {
+    buyerError.classList.add('hidden');
+    buyerInput.removeAttribute('aria-invalid');
+    render();
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!buyerInput.value.trim()) {
+      buyerError.classList.remove('hidden');
+      buyerInput.setAttribute('aria-invalid', 'true');
+      buyerInput.focus();
+      return;
+    }
+    const { links } = current();
+    if (isMobile) {
+      // Try the app first; fall back to venmo.com if it isn't installed
+      const fallback = setTimeout(() => (window.location.href = links.web), 1500);
+      window.addEventListener('blur', () => clearTimeout(fallback), { once: true });
+      window.location.href = links.app;
+    } else {
+      window.open(links.web, '_blank', 'noopener,noreferrer');
+    }
+  });
+
+  render();
+</script>

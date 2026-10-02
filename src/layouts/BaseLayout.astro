@@ -142,6 +142,7 @@ const breadcrumbSchema = breadcrumbs ? {
     ) : null}
 
     <title>{fullTitle}</title>
+    <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col">
     <Header />

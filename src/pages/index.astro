@@ -29,6 +29,9 @@ const upcomingFixtures = fixturesData.fixtures
 
 const nextFixture = upcomingFixtures[0];
 
+// Promote the Dinner Dance until the night itself
+const showDinnerDance = todayStr <= '2026-11-13';
+
 // Get the latest result (spread to avoid mutating the imported array)
 const latestResultRaw = [...resultsData.results]
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
@@ -76,6 +79,21 @@ const updateCards = [
     size="large"
     bottomColor="#14532d"
   />
+
+  {showDinnerDance && (
+    <a href="/dinner-dance" class="group block bg-shamrock-950 border-y border-gold-500/40 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+        <p class="text-sm sm:text-base">
+          <span class="font-bold uppercase tracking-wider text-gold-400">Annual Dinner Dance</span>
+          <span class="text-shamrock-100"> · Fri, Nov 13th · Bayridge Manor · $150pp</span>
+        </p>
+        <span class="inline-flex items-center gap-2 px-5 py-2 bg-gold-500 text-gray-900 text-sm font-bold uppercase tracking-wide group-hover:bg-gold-400 transition-colors">
+          Get Tickets
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </span>
+      </div>
+    </a>
+  )}
 
   <!-- Match Centre: Next Fixture & Latest Result (CPFC-style sharp cards on dark bg) -->
   <section class="py-10 md:py-14 bg-shamrock-900">
