@@ -12,7 +12,6 @@ const options = [
     id: a.id,
     title: `${a.tier} Journal Ad`,
     sub: 'Sponsor ad in the Dinner Dance journal',
-    price: a.price,
     swatch: a.tier.toLowerCase(),
   })),
 ];
@@ -71,7 +70,7 @@ const eventSchema = {
 
 <BaseLayout
   title="Annual Dinner Dance 2026"
-  description="Brooklyn Shamrocks GFC Annual Dinner Dance — Friday, November 13th at Bayridge Manor, Brooklyn. Celebrating our Junior B Champions. Tickets $150 per person and journal ads from $100 via Venmo."
+  description="Brooklyn Shamrocks GFC Annual Dinner Dance — Friday, November 13th at Bayridge Manor, Brooklyn. Celebrating our Junior B Champions. Tickets $150 per person via Venmo. Journal ads available for sponsors."
   schema={eventSchema}
   breadcrumbs={[{ name: 'Dinner Dance', href: '/dinner-dance' }]}
 >
@@ -106,7 +105,7 @@ const eventSchema = {
         </div>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-          <a href="#tickets" data-open="tickets" class="dd-btn-gold inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold uppercase tracking-wider">
+          <a href="#tickets" data-choose="tickets" class="dd-btn-gold inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold uppercase tracking-wider">
             Buy Tickets
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
           </a>
@@ -115,7 +114,7 @@ const eventSchema = {
           </a>
         </div>
         <p class="mt-5 text-sm text-shamrock-100">
-          Sponsoring? <a href="#journal" class="font-bold text-gold-300 hover:text-gold-200 underline underline-offset-4">Buy a journal ad</a> from $100.
+          Sponsoring? <a href="#journal" class="font-bold text-gold-300 hover:text-gold-200 underline underline-offset-4">Buy a journal ad</a>.
         </p>
       </div>
 
@@ -224,7 +223,7 @@ const eventSchema = {
                   <span class="block text-lg sm:text-xl font-bold uppercase tracking-tight">{o.title}</span>
                   <span class="block text-sm text-gray-500">{o.sub}</span>
                 </span>
-                <span class="text-2xl font-extrabold whitespace-nowrap">${o.price}</span>
+                {o.price && <span class="text-2xl font-extrabold whitespace-nowrap">${o.price}</span>}
                 <svg class="dd-chevron w-6 h-6 text-gray-400 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
               </button>
               <div id={`panel-${o.id}`} class="hidden border-t border-gray-200" data-panel></div>
@@ -461,8 +460,8 @@ const eventSchema = {
   optEls.forEach((el) =>
     el.querySelector('[data-toggle]')!.addEventListener('click', () => toggle(el.dataset.opt!))
   );
-  document.querySelectorAll<HTMLAnchorElement>('[data-open]').forEach((a) =>
-    a.addEventListener('click', () => toggle(a.dataset.open!, true))
+  document.querySelectorAll<HTMLAnchorElement>('[data-choose]').forEach((a) =>
+    a.addEventListener('click', () => toggle(a.dataset.choose!, true))
   );
 
   stepBtns.forEach((b) =>
@@ -502,6 +501,10 @@ const eventSchema = {
   });
 
   // Deep links: /dinner-dance#ad-gold opens that ad, #tickets opens tickets
-  const hash = location.hash.slice(1);
-  if (hash === 'tickets' || adFor(hash)) toggle(hash, true);
+  function openFromHash() {
+    const hash = location.hash.slice(1);
+    if (hash === 'tickets' || adFor(hash)) toggle(hash, true);
+  }
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
 </script>
