@@ -1,7 +1,7 @@
 // src/lib/venmo.test.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ticketNote, venmoLinks, clampQty } from './venmo.js';
+import { ticketNote, adNote, venmoLinks, clampQty, JOURNAL_ADS } from './venmo.js';
 
 test('clampQty keeps quantity between 1 and max, defaulting bad input to 1', () => {
   assert.equal(clampQty(3), 3);
@@ -20,6 +20,18 @@ test('ticketNote includes quantity, event and buyer name', () => {
 
 test('ticketNote omits the name when blank', () => {
   assert.equal(ticketNote(1, '   '), 'Dinner Dance 2026 – 1 ticket');
+});
+
+test('adNote names the tier and the sponsor', () => {
+  assert.equal(adNote('Gold', 'Hanna Plumbing'), 'Dinner Dance 2026 – Gold Journal Ad – Hanna Plumbing');
+  assert.equal(adNote('White', ' '), 'Dinner Dance 2026 – White Journal Ad');
+});
+
+test('JOURNAL_ADS lists White $100, Gold $200, Platinum $500', () => {
+  assert.deepEqual(
+    JOURNAL_ADS.map((a) => [a.tier, a.price]),
+    [['White', 100], ['Gold', 200], ['Platinum', 500]]
+  );
 });
 
 test('venmoLinks prefills recipient, amount and note for app and web', () => {

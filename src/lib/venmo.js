@@ -18,6 +18,20 @@ export function ticketNote(qty, name) {
   return parts.join(' – ');
 }
 
+// Sponsor ads in the Dinner Dance journal, one ad per payment.
+export const JOURNAL_ADS = [
+  { id: 'ad-white', tier: 'White', price: 100 },
+  { id: 'ad-gold', tier: 'Gold', price: 200 },
+  { id: 'ad-platinum', tier: 'Platinum', price: 500 },
+];
+
+export function adNote(tier, name) {
+  const parts = ['Dinner Dance 2026', `${tier} Journal Ad`];
+  const trimmed = String(name ?? '').trim();
+  if (trimmed) parts.push(trimmed);
+  return parts.join(' – ');
+}
+
 export function venmoLinks({ user, amount, note }) {
   const n = encodeURIComponent(note);
   return {

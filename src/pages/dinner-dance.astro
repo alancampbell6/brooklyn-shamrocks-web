@@ -1,10 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { CLUB_SITE, CLUB_EMAIL } from '../lib/constants';
-import { MAX_TICKETS } from '../lib/venmo.js';
+import { MAX_TICKETS, JOURNAL_ADS } from '../lib/venmo.js';
 
 const venmoUser = 'brooklyn-shamrocksgfc';
 const ticketPrice = 150;
+
+const options = [
+  { id: 'tickets', title: 'Dinner Dance Tickets', sub: 'Per person · cocktail hour, dinner & dance', price: ticketPrice, swatch: 'ticket' },
+  ...JOURNAL_ADS.map((a) => ({
+    id: a.id,
+    title: `${a.tier} Journal Ad`,
+    sub: 'Sponsor ad in the Dinner Dance journal',
+    price: a.price,
+    swatch: a.tier.toLowerCase(),
+  })),
+];
 
 const venue = {
   name: 'Bayridge Manor',
@@ -60,7 +71,7 @@ const eventSchema = {
 
 <BaseLayout
   title="Annual Dinner Dance 2026"
-  description="Brooklyn Shamrocks GFC Annual Dinner Dance — Friday, November 13th at Bayridge Manor, Brooklyn. Celebrating our Junior B Champions. Tickets $150 per person via Venmo."
+  description="Brooklyn Shamrocks GFC Annual Dinner Dance — Friday, November 13th at Bayridge Manor, Brooklyn. Celebrating our Junior B Champions. Tickets $150 per person and journal ads from $100 via Venmo."
   schema={eventSchema}
   breadcrumbs={[{ name: 'Dinner Dance', href: '/dinner-dance' }]}
 >
@@ -95,7 +106,7 @@ const eventSchema = {
         </div>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-          <a href="#tickets" class="dd-btn-gold inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold uppercase tracking-wider">
+          <a href="#tickets" data-open="tickets" class="dd-btn-gold inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold uppercase tracking-wider">
             Buy Tickets
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
           </a>
@@ -103,6 +114,9 @@ const eventSchema = {
             Event Details
           </a>
         </div>
+        <p class="mt-5 text-sm text-shamrock-100">
+          Sponsoring? <a href="#journal" class="font-bold text-gold-300 hover:text-gold-200 underline underline-offset-4">Buy a journal ad</a> from $100.
+        </p>
       </div>
 
       <a href="/images/dinner-dance-2026.jpg" target="_blank" rel="noopener" class="block mx-auto w-full max-w-sm lg:max-w-md group" aria-label="Open the full event poster">
@@ -180,61 +194,101 @@ const eventSchema = {
     </div>
   </section>
 
-  <!-- Tickets -->
+  <!-- Tickets & journal ads -->
   <section id="tickets" class="dd-hero relative py-14 md:py-20 scroll-mt-20 text-white">
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-10">
-        <p class="text-xs tracking-[0.35em] uppercase text-gold-300 mb-3">${ticketPrice} per person</p>
-        <h2 class="dd-serif dd-gold text-4xl md:text-5xl font-bold">Get Your Tickets</h2>
+        <p class="text-xs tracking-[0.35em] uppercase text-gold-300 mb-3">Pay securely with Venmo</p>
+        <h2 class="dd-serif dd-gold text-4xl md:text-5xl font-bold">Tickets &amp; Journal Ads</h2>
       </div>
 
-      <form id="ticket-form" class="bg-white text-gray-900 shadow-2xl grid md:grid-cols-[1fr_auto]" novalidate>
-        <div class="p-6 sm:p-8 md:p-10">
-          <!-- Quantity -->
-          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-3" for="qty">Tickets</label>
-          <div class="flex items-center gap-4 mb-8">
-            <div class="inline-flex items-stretch border-2 border-gray-200">
-              <button type="button" data-step="-1" class="w-12 h-12 text-2xl font-bold text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Remove a ticket">−</button>
-              <input id="qty" name="qty" type="number" inputmode="numeric" min="1" max={MAX_TICKETS} value="1" class="w-16 text-center text-xl font-bold border-x-2 border-gray-200 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-              <button type="button" data-step="1" class="w-12 h-12 text-2xl font-bold text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Add a ticket">+</button>
+      <div class="space-y-3">
+        {options.map((o, i) => (
+          <Fragment>
+            {i === 1 && (
+              <div id="journal" class="pt-8 pb-2 text-center scroll-mt-24">
+                <p class="dd-serif dd-gold text-2xl md:text-3xl font-bold">Advertise in the Journal</p>
+                <p class="text-shamrock-100 text-sm mt-2">Support the club and put your business or family in front of everyone on the night.</p>
+              </div>
+            )}
+            <div id={o.id === 'tickets' ? undefined : o.id} class="dd-opt bg-white text-gray-900 shadow-xl scroll-mt-24" data-opt={o.id}>
+              <button
+                type="button"
+                class="w-full flex items-center gap-4 p-5 sm:p-6 text-left hover:bg-gray-50 transition-colors"
+                aria-expanded="false"
+                aria-controls={`panel-${o.id}`}
+                data-toggle={o.id}
+              >
+                <span class={`dd-swatch dd-swatch-${o.swatch} flex-shrink-0 w-10 h-10`} aria-hidden="true"></span>
+                <span class="flex-1 min-w-0">
+                  <span class="block text-lg sm:text-xl font-bold uppercase tracking-tight">{o.title}</span>
+                  <span class="block text-sm text-gray-500">{o.sub}</span>
+                </span>
+                <span class="text-2xl font-extrabold whitespace-nowrap">${o.price}</span>
+                <svg class="dd-chevron w-6 h-6 text-gray-400 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              <div id={`panel-${o.id}`} class="hidden border-t border-gray-200" data-panel></div>
             </div>
-            <span class="text-gray-500">× ${ticketPrice}</span>
+          </Fragment>
+        ))}
+      </div>
+
+      <!-- One shared Venmo form; the script moves it into whichever option is open -->
+      <div id="form-home" hidden>
+        <form id="pay-form" class="grid md:grid-cols-[1fr_auto]" novalidate>
+          <div class="p-6 sm:p-8 md:p-10">
+            <!-- Quantity (tickets only) -->
+            <div id="qty-row">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-3" for="qty">Tickets</label>
+              <div class="flex items-center gap-4 mb-8">
+                <div class="inline-flex items-stretch border-2 border-gray-200">
+                  <button type="button" data-step="-1" class="w-12 h-12 text-2xl font-bold text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Remove a ticket">−</button>
+                  <input id="qty" name="qty" type="number" inputmode="numeric" min="1" max={MAX_TICKETS} value="1" class="w-16 text-center text-xl font-bold border-x-2 border-gray-200 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
+                  <button type="button" data-step="1" class="w-12 h-12 text-2xl font-bold text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Add a ticket">+</button>
+                </div>
+                <span class="text-gray-500">× ${ticketPrice}</span>
+              </div>
+            </div>
+
+            <!-- Name -->
+            <label id="buyer-label" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2" for="buyer">Name for the guest list</label>
+            <input id="buyer" name="buyer" type="text" autocomplete="name" placeholder="e.g. Pat Guerin" class="w-full border-2 border-gray-200 px-4 py-3 text-lg focus:border-shamrock-600 focus:outline-none" />
+            <p id="buyer-error" class="hidden text-sm text-red-600 mt-2">Add a name so we can put you on the list.</p>
+            <p id="buyer-hint" class="text-sm text-gray-500 mt-2">Buying for a group? Add their names too — it goes in the Venmo note.</p>
+
+            <!-- Total + pay -->
+            <div class="flex items-end justify-between border-t border-gray-200 mt-8 pt-6 mb-6">
+              <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Total</span>
+              <span id="total" class="text-4xl font-extrabold text-gray-900" aria-live="polite">${ticketPrice}</span>
+            </div>
+
+            <button type="submit" class="w-full flex items-center justify-center gap-3 py-4 text-lg font-bold text-white transition-all hover:brightness-110 active:scale-[0.99]" style="background-color:#008CFF;">
+              <span id="pay-label">Pay ${ticketPrice} with Venmo</span>
+            </button>
+            <p class="text-center text-sm text-gray-500 mt-4">
+              Opens Venmo with the amount and note filled in. Sending to
+              <a href={`https://venmo.com/u/${venmoUser}`} target="_blank" rel="noopener noreferrer" class="font-bold hover:underline" style="color:#008CFF;">@Brooklyn-Shamrocksgfc</a>
+            </p>
+            <p id="ad-artwork" class="hidden text-center text-sm text-gray-700 bg-gray-50 border border-gray-200 px-4 py-3 mt-4">
+              After paying, email your ad artwork or wording to
+              <a href={`mailto:${CLUB_EMAIL}?subject=${encodeURIComponent('Dinner Dance Journal Ad')}`} class="font-bold text-shamrock-700 hover:underline">{CLUB_EMAIL}</a>.
+            </p>
           </div>
 
-          <!-- Name -->
-          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2" for="buyer">Name for the guest list</label>
-          <input id="buyer" name="buyer" type="text" autocomplete="name" placeholder="e.g. Pat Guerin" class="w-full border-2 border-gray-200 px-4 py-3 text-lg focus:border-shamrock-600 focus:outline-none" />
-          <p id="buyer-error" class="hidden text-sm text-red-600 mt-2">Add a name so we can put you on the list.</p>
-          <p class="text-sm text-gray-500 mt-2">Buying for a group? Add their names too — it goes in the Venmo note.</p>
-
-          <!-- Total + pay -->
-          <div class="flex items-end justify-between border-t border-gray-200 mt-8 pt-6 mb-6">
-            <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Total</span>
-            <span id="total" class="text-4xl font-extrabold text-gray-900" aria-live="polite">${ticketPrice}</span>
+          <!-- QR (desktop) -->
+          <div class="hidden md:flex flex-col items-center justify-center gap-4 bg-gray-50 border-l border-gray-200 p-8 w-72">
+            <p class="text-xs font-bold uppercase tracking-widest text-gray-500 text-center">On a computer?<br />Scan with your phone</p>
+            <div id="qr" class="w-48 h-48 bg-white p-2 ring-1 ring-gray-200" role="img" aria-label="QR code that opens Venmo with your payment filled in"></div>
+            <p id="qr-caption" class="text-xs text-gray-500 text-center">1 ticket · $150</p>
           </div>
-
-          <button type="submit" id="pay-btn" class="w-full flex items-center justify-center gap-3 py-4 text-lg font-bold text-white transition-all hover:brightness-110 active:scale-[0.99]" style="background-color:#008CFF;">
-            <span id="pay-label">Pay ${ticketPrice} with Venmo</span>
-          </button>
-          <p class="text-center text-sm text-gray-500 mt-4">
-            Opens Venmo with the amount and note filled in. Sending to
-            <a href={`https://venmo.com/u/${venmoUser}`} target="_blank" rel="noopener noreferrer" class="font-bold hover:underline" style="color:#008CFF;">@Brooklyn-Shamrocksgfc</a>
-          </p>
-        </div>
-
-        <!-- QR (desktop) -->
-        <div class="hidden md:flex flex-col items-center justify-center gap-4 bg-gray-50 border-l border-gray-200 p-8 w-72">
-          <p class="text-xs font-bold uppercase tracking-widest text-gray-500 text-center">On a computer?<br />Scan with your phone</p>
-          <div id="qr" class="w-48 h-48 bg-white p-2 ring-1 ring-gray-200" role="img" aria-label="QR code that opens Venmo with your ticket payment filled in"></div>
-          <p id="qr-caption" class="text-xs text-gray-500 text-center">1 ticket · $150</p>
-        </div>
-      </form>
+        </form>
+      </div>
 
       <!-- How it works -->
       <ol class="grid sm:grid-cols-3 gap-6 mt-10 text-sm">
         <li class="flex gap-3">
           <span class="dd-serif flex-shrink-0 w-8 h-8 grid place-items-center border border-gold-400 text-gold-300 font-bold">1</span>
-          <span class="text-shamrock-100">Pick your tickets and add the name(s) for the guest list.</span>
+          <span class="text-shamrock-100">Pick tickets or a journal ad and add the name(s) for the guest list or the ad.</span>
         </li>
         <li class="flex gap-3">
           <span class="dd-serif flex-shrink-0 w-8 h-8 grid place-items-center border border-gold-400 text-gold-300 font-bold">2</span>
@@ -242,12 +296,12 @@ const eventSchema = {
         </li>
         <li class="flex gap-3">
           <span class="dd-serif flex-shrink-0 w-8 h-8 grid place-items-center border border-gold-400 text-gold-300 font-bold">3</span>
-          <span class="text-shamrock-100">That's it. Your Venmo payment is your ticket — names will be on the door.</span>
+          <span class="text-shamrock-100">That's it. Your Venmo payment is your ticket — names will be on the door. Advertisers, email us your artwork.</span>
         </li>
       </ol>
 
       <p class="text-center text-shamrock-200 text-sm mt-10">
-        Questions about tables or tickets? <a href={`mailto:${CLUB_EMAIL}`} class="font-bold text-gold-300 hover:text-gold-200 underline underline-offset-4">{CLUB_EMAIL}</a>
+        Questions about tables, tickets or ads? <a href={`mailto:${CLUB_EMAIL}`} class="font-bold text-gold-300 hover:text-gold-200 underline underline-offset-4">{CLUB_EMAIL}</a>
       </p>
     </div>
   </section>
@@ -269,6 +323,30 @@ const eventSchema = {
       radial-gradient(ellipse 60% 50% at 100% 100%, rgba(234, 179, 8, 0.08), transparent 70%),
       #052e16;
   }
+  .dd-swatch {
+    border-radius: 9999px;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  }
+  .dd-swatch-ticket {
+    background: #052e16;
+    box-shadow: inset 0 0 0 3px #eab308;
+  }
+  .dd-swatch-white {
+    background: #ffffff;
+    box-shadow: inset 0 0 0 2px #d1d5db;
+  }
+  .dd-swatch-gold {
+    background: linear-gradient(135deg, #fde68a, #eab308 55%, #b7791f);
+  }
+  .dd-swatch-platinum {
+    background: linear-gradient(135deg, #f8fafc, #cbd5e1 50%, #94a3b8);
+  }
+  .dd-opt[data-open] .dd-chevron {
+    transform: rotate(180deg);
+  }
+  .dd-opt[data-open] > button {
+    background: #f9fafb;
+  }
   .dd-btn-gold {
     background: linear-gradient(180deg, #fcd34d, #eab308);
     color: #1c1917;
@@ -284,35 +362,50 @@ const eventSchema = {
 
 <script>
   import QRCode from 'qrcode';
-  import { clampQty, ticketNote, venmoLinks, MAX_TICKETS } from '../lib/venmo.js';
+  import { clampQty, ticketNote, adNote, venmoLinks, MAX_TICKETS, JOURNAL_ADS } from '../lib/venmo.js';
 
   const VENMO_USER = 'brooklyn-shamrocksgfc';
-  const PRICE = 150;
+  const TICKET_PRICE = 150;
 
-  const form = document.getElementById('ticket-form') as HTMLFormElement;
+  const formHome = document.getElementById('form-home')!;
+  const form = document.getElementById('pay-form') as HTMLFormElement;
+  const qtyRow = document.getElementById('qty-row')!;
   const qtyInput = document.getElementById('qty') as HTMLInputElement;
+  const buyerLabel = document.getElementById('buyer-label')!;
   const buyerInput = document.getElementById('buyer') as HTMLInputElement;
   const buyerError = document.getElementById('buyer-error')!;
+  const buyerHint = document.getElementById('buyer-hint')!;
+  const adArtwork = document.getElementById('ad-artwork')!;
   const totalEl = document.getElementById('total')!;
   const payLabel = document.getElementById('pay-label')!;
   const qrEl = document.getElementById('qr')!;
   const qrCaption = document.getElementById('qr-caption')!;
   const stepBtns = form.querySelectorAll<HTMLButtonElement>('[data-step]');
+  const optEls = document.querySelectorAll<HTMLElement>('.dd-opt');
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+  // Which option the form is currently paying for: tickets or a journal ad tier
+  let selected = 'tickets';
+  const adFor = (id: string) => JOURNAL_ADS.find((a) => a.id === id);
+
   function current() {
+    const ad = adFor(selected);
+    if (ad) {
+      const note = adNote(ad.tier, buyerInput.value);
+      return { amount: ad.price, caption: `${ad.tier} journal ad`, links: venmoLinks({ user: VENMO_USER, amount: ad.price, note }) };
+    }
     const qty = clampQty(qtyInput.value);
-    const amount = qty * PRICE;
-    const links = venmoLinks({ user: VENMO_USER, amount, note: ticketNote(qty, buyerInput.value) });
-    return { qty, amount, links };
+    const amount = qty * TICKET_PRICE;
+    const note = ticketNote(qty, buyerInput.value);
+    return { qty, amount, caption: `${qty} ticket${qty === 1 ? '' : 's'}`, links: venmoLinks({ user: VENMO_USER, amount, note }) };
   }
 
   let qrTimer: ReturnType<typeof setTimeout> | undefined;
   function render() {
-    const { qty, amount, links } = current();
+    const { qty = 1, amount, caption, links } = current();
     totalEl.textContent = `$${amount.toLocaleString()}`;
     payLabel.textContent = `Pay $${amount.toLocaleString()} with Venmo`;
-    qrCaption.textContent = `${qty} ticket${qty === 1 ? '' : 's'} · $${amount.toLocaleString()}`;
+    qrCaption.textContent = `${caption} · $${amount.toLocaleString()}`;
     stepBtns.forEach((b) => {
       const step = Number(b.dataset.step);
       b.disabled = step < 0 ? qty <= 1 : qty >= MAX_TICKETS;
@@ -330,6 +423,47 @@ const eventSchema = {
       });
     }, 150);
   }
+
+  function setMode(id: string) {
+    selected = id;
+    const isAd = !!adFor(id);
+    qtyRow.hidden = isAd;
+    adArtwork.classList.toggle('hidden', !isAd);
+    buyerLabel.textContent = isAd ? 'Business or name for the ad' : 'Name for the guest list';
+    buyerInput.placeholder = isAd ? 'e.g. Hanna Plumbing' : 'e.g. Pat Guerin';
+    buyerInput.autocomplete = isAd ? 'organization' : 'name';
+    buyerError.textContent = isAd ? 'Add a name so we know whose ad this is.' : 'Add a name so we can put you on the list.';
+    buyerHint.textContent = isAd
+      ? 'Goes in the Venmo note so we can match your payment to your ad.'
+      : 'Buying for a group? Add their names too — it goes in the Venmo note.';
+    buyerError.classList.add('hidden');
+    buyerInput.removeAttribute('aria-invalid');
+  }
+
+  // Accordion: one option open at a time, and the shared form moves into it
+  function toggle(id: string, forceOpen = false) {
+    optEls.forEach((el) => {
+      const btn = el.querySelector<HTMLButtonElement>('[data-toggle]')!;
+      const panel = el.querySelector<HTMLElement>('[data-panel]')!;
+      const open = el.dataset.opt === id && (forceOpen || !el.hasAttribute('data-open'));
+      el.toggleAttribute('data-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      panel.classList.toggle('hidden', !open);
+      if (open) {
+        setMode(id);
+        panel.appendChild(form);
+      }
+    });
+    if (!document.querySelector('.dd-opt[data-open]')) formHome.appendChild(form);
+    render();
+  }
+
+  optEls.forEach((el) =>
+    el.querySelector('[data-toggle]')!.addEventListener('click', () => toggle(el.dataset.opt!))
+  );
+  document.querySelectorAll<HTMLAnchorElement>('[data-open]').forEach((a) =>
+    a.addEventListener('click', () => toggle(a.dataset.open!, true))
+  );
 
   stepBtns.forEach((b) =>
     b.addEventListener('click', () => {
@@ -367,5 +501,7 @@ const eventSchema = {
     }
   });
 
-  render();
+  // Deep links: /dinner-dance#ad-gold opens that ad, #tickets opens tickets
+  const hash = location.hash.slice(1);
+  if (hash === 'tickets' || adFor(hash)) toggle(hash, true);
 </script>
