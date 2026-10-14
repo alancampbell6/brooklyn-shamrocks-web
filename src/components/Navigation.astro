@@ -4,7 +4,7 @@ import { NAV_ITEMS } from '../lib/nav';
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="hidden md:flex items-center h-full">
+<nav class="hidden lg:flex items-center h-full">
   {NAV_ITEMS.map((item, i) => {
     const isActive = currentPath === item.href ||
       (item.href !== '/' && currentPath.startsWith(item.href));
