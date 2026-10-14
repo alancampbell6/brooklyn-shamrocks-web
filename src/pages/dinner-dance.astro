@@ -4,6 +4,7 @@ import { CLUB_SITE, CLUB_EMAIL } from '../lib/constants';
 import { MAX_TICKETS, JOURNAL_ADS } from '../lib/venmo.js';
 
 const venmoUser = 'brooklyn-shamrocksgfc';
+const journalEmail = 'bklynshamjournal@gmail.com';
 const ticketPrice = 150;
 
 const options = [
@@ -271,7 +272,7 @@ const eventSchema = {
             </p>
             <p id="ad-artwork" class="hidden text-center text-sm text-gray-700 bg-gray-50 border border-gray-200 px-4 py-3 mt-4">
               After paying, email your ad artwork or wording to
-              <a href={`mailto:${CLUB_EMAIL}?subject=${encodeURIComponent('Dinner Dance Journal Ad')}`} class="font-bold text-shamrock-700 hover:underline">{CLUB_EMAIL}</a>.
+              <a href={`mailto:${journalEmail}?subject=${encodeURIComponent('Dinner Dance Journal Ad')}`} class="font-bold text-shamrock-700 hover:underline break-words">{journalEmail}</a>.
             </p>
           </div>
 
