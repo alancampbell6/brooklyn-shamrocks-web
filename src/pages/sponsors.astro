@@ -167,7 +167,7 @@ const uniqueBars = unique(barsAndRestaurants);
 const uniqueIndividual = unique(individualSupporters);
 ---
 
-<BaseLayout title="Sponsors" description="Brooklyn Shamrocks GAA proudly thanks all our sponsors and supporters. From title sponsors to individual donors, your generosity makes our club possible." breadcrumbs={[{ name: 'Sponsors', href: '/sponsors' }]}>
+<BaseLayout preloadHero title="Sponsors" description="Brooklyn Shamrocks GAA proudly thanks all our sponsors and supporters. From title sponsors to individual donors, your generosity makes our club possible." breadcrumbs={[{ name: 'Sponsors', href: '/sponsors' }]}>
   <Hero
     title="Our Sponsors"
     subtitle="Brooklyn Shamrocks GAA is deeply grateful to every sponsor and supporter who makes our club possible. Your generosity funds our teams, our players, and our community."
@@ -206,7 +206,10 @@ const uniqueIndividual = unique(individualSupporters);
               <img
                 src={sponsor.logo}
                 alt={sponsor.name}
+                width={sponsor.width}
+                height={sponsor.height}
                 loading="lazy"
+                decoding="async"
                 class="h-28 md:h-36 w-auto object-contain group-hover:scale-105 transition-transform"
               />
             </picture>

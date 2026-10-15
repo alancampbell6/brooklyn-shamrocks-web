@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
 
 const championships = [
   {
@@ -110,13 +111,13 @@ const guestOfHonor = [
           <div class={`rounded-2xl overflow-hidden ${champ.highlight ? 'bg-gradient-to-r from-shamrock-700 to-shamrock-800 text-white' : 'bg-white border border-gray-200'}`}>
             {champ.image && (
               <div class="aspect-[21/9] overflow-hidden bg-gray-100">
-                <img
+                <ResponsiveImage
                   src={champ.image}
                   alt={champ.imageCaption || champ.title}
-                  width="1200"
-                  height="514"
+                  sizes="(min-width: 1024px) 960px, 100vw"
+                  width={1200}
+                  height={514}
                   class="w-full h-full object-cover"
-                  loading="lazy"
                 />
               </div>
             )}

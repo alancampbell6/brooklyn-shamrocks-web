@@ -48,6 +48,9 @@ const localBusinessSchema = {
 ---
 
 <BaseLayout title="Contact Us - Play Gaelic Football in NYC" description="Join Brooklyn Shamrocks, a sanctioned New York GAA club. GAA transfers welcome. Training at Randalls Island, matches at Gaelic Park. Play junior or senior football in New York." schema={localBusinessSchema} preloadHero={true} breadcrumbs={[{ name: 'Contact', href: '/contact' }]}>
+  <Fragment slot="head">
+    <link rel="dns-prefetch" href="https://maps.google.com" />
+  </Fragment>
   <Hero
     title="Contact Us"
     subtitle="Get in touch - new players and GAA transfers welcome"

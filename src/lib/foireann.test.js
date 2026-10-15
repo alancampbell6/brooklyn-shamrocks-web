@@ -126,6 +126,27 @@ test('getFixtures re-fetches after TTL expiry', async () => {
   assert.equal(getCallCount(), 2, 'fetch must be called again after TTL expires');
 });
 
+// 3b. concurrent callers share one in-flight request
+test('concurrent getFixtures calls share one fetch', async () => {
+  setEnv();
+  const { getCallCount } = stubFetch([makeRawFixture()]);
+
+  const [a, b] = await Promise.all([getFixtures(), getFixtures()]);
+
+  assert.equal(getCallCount(), 1, 'a second caller mid-flight must reuse the first request');
+  assert.deepEqual(a, b);
+});
+
+// 3c. every request is bounded by a timeout signal
+test('getFixtures passes an abort signal so a hung API cannot stall the render', async () => {
+  setEnv();
+  const { getCalls } = stubFetch([makeRawFixture()]);
+
+  await getFixtures();
+
+  assert.ok(getCalls()[0].opts.signal instanceof AbortSignal);
+});
+
 // 4. graceful empty on non-200 response
 test('getFixtures returns [] on non-200 response (no throw)', async () => {
   setEnv();

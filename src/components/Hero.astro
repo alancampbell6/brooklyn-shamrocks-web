@@ -1,4 +1,7 @@
 ---
+import ResponsiveImage from './ResponsiveImage.astro';
+import { HERO_SRC, HERO_SIZES } from '../lib/hero';
+
 interface Props {
   title: string;
   subtitle?: string;
@@ -19,10 +22,14 @@ const sizeClasses = {
 <section class={`relative overflow-hidden ${sizeClasses[size]} bg-shamrock-900`}>
   <!-- Background Image -->
   <div class="absolute inset-0">
-    <picture>
-      <source srcset="/images/hero-team-huddle.webp" type="image/webp" />
-      <img src="/images/hero-team-huddle.jpg" alt="" class="w-full h-full object-cover" fetchpriority="high" />
-    </picture>
+    <ResponsiveImage
+      src={HERO_SRC}
+      alt=""
+      sizes={HERO_SIZES}
+      class="w-full h-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
     <div class="absolute inset-0 bg-shamrock-900/75"></div>
   </div>
 

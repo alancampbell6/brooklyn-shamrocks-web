@@ -36,7 +36,7 @@ const team2Color = (teamColors as Record<string, string>)[team2] || '#9ca3af';
       <div class="flex-1 text-center">
         <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={team1 === CLUB_NAME ? '' : `background-color: ${team1Color}`}>
           {team1 === CLUB_NAME ? (
-            <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
+            <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="40" height="40" loading="lazy" decoding="async" class="w-10 h-10 object-contain" />
           ) : (
             <span class="text-white font-bold text-sm">{team1.substring(0, 2).toUpperCase()}</span>
           )}
@@ -52,7 +52,7 @@ const team2Color = (teamColors as Record<string, string>)[team2] || '#9ca3af';
       <div class="flex-1 text-center">
         <div class="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center overflow-hidden" style={team2 === CLUB_NAME ? '' : `background-color: ${team2Color}`}>
           {team2 === CLUB_NAME ? (
-            <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="40" height="40" loading="lazy" class="w-10 h-10 object-contain" />
+            <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="40" height="40" loading="lazy" decoding="async" class="w-10 h-10 object-contain" />
           ) : (
             <span class="text-white font-bold text-sm">{team2.substring(0, 2).toUpperCase()}</span>
           )}

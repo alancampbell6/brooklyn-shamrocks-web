@@ -19,6 +19,9 @@ import {
 
 export const BASE = 'https://api.foireann.ie/open-data';
 export const TTL_MS = 5 * 60 * 1000; // 5 minutes
+// Upper bound on one Foireann request (headers + body). Without it a hung API
+// holds the render until the function times out.
+export const FETCH_TIMEOUT_MS = 8000;
 
 /**
  * Read a server-side config value.
@@ -52,12 +55,21 @@ export function __setClock(fn) {
 // ─── Module-level cache ───────────────────────────────────────────────────────
 // Keyed by 'fixtures' or 'results'. Each entry: { value: rows[], expires: ms }.
 const cache = {};
+// Requests in progress, keyed like the cache, so concurrent renders share one fetch.
+const inflight = {};
+
+/** Run `fn` once per key at a time; callers that arrive mid-flight get the same promise. */
+function dedupe(key, fn) {
+  inflight[key] ??= fn().finally(() => delete inflight[key]);
+  return inflight[key];
+}
 
 /** Clear all cached entries. Call between tests to ensure isolation. */
 export function __resetCache() {
   delete cache.fixtures;
   delete cache.results;
   delete cache.standings;
+  for (const key of Object.keys(inflight)) delete inflight[key];
 }
 
 // ─── Core loader ──────────────────────────────────────────────────────────────
@@ -105,6 +117,7 @@ async function load(cacheKey, isResult, sort) {
         Authorization: `Bearer ${key}`,
         Accept: 'application/json',
       },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
     if (!res.ok) {
@@ -136,16 +149,20 @@ function currentSeason() {
 
 /** Upcoming fixtures for the Brooklyn Shamrocks (ascending by start date). */
 export async function getFixtures() {
-  return load('fixtures', false, 'startDate,asc');
+  return dedupe('fixtures', () => load('fixtures', false, 'startDate,asc'));
 }
 
 /** Past results for the Brooklyn Shamrocks (descending by start date). */
 export async function getResults() {
-  return load('results', true, 'startDate,desc');
+  return dedupe('results', () => load('results', true, 'startDate,desc'));
 }
 
 /** Official standings for each competition the club plays in (5-minute cache). */
 export async function getStandings() {
+  return dedupe('standings', loadStandings);
+}
+
+async function loadStandings() {
   const entry = cache.standings;
   if (entry && now() < entry.expires) return entry.value;
 
@@ -162,6 +179,7 @@ export async function getStandings() {
   try {
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${key}`, Accept: 'application/json' },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
     if (!res.ok) {
       console.warn(`[foireann] HTTP ${res.status} fetching competitions`);

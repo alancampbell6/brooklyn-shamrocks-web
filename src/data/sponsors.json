@@ -4,19 +4,25 @@
       "name": "IRL Systems",
       "url": "https://www.irlsystems.com",
       "logo": "/images/sponsors/irl-systems.png",
-      "tier": "principal"
+      "tier": "principal",
+      "width": 300,
+      "height": 146
     },
     {
       "name": "JT Magen",
       "url": "https://jtmagen.com",
       "logo": "/images/sponsors/jt-magen.png",
-      "tier": "club"
+      "tier": "club",
+      "width": 536,
+      "height": 590
     },
     {
       "name": "Skyline Windows",
       "url": "https://www.skylinewindows.com",
       "logo": "/images/sponsors/skyline-windows.png",
-      "tier": "club"
+      "tier": "club",
+      "width": 304,
+      "height": 105
     },
     {
       "name": "Club Tia",

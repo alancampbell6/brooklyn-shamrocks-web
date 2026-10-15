@@ -17,8 +17,10 @@ import { findVideoUrl } from '../lib/gaa';
 export const prerender = false;
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
 
-const fixturesData = { fixtures: await getFixtures() };
-const resultsData = { results: await getResults() };
+// Independent requests: run them together so TTFB is the slowest call, not the sum.
+const [fixtures, results] = await Promise.all([getFixtures(), getResults()]);
+const fixturesData = { fixtures };
+const resultsData = { results };
 
 // Compare date strings directly (YYYY-MM-DD sorts lexicographically) to avoid
 // timezone off-by-one issues when comparing UTC-parsed dates to local time.
@@ -256,7 +258,7 @@ const updateCards = [
                   <img
                     src={product.image}
                     alt={product.name}
-                    loading="lazy"
+                    loading="lazy" decoding="async"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
@@ -367,7 +369,7 @@ const updateCards = [
           <div class="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
             <div class="h-1.5 bg-gradient-to-r from-shamrock-700 to-shamrock-500"></div>
             <div class="p-6 flex gap-4">
-              <img src="/images/crest_white_bg.png" alt="" width="48" height="48" loading="lazy" class="w-12 h-12 object-contain flex-shrink-0 opacity-60" />
+              <img src="/images/crest_white_bg.webp" alt="" width="48" height="48" loading="lazy" decoding="async" class="w-12 h-12 object-contain flex-shrink-0 opacity-60" />
               <div>
                 <h3 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-wide">{team.name}</h3>
                 <p class="text-sm text-gray-600 mb-4">{team.description}</p>

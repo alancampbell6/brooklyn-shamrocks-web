@@ -1,0 +1,230 @@
+{
+  "/images/hero-team-huddle.jpg": {
+    "width": 1534,
+    "height": 1069,
+    "base": "/images/responsive/hero-team-huddle",
+    "widths": [
+      640,
+      960,
+      1280,
+      1534
+    ]
+  },
+  "/images/dinner-dance-2026.jpg": {
+    "width": 1024,
+    "height": 1536,
+    "base": "/images/responsive/dinner-dance-2026",
+    "widths": [
+      480,
+      768,
+      1024
+    ]
+  },
+  "/images/history/1967_irish_haven.jpg": {
+    "width": 548,
+    "height": 717,
+    "base": "/images/responsive/history/1967_irish_haven",
+    "widths": [
+      400,
+      548
+    ]
+  },
+  "/images/history/1979.jpeg": {
+    "width": 1200,
+    "height": 590,
+    "base": "/images/responsive/history/1979",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/1979_2.jpeg": {
+    "width": 1200,
+    "height": 954,
+    "base": "/images/responsive/history/1979_2",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/1997_team_photo.jpg": {
+    "width": 960,
+    "height": 636,
+    "base": "/images/responsive/history/1997_team_photo",
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "/images/history/2002.jpg": {
+    "width": 960,
+    "height": 724,
+    "base": "/images/responsive/history/2002",
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "/images/history/2002_1.jpg": {
+    "width": 960,
+    "height": 603,
+    "base": "/images/responsive/history/2002_1",
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "/images/history/2002_2.jpg": {
+    "width": 960,
+    "height": 720,
+    "base": "/images/responsive/history/2002_2",
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "/images/history/2002_3.jpg": {
+    "width": 960,
+    "height": 616,
+    "base": "/images/responsive/history/2002_3",
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "/images/history/2002_4.jpg": {
+    "width": 960,
+    "height": 542,
+    "base": "/images/responsive/history/2002_4",
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "/images/history/2011_team_photo.jpg": {
+    "width": 720,
+    "height": 576,
+    "base": "/images/responsive/history/2011_team_photo",
+    "widths": [
+      400,
+      720
+    ]
+  },
+  "/images/history/2012_team.jpeg": {
+    "width": 1200,
+    "height": 1210,
+    "base": "/images/responsive/history/2012_team",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/2012_winners.jpeg": {
+    "width": 1200,
+    "height": 952,
+    "base": "/images/responsive/history/2012_winners",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/2014_team.jpg": {
+    "width": 1200,
+    "height": 680,
+    "base": "/images/responsive/history/2014_team",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/2015_juniorA_champs.jpg": {
+    "width": 1200,
+    "height": 697,
+    "base": "/images/responsive/history/2015_juniorA_champs",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/2018_newry_memorial.jpg": {
+    "width": 960,
+    "height": 720,
+    "base": "/images/responsive/history/2018_newry_memorial",
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  },
+  "/images/history/Brooklyn_players_for_newYork_vs_leitrim_win.jpg": {
+    "width": 1200,
+    "height": 900,
+    "base": "/images/responsive/history/Brooklyn_players_for_newYork_vs_leitrim_win",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/intermediate_champs_2021.jpg": {
+    "width": 750,
+    "height": 541,
+    "base": "/images/responsive/history/intermediate_champs_2021",
+    "widths": [
+      400,
+      750
+    ]
+  },
+  "/images/history/juniorB_champs.jpg": {
+    "width": 916,
+    "height": 1261,
+    "base": "/images/responsive/history/juniorB_champs",
+    "widths": [
+      400,
+      800,
+      916
+    ]
+  },
+  "/images/history/junior_final_1972.jpeg": {
+    "width": 1200,
+    "height": 1218,
+    "base": "/images/responsive/history/junior_final_1972",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/leagueChamps2023.jpg": {
+    "width": 1200,
+    "height": 704,
+    "base": "/images/responsive/history/leagueChamps2023",
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "/images/history/newsReport2010.jpg": {
+    "width": 960,
+    "height": 640,
+    "base": "/images/responsive/history/newsReport2010",
+    "widths": [
+      400,
+      800,
+      960
+    ]
+  }
+}
