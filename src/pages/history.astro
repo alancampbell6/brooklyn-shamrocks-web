@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
 
 const timeline = [
   {
@@ -212,11 +213,11 @@ const timeline = [
                       data-lightbox={item.image}
                       data-caption={item.imageCaption || item.title}
                     >
-                      <img
+                      <ResponsiveImage
                         src={item.image}
                         alt={item.imageCaption || item.title}
+                        sizes="(min-width: 1024px) 560px, calc(100vw - 4rem)"
                         class={`w-full h-auto max-h-[28rem] object-contain hover:scale-105 transition-transform duration-300 ${item.imagePosition === 'top' ? 'object-top' : ''}`}
-                        loading="lazy"
                       />
                     </button>
                   )}
@@ -229,11 +230,11 @@ const timeline = [
                           data-lightbox={img}
                           data-caption={`${item.imageCaption || item.title} - Photo ${idx + 1}`}
                         >
-                          <img
+                          <ResponsiveImage
                             src={img}
                             alt={`${item.title} - Photo ${idx + 1}`}
+                            sizes="(min-width: 1024px) 280px, 50vw"
                             class="w-full h-auto max-h-72 object-cover hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
                           />
                         </button>
                       ))}

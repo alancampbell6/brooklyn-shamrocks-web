@@ -1,7 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
+import '@fontsource/cinzel/latin-700.css';
+import '@fontsource/cinzel/latin-800.css';
+import manifest from '../data/responsive-images.json';
 import { CLUB_SITE, CLUB_EMAIL } from '../lib/constants';
 import { MAX_TICKETS, JOURNAL_ADS } from '../lib/venmo.js';
+
+const POSTER = '/images/dinner-dance-2026.jpg';
+const POSTER_SIZES = '(min-width: 1024px) 448px, (min-width: 384px) 384px, 100vw';
+const poster = manifest[POSTER];
+const posterSrcset = poster.widths.map((w) => `${poster.base}-${w}.avif ${w}w`).join(', ');
 
 const venmoUser = 'brooklyn-shamrocksgfc';
 const journalEmail = 'bklynshamjournal@gmail.com';
@@ -76,8 +85,7 @@ const eventSchema = {
   breadcrumbs={[{ name: 'Dinner Dance', href: '/dinner-dance' }]}
 >
   <Fragment slot="head">
-    <link rel="preload" href="/images/dinner-dance-2026.webp" as="image" type="image/webp" />
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="preload" as="image" type="image/avif" imagesrcset={posterSrcset} imagesizes={POSTER_SIZES} fetchpriority="high" />
   </Fragment>
 
   <!-- Hero -->
@@ -121,17 +129,14 @@ const eventSchema = {
       </div>
 
       <a href="/images/dinner-dance-2026.jpg" target="_blank" rel="noopener" class="block mx-auto w-full max-w-sm lg:max-w-md group" aria-label="Open the full event poster">
-        <picture>
-          <source srcset="/images/dinner-dance-2026.webp" type="image/webp" />
-          <img
-            src="/images/dinner-dance-2026.jpg"
-            alt="Brooklyn Shamrocks GFC Annual Dinner Dance poster: Friday November 13th, Bayridge Manor, $150 per person"
-            width="1024"
-            height="1536"
-            fetchpriority="high"
-            class="w-full h-auto shadow-2xl ring-1 ring-gold-400/40 transition-transform duration-500 group-hover:-rotate-1 group-hover:scale-[1.02] lg:rotate-2"
-          />
-        </picture>
+        <ResponsiveImage
+          src={POSTER}
+          alt="Brooklyn Shamrocks GFC Annual Dinner Dance poster: Friday November 13th, Bayridge Manor, $150 per person"
+          sizes={POSTER_SIZES}
+          loading="eager"
+          fetchpriority="high"
+          class="w-full h-auto shadow-2xl ring-1 ring-gold-400/40 transition-transform duration-500 group-hover:-rotate-1 group-hover:scale-[1.02] lg:rotate-2"
+        />
       </a>
     </div>
   </section>
@@ -362,7 +367,8 @@ const eventSchema = {
 </style>
 
 <script>
-  import QRCode from 'qrcode';
+  // The QR code only shows on desktop, so fetch the library only when it's drawn
+  const loadQRCode = () => import('qrcode').then((m) => m.default);
   import { clampQty, ticketNote, adNote, venmoLinks, MAX_TICKETS, JOURNAL_ADS } from '../lib/venmo.js';
 
   const VENMO_USER = 'brooklyn-shamrocksgfc';
@@ -402,6 +408,7 @@ const eventSchema = {
   }
 
   let qrTimer: ReturnType<typeof setTimeout> | undefined;
+  let qrDraws = 0;
   function render() {
     const { qty = 1, amount, caption, links } = current();
     totalEl.textContent = `$${amount.toLocaleString()}`;
@@ -414,14 +421,17 @@ const eventSchema = {
 
     // Debounce so typing a name doesn't redraw the QR on every keystroke
     clearTimeout(qrTimer);
+    const drawn = ++qrDraws;
     qrTimer = setTimeout(async () => {
       if (getComputedStyle(qrEl.parentElement!).display === 'none') return;
-      qrEl.innerHTML = await QRCode.toString(links.web, {
+      const QRCode = await loadQRCode();
+      const svg = await QRCode.toString(links.web, {
         type: 'svg',
         margin: 0,
         errorCorrectionLevel: 'M',
         color: { dark: '#052e16', light: '#ffffff' },
       });
+      if (drawn === qrDraws) qrEl.innerHTML = svg;
     }, 150);
   }
 

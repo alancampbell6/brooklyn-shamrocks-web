@@ -21,8 +21,9 @@ scraper — the data is always live.
   (Vercel serverless) to fetch live data.
 - `src/lib/foireann.js` is the server-only client. It fetches the New York GAA board,
   filters to the **Brooklyn Shamrocks** club, and caches results in-memory for 5 minutes.
-  The two dynamic pages also send `Cache-Control: s-maxage=300` so Vercel's CDN serves a
-  cached render for 5 minutes (foireann is hit at most ~once per 5 min per region).
+  Requests run in parallel, share one in-flight fetch, and give up after 8 seconds.
+- The two dynamic pages use Vercel ISR (`isr: { expiration: 300 }` in `astro.config.mjs`):
+  the render is cached globally and refreshed in the background every 5 minutes.
 - `src/lib/foireann-transform.js` holds the pure mapping/filtering logic (unit-tested).
 
 ### Configuration
@@ -40,6 +41,14 @@ Set these environment variables (server-only — never prefix with `PUBLIC_`):
 
 If the API key is missing or the API is unreachable, the pages render empty (graceful) —
 no stale fallback.
+
+## Images
+
+Photos live in `public/images`. After adding or replacing the hero, the Dinner Dance
+poster or a history photo, run `node scripts/responsive-images.mjs`. It writes AVIF/WebP
+copies at several widths to `public/images/responsive/` and updates
+`src/data/responsive-images.json`, which `<ResponsiveImage>` uses for `srcset` and
+`width`/`height`. Originals are never modified.
 
 ## Commands
 

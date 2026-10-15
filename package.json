@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && node scripts/fix-vercel-runtime.mjs",
+    "build": "astro build && node scripts/fix-vercel-runtime.mjs && node scripts/vercel-cache-headers.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "test": "node --test src/lib/*.test.js"
@@ -18,6 +18,8 @@
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/tailwind": "^5.1.0",
     "@astrojs/vercel": "^7.8.2",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/cinzel": "^5.3.0",
     "astro": "^4.16.0",
     "qrcode": "^1.5.4",
     "tailwindcss": "^3.4.0"

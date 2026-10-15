@@ -4,6 +4,9 @@ import Hero from '../components/Hero.astro';
 ---
 
 <BaseLayout title="Club News & Updates" description="Latest news, match reports, and announcements from Brooklyn Shamrocks, a sanctioned GAA club in New York. Gaelic football updates from junior and senior teams in NYC." preloadHero={true} breadcrumbs={[{ name: 'Updates', href: '/updates' }]}>
+  <Fragment slot="head">
+    <link rel="dns-prefetch" href="https://connect.facebook.net" />
+  </Fragment>
   <Hero
     title="Club Updates"
     subtitle="Stay connected with the latest news, events, and announcements"
@@ -152,7 +155,7 @@ import Hero from '../components/Hero.astro';
     </div>
   </section>
 
-  <!-- Facebook SDK (lazy-loaded on scroll) -->
+  <!-- Facebook SDK (loaded after page load, once the feed is near the viewport) -->
   <script is:inline>
     (function() {
       var loaded = false;
@@ -166,17 +169,28 @@ import Hero from '../components/Hero.astro';
         js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0";
         fjs.parentNode.insertBefore(js, fjs);
       }
-      if ('IntersectionObserver' in window) {
-        var target = document.getElementById('fb-root');
-        if (target) {
-          var observer = new IntersectionObserver(function(entries) {
-            if (entries[0].isIntersecting) { loadFBSDK(); observer.disconnect(); }
-          }, { rootMargin: '200px' });
-          observer.observe(target);
+      function watch() {
+        if ('IntersectionObserver' in window) {
+          var target = document.getElementById('fb-root');
+          if (target) {
+            var observer = new IntersectionObserver(function(entries) {
+              if (entries[0].isIntersecting) { loadFBSDK(); observer.disconnect(); }
+            }, { rootMargin: '200px' });
+            observer.observe(target);
+          }
+        } else {
+          loadFBSDK();
         }
-      } else {
-        loadFBSDK();
       }
+      // The feed sits first on mobile, so it is usually in view at once. Wait until
+      // the page has loaded and the main thread is idle so the SDK doesn't compete
+      // with the page's own content.
+      function whenIdle() {
+        if ('requestIdleCallback' in window) requestIdleCallback(watch, { timeout: 3000 });
+        else setTimeout(watch, 1);
+      }
+      if (document.readyState === 'complete') whenIdle();
+      else window.addEventListener('load', whenIdle, { once: true });
     })();
   </script>
 

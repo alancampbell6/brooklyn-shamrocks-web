@@ -1,7 +1,10 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import '@fontsource-variable/inter/index.css';
+import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import '../styles/global.css';
+import { heroPreload } from '../lib/hero';
 import { CLUB_SITE, CLUB_EMAIL, SOCIAL_LINKS } from '../lib/constants';
 
 interface Props {
@@ -118,17 +121,10 @@ const breadcrumbSchema = breadcrumbs ? {
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <!-- Preload critical images for LCP (only on pages with Hero) -->
-    {preloadHero && <link rel="preload" href="/images/hero-team-huddle.webp" as="image" type="image/webp" />}
+    {preloadHero && <link rel="preload" as="image" type={heroPreload.type} imagesrcset={heroPreload.srcset} imagesizes={heroPreload.sizes} fetchpriority="high" />}
 
-    <!-- Resource Hints -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://www.google.com" />
-    <link rel="dns-prefetch" href="https://maps.googleapis.com" />
-    <link rel="dns-prefetch" href="https://connect.facebook.net" />
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <!-- Fonts (self-hosted via Fontsource; the latin subset is all the site uses) -->
+    <link rel="preload" href={interLatinWoff2} as="font" type="font/woff2" crossorigin />
 
     <!-- JSON-LD Schema -->
     <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />

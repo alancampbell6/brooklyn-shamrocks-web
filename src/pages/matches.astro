@@ -11,8 +11,10 @@ import { getOutcome, findVideoUrl, OUTCOME_COLORS, OUTCOME_LABELS, OUTCOME_ARIA_
 export const prerender = false;
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
 
-const fixturesData = { fixtures: await getFixtures() };
-const resultsData = { results: await getResults() };
+// Independent requests: run them together so TTFB is the slowest call, not the sum.
+const [fixtures, results, standings] = await Promise.all([getFixtures(), getResults(), getStandings()]);
+const fixturesData = { fixtures };
+const resultsData = { results };
 
 const colors = teamColors as Record<string, string>;
 function getColor(team: string) { return colors[team] || '#9ca3af'; }
@@ -26,8 +28,7 @@ function compBadge(comp: string): { bg: string; text: string } {
 }
 
 // --- League Tables / Standings ---
-// Official Foireann standings for each competition Brooklyn plays in.
-const standings = await getStandings();
+// Official Foireann standings for each competition Brooklyn plays in (fetched above).
 
 // --- Fixtures ---
 
@@ -195,7 +196,7 @@ const outcomeLabels = OUTCOME_LABELS;
                     <div class="flex-1 text-center">
                       <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredFixture.team1 === CLUB_NAME ? '' : `background-color: ${getColor(featuredFixture.team1)}`}>
                         {featuredFixture.team1 === CLUB_NAME ? (
-                          <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
+                          <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="56" height="56" loading="lazy" decoding="async" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
                         ) : (
                           <span class="text-white font-bold text-lg md:text-xl">{featuredFixture.team1.substring(0, 2).toUpperCase()}</span>
                         )}
@@ -220,7 +221,7 @@ const outcomeLabels = OUTCOME_LABELS;
                     <div class="flex-1 text-center">
                       <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredFixture.team2 === CLUB_NAME ? '' : `background-color: ${getColor(featuredFixture.team2)}`}>
                         {featuredFixture.team2 === CLUB_NAME ? (
-                          <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
+                          <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="56" height="56" loading="lazy" decoding="async" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
                         ) : (
                           <span class="text-white font-bold text-lg md:text-xl">{featuredFixture.team2.substring(0, 2).toUpperCase()}</span>
                         )}
@@ -257,7 +258,7 @@ const outcomeLabels = OUTCOME_LABELS;
                           <span class="font-semibold text-gray-900 text-sm text-right">{fixture.team1}</span>
                           <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={fixture.team1 === CLUB_NAME ? '' : `background-color: ${getColor(fixture.team1)}`}>
                             {fixture.team1 === CLUB_NAME ? (
-                              <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                              <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="22" height="22" loading="lazy" decoding="async" class="w-[22px] h-[22px] object-contain" />
                             ) : (
                               <span class="text-white font-bold text-[10px]">{fixture.team1.substring(0, 2).toUpperCase()}</span>
                             )}
@@ -271,7 +272,7 @@ const outcomeLabels = OUTCOME_LABELS;
                         <div class="flex items-center gap-2 flex-1">
                           <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={fixture.team2 === CLUB_NAME ? '' : `background-color: ${getColor(fixture.team2)}`}>
                             {fixture.team2 === CLUB_NAME ? (
-                              <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                              <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="22" height="22" loading="lazy" decoding="async" class="w-[22px] h-[22px] object-contain" />
                             ) : (
                               <span class="text-white font-bold text-[10px]">{fixture.team2.substring(0, 2).toUpperCase()}</span>
                             )}
@@ -393,7 +394,7 @@ const outcomeLabels = OUTCOME_LABELS;
                     <div class="flex-1 text-center">
                       <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredResult.team1 === CLUB_NAME ? '' : `background-color: ${getColor(featuredResult.team1)}`}>
                         {featuredResult.team1 === CLUB_NAME ? (
-                          <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
+                          <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="56" height="56" loading="lazy" decoding="async" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
                         ) : (
                           <span class="text-white font-bold text-lg md:text-xl">{featuredResult.team1.substring(0, 2).toUpperCase()}</span>
                         )}
@@ -418,7 +419,7 @@ const outcomeLabels = OUTCOME_LABELS;
                     <div class="flex-1 text-center">
                       <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 rounded-full flex items-center justify-center overflow-hidden" style={featuredResult.team2 === CLUB_NAME ? '' : `background-color: ${getColor(featuredResult.team2)}`}>
                         {featuredResult.team2 === CLUB_NAME ? (
-                          <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="56" height="56" loading="lazy" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
+                          <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="56" height="56" loading="lazy" decoding="async" class="w-14 h-14 md:w-16 md:h-16 object-contain" />
                         ) : (
                           <span class="text-white font-bold text-lg md:text-xl">{featuredResult.team2.substring(0, 2).toUpperCase()}</span>
                         )}
@@ -472,7 +473,7 @@ const outcomeLabels = OUTCOME_LABELS;
                           <span class="font-semibold text-gray-900 text-sm text-right">{result.team1}</span>
                           <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={result.team1 === CLUB_NAME ? '' : `background-color: ${getColor(result.team1)}`}>
                             {result.team1 === CLUB_NAME ? (
-                              <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                              <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="22" height="22" loading="lazy" decoding="async" class="w-[22px] h-[22px] object-contain" />
                             ) : (
                               <span class="text-white font-bold text-[10px]">{result.team1.substring(0, 2).toUpperCase()}</span>
                             )}
@@ -490,7 +491,7 @@ const outcomeLabels = OUTCOME_LABELS;
                         <div class="flex items-center gap-2 flex-1">
                           <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={result.team2 === CLUB_NAME ? '' : `background-color: ${getColor(result.team2)}`}>
                             {result.team2 === CLUB_NAME ? (
-                              <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                              <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="22" height="22" loading="lazy" decoding="async" class="w-[22px] h-[22px] object-contain" />
                             ) : (
                               <span class="text-white font-bold text-[10px]">{result.team2.substring(0, 2).toUpperCase()}</span>
                             )}
@@ -600,7 +601,7 @@ const outcomeLabels = OUTCOME_LABELS;
                           <div class="flex items-center gap-2.5">
                             <div class="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={s.team === CLUB_NAME ? '' : `background-color: ${getColor(s.team)}`}>
                               {s.team === CLUB_NAME ? (
-                                <img src="/images/crest_white_bg.png" alt={CLUB_NAME} width="22" height="22" loading="lazy" class="w-[22px] h-[22px] object-contain" />
+                                <img src="/images/crest_white_bg.webp" alt={CLUB_NAME} width="22" height="22" loading="lazy" decoding="async" class="w-[22px] h-[22px] object-contain" />
                               ) : (
                                 <span class="text-white font-bold text-[10px]">{s.team.substring(0, 2).toUpperCase()}</span>
                               )}
