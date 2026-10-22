@@ -6,6 +6,7 @@ import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-n
 import '../styles/global.css';
 import { heroPreload } from '../lib/hero';
 import { CLUB_SITE, CLUB_EMAIL, SOCIAL_LINKS } from '../lib/constants';
+import { jsonLd } from '../lib/json-ld.js';
 
 interface Props {
   title: string;
@@ -127,14 +128,14 @@ const breadcrumbSchema = breadcrumbs ? {
     <link rel="preload" href={interLatinWoff2} as="font" type="font/woff2" crossorigin />
 
     <!-- JSON-LD Schema -->
-    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
-    {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
+    <script type="application/ld+json" set:html={jsonLd(organizationSchema)} />
+    {breadcrumbSchema && <script type="application/ld+json" set:html={jsonLd(breadcrumbSchema)} />}
     {schema && Array.isArray(schema) ? (
       schema.map((s: object) => (
-        <script type="application/ld+json" set:html={JSON.stringify(s)} />
+        <script type="application/ld+json" set:html={jsonLd(s)} />
       ))
     ) : schema ? (
-      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      <script type="application/ld+json" set:html={jsonLd(schema)} />
     ) : null}
 
     <title>{fullTitle}</title>
